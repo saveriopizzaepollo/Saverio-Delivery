@@ -17,15 +17,13 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(--blu);overflow:hidden;}
 #loading{position:fixed;inset:0;background:var(--blu);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;}
-.logo{font-size:2rem;font-weight:900;color:white;letter-spacing:.2em;text-align:center;line-height:1.2;}
-.logo-sub{color:rgba(255,255,255,.4);font-weight:700;font-size:.7rem;letter-spacing:.25em;margin-top:.5rem;}
+.logo{font-size:2.2rem;font-weight:900;color:white;letter-spacing:.2em;text-align:center;line-height:1.2;}
 .spinner{width:44px;height:44px;border:5px solid rgba(255,255,255,.15);border-top-color:var(--arancione);border-radius:50%;animation:spin .8s linear infinite;margin-top:2rem;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .lmsg{color:rgba(255,255,255,.4);font-weight:700;font-size:.75rem;letter-spacing:.1em;margin-top:1rem;}
 #login{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;z-index:100;}
 #login.show{display:flex;}
-.login-logo{font-size:1.9rem;font-weight:900;color:white;letter-spacing:.2em;text-align:center;line-height:1.2;margin-bottom:.5rem;}
-.login-tag{color:rgba(255,255,255,.4);font-weight:700;font-size:.7rem;letter-spacing:.25em;margin-bottom:3rem;}
+.login-logo{font-size:1.9rem;font-weight:900;color:white;letter-spacing:.2em;text-align:center;line-height:1.2;margin-bottom:3rem;}
 .lbtns{display:flex;flex-direction:column;gap:1rem;width:100%;max-width:320px;}
 .lbtn{display:flex;align-items:center;justify-content:center;gap:.75rem;padding:1.3rem;border-radius:18px;border:none;cursor:pointer;font-family:'Barlow',sans-serif;font-size:1.15rem;font-weight:900;letter-spacing:.18em;color:white;transition:transform .12s,opacity .12s;}
 .lbtn:active{transform:scale(.96);opacity:.85;}
@@ -95,15 +93,13 @@ html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(
 <body>
 
 <div id="loading">
-  <div class="logo">🍕 SAVERIO<br>DELIVERY</div>
-  <div class="logo-sub">PIZZERIA · PALERMO</div>
+  <div class="logo">SAVERIO<br>DELIVERY</div>
   <div class="spinner"></div>
-  <div class="lmsg" id="lmsg">CARICAMENTO...</div>
+  <div class="lmsg">CARICAMENTO...</div>
 </div>
 
 <div id="login">
-  <div class="login-logo">🍕 SAVERIO<br>DELIVERY</div>
-  <div class="login-tag">PIZZERIA SAVERIO · PALERMO</div>
+  <div class="login-logo">SAVERIO<br>DELIVERY</div>
   <div class="lbtns">
     <button class="lbtn ba" onclick="avviaLogin('admin','ADMIN')">🔑 ADMIN</button>
     <button class="lbtn bd" onclick="avviaLogin('dispatch','DISPATCH')">📦 DISPATCH</button>
@@ -156,7 +152,7 @@ html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(
 
 <div id="app">
   <div class="hdr">
-    <div class="htit">🛵 SAVERIO DELIVERY</div>
+    <div class="htit">SAVERIO DELIVERY</div>
     <div style="display:flex;align-items:center;gap:.5rem">
       <span class="rbadge" id="rbadge">—</span>
       <button class="lout" onclick="logout()">ESCI</button>
@@ -192,173 +188,47 @@ html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(
 <div class="toast" id="toast"></div>
 
 <script>
-// CONFIG FIREBASE
-var cfg = {
-  apiKey:"AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",
-  authDomain:"saverio-delivery.firebaseapp.com",
-  databaseURL:"https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:"saverio-delivery",
-  storageBucket:"saverio-delivery.firebasestorage.app",
-  messagingSenderId:"913928598350",
-  appId:"1:913928598350:web:98489624879baabe27241f"
-};
-
-var db, pinBuf='', pinId=null, pinNome=null;
-
-// INIT — avvia subito senza aspettare .info/connected
-window.onload = function() {
-  try {
+var cfg={apiKey:"AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",authDomain:"saverio-delivery.firebaseapp.com",databaseURL:"https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",projectId:"saverio-delivery",storageBucket:"saverio-delivery.firebasestorage.app",messagingSenderId:"913928598350",appId:"1:913928598350:web:98489624879baabe27241f"};
+var db,pinBuf='',pinId=null,pinNome=null;
+window.onload=function(){
+  try{
     firebase.initializeApp(cfg);
-    db = firebase.database();
-    // Testa subito leggendo un nodo
-    db.ref('utenti/admin').once('value').then(function(snap) {
-      if (!snap.exists()) {
+    db=firebase.database();
+    db.ref('utenti/admin').once('value').then(function(snap){
+      if(!snap.exists()){
         db.ref('utenti/admin').set({nome:'Saverio',cognome:'',telefono:'',ruolo:'admin',pin:'1234',softpos:false,attivo:true});
         db.ref('utenti/dispatch').set({nome:'Dispatch',cognome:'',telefono:'',ruolo:'dispatch',pin:'0000',softpos:false,attivo:true});
       }
-      if (!ripristinaSessione()) mostraLogin();
-    }).catch(function(e) {
-      console.error('Firebase error:', e);
-      mostraLogin();
-    });
-  } catch(e) {
-    console.error(e);
-    mostraLogin();
-  }
-  // Safety timeout
-  setTimeout(function() {
-    if (document.getElementById('loading').style.display !== 'none') mostraLogin();
-  }, 4000);
+      if(!ripristinaSessione()) mostraLogin();
+    }).catch(function(){mostraLogin();});
+  }catch(e){mostraLogin();}
+  setTimeout(function(){if(document.getElementById('loading').style.display!=='none') mostraLogin();},4000);
   resetMezzanotte();
 };
-
-function resetMezzanotte() {
-  var d=new Date(), k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-  var u=localStorage.getItem('rd');
-  if(u&&u!==k) sessionStorage.clear();
-  localStorage.setItem('rd',k);
-  var mn=new Date(); mn.setHours(24,0,10,0);
-  setTimeout(function(){sessionStorage.clear();location.reload();},mn-d);
-}
-
-function nascondi() {
-  document.getElementById('loading').style.display='none';
-  ['login','rider-lista','pin','primo','app'].forEach(function(id){
-    document.getElementById(id).classList.remove('show');
+function resetMezzanotte(){var d=new Date(),k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),u=localStorage.getItem('rd');if(u&&u!==k)sessionStorage.clear();localStorage.setItem('rd',k);var mn=new Date();mn.setHours(24,0,10,0);setTimeout(function(){sessionStorage.clear();location.reload();},mn-d);}
+function nascondi(){document.getElementById('loading').style.display='none';['login','rider-lista','pin','primo','app'].forEach(function(id){document.getElementById(id).classList.remove('show');});}
+function mostraLogin(){nascondi();document.getElementById('login').classList.add('show');}
+function avviaLogin(uid,nome){pinId=uid;pinNome=nome;nascondi();document.getElementById('pin').classList.add('show');document.getElementById('pnome').textContent=nome;document.getElementById('perr').style.display='none';pinBuf='';dots();}
+function apriRider(){
+  nascondi();document.getElementById('rider-lista').classList.add('show');
+  db.ref('utenti').once('value').then(function(snap){
+    var c=document.getElementById('rider-items');c.innerHTML='';
+    if(snap.exists())snap.forEach(function(ch){var u=ch.val();if(u.ruolo!=='rider'||u.attivo===false)return;var d=document.createElement('div');d.className='rbtn';d.innerHTML='<div class="rav">'+((u.nome||'?').charAt(0).toUpperCase())+'</div><div><div class="rn">'+(u.nome||'')+' '+(u.cognome||'')+'</div><div class="rs">RIDER</div></div>';d.onclick=(function(id,u){return function(){pinId=id;pinNome=((u.nome||'')+' '+(u.cognome||'')).trim();apriPin();};})(ch.key,u);c.appendChild(d);});
+    var bn=document.createElement('div');bn.className='rbtn';bn.style.borderColor='rgba(232,96,10,.35)';bn.innerHTML='<div class="rav new">+</div><div><div class="rn">SONO NUOVO</div><div class="rs">PRIMO ACCESSO</div></div>';bn.onclick=function(){nascondi();document.getElementById('primo').classList.add('show');};c.appendChild(bn);
   });
 }
-
-function mostraLogin() {
-  nascondi();
-  document.getElementById('login').classList.add('show');
-}
-
-function avviaLogin(uid, nome) {
-  pinId=uid; pinNome=nome;
-  nascondi();
-  document.getElementById('pin').classList.add('show');
-  document.getElementById('pnome').textContent=nome;
-  document.getElementById('perr').style.display='none';
-  pinBuf=''; dots();
-}
-
-function apriRider() {
-  nascondi();
-  document.getElementById('rider-lista').classList.add('show');
-  db.ref('utenti').once('value').then(function(snap) {
-    var c=document.getElementById('rider-items'); c.innerHTML='';
-    if(snap.exists()) snap.forEach(function(ch){
-      var u=ch.val();
-      if(u.ruolo!=='rider'||u.attivo===false) return;
-      var d=document.createElement('div'); d.className='rbtn';
-      d.innerHTML='<div class="rav">'+((u.nome||'?').charAt(0).toUpperCase())+'</div><div><div class="rn">'+(u.nome||'')+' '+(u.cognome||'')+'</div><div class="rs">RIDER</div></div>';
-      d.onclick=(function(id,u){return function(){pinId=id;pinNome=((u.nome||'')+' '+(u.cognome||'')).trim();apriPin();};})(ch.key,u);
-      c.appendChild(d);
-    });
-    var bn=document.createElement('div'); bn.className='rbtn'; bn.style.borderColor='rgba(232,96,10,.35)';
-    bn.innerHTML='<div class="rav new">+</div><div><div class="rn">SONO NUOVO</div><div class="rs">PRIMO ACCESSO</div></div>';
-    bn.onclick=function(){nascondi();document.getElementById('primo').classList.add('show');};
-    c.appendChild(bn);
-  });
-}
-
-function apriPin() {
-  nascondi();
-  document.getElementById('pin').classList.add('show');
-  document.getElementById('pnome').textContent=(pinNome||'').toUpperCase();
-  document.getElementById('perr').style.display='none';
-  pinBuf=''; dots();
-}
-
-function registra() {
-  var nome=document.getElementById('pa-nome').value.trim();
-  var cognome=document.getElementById('pa-cognome').value.trim();
-  var tel=document.getElementById('pa-tel').value.trim();
-  if(!nome){alert('Inserisci il nome');return;}
-  var ref=db.ref('utenti').push();
-  ref.set({nome:nome,cognome:cognome,telefono:tel,ruolo:'rider',pin:'0000',softpos:false,attivo:true});
-  pinId=ref.key; pinNome=(nome+' '+cognome).trim(); apriPin();
-}
-
+function apriPin(){nascondi();document.getElementById('pin').classList.add('show');document.getElementById('pnome').textContent=(pinNome||'').toUpperCase();document.getElementById('perr').style.display='none';pinBuf='';dots();}
+function registra(){var nome=document.getElementById('pa-nome').value.trim(),cognome=document.getElementById('pa-cognome').value.trim(),tel=document.getElementById('pa-tel').value.trim();if(!nome){alert('Inserisci il nome');return;}var ref=db.ref('utenti').push();ref.set({nome:nome,cognome:cognome,telefono:tel,ruolo:'rider',pin:'0000',softpos:false,attivo:true});pinId=ref.key;pinNome=(nome+' '+cognome).trim();apriPin();}
 function tornaLogin(){pinBuf='';mostraLogin();}
-
-function k(c){
-  if(pinBuf.length>=4) return;
-  pinBuf+=c; dots();
-  if(pinBuf.length===4) setTimeout(verificaPin,150);
-}
+function k(c){if(pinBuf.length>=4)return;pinBuf+=c;dots();if(pinBuf.length===4)setTimeout(verificaPin,150);}
 function kd(){pinBuf=pinBuf.slice(0,-1);dots();}
-function dots(){for(var i=0;i<4;i++) document.getElementById('d'+i).classList.toggle('on',i<pinBuf.length);}
-
-function verificaPin() {
-  db.ref('utenti/'+pinId).once('value').then(function(snap) {
-    if(!snap.exists()){errPin();return;}
-    var u=snap.val();
-    if(u.pin===pinBuf){
-      sessionStorage.setItem('s',JSON.stringify({id:pinId,ruolo:u.ruolo}));
-      avviaApp(pinId,u);
-    } else errPin();
-  }).catch(function(){errPin();});
-}
-
-function errPin(){
-  document.getElementById('perr').style.display='block';
-  pinBuf=''; dots();
-  setTimeout(function(){document.getElementById('perr').style.display='none';},2500);
-}
-
-function ripristinaSessione() {
-  var s=sessionStorage.getItem('s');
-  if(!s) return false;
-  try {
-    var p=JSON.parse(s);
-    db.ref('utenti/'+p.id).once('value').then(function(snap) {
-      if(!snap.exists()){sessionStorage.clear();mostraLogin();return;}
-      avviaApp(p.id,snap.val());
-    });
-    return true;
-  } catch(e){return false;}
-}
-
-function avviaApp(id,u) {
-  nascondi();
-  document.getElementById('app').classList.add('show');
-  var nome=((u.nome||'')+' '+(u.cognome||'')).trim()||u.ruolo;
-  document.getElementById('rbadge').textContent=u.ruolo.toUpperCase();
-  document.getElementById('wnome').textContent='CIAO, '+(u.nome||u.ruolo).toUpperCase()+'!';
-  document.getElementById('wruolo').textContent='Accesso come '+u.ruolo;
-  document.getElementById('iruolo').textContent=u.ruolo.toUpperCase();
-  document.getElementById('iutente').textContent=nome;
-  toast('✅ ACCESSO EFFETTUATO');
-}
-
+function dots(){for(var i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('on',i<pinBuf.length);}
+function verificaPin(){db.ref('utenti/'+pinId).once('value').then(function(snap){if(!snap.exists()){errPin();return;}var u=snap.val();if(u.pin===pinBuf){sessionStorage.setItem('s',JSON.stringify({id:pinId,ruolo:u.ruolo}));avviaApp(pinId,u);}else errPin();}).catch(function(){errPin();});}
+function errPin(){document.getElementById('perr').style.display='block';pinBuf='';dots();setTimeout(function(){document.getElementById('perr').style.display='none';},2500);}
+function ripristinaSessione(){var s=sessionStorage.getItem('s');if(!s)return false;try{var p=JSON.parse(s);db.ref('utenti/'+p.id).once('value').then(function(snap){if(!snap.exists()){sessionStorage.clear();mostraLogin();return;}avviaApp(p.id,snap.val());});return true;}catch(e){return false;}}
+function avviaApp(id,u){nascondi();document.getElementById('app').classList.add('show');var nome=((u.nome||'')+' '+(u.cognome||'')).trim()||u.ruolo;document.getElementById('rbadge').textContent=u.ruolo.toUpperCase();document.getElementById('wnome').textContent='CIAO, '+(u.nome||u.ruolo).toUpperCase()+'!';document.getElementById('wruolo').textContent='Accesso come '+u.ruolo;document.getElementById('iruolo').textContent=u.ruolo.toUpperCase();document.getElementById('iutente').textContent=nome;toast('✅ ACCESSO EFFETTUATO');}
 function logout(){sessionStorage.clear();location.reload();}
-
-function toast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show');},2500);
-}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 </script>
 
 </body>
