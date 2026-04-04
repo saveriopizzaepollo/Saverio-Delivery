@@ -13,89 +13,174 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
-:root{--blu:#1A3A5C;--blu2:#2B5F8E;--arancione:#E8600A;--verde:#1B8A4A;--rosso:#C0392B;--giallo:#D4A017;}
+:root{--blu:#1A3A5C;--blu2:#2B5F8E;--arancione:#E8600A;--verde:#1B8A4A;--rosso:#C0392B;--giallo:#D4A017;--grigio:#F0F4F8;--bordo:#D0DCE8;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(--blu);overflow:hidden;}
-#loading{position:fixed;inset:0;background:var(--blu);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:var(–blu);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;}
 .logo{font-size:2.2rem;font-weight:900;color:white;letter-spacing:.2em;text-align:center;line-height:1.2;}
-.spinner{width:44px;height:44px;border:5px solid rgba(255,255,255,.15);border-top-color:var(--arancione);border-radius:50%;animation:spin .8s linear infinite;margin-top:2rem;}
+.spinner{width:44px;height:44px;border:5px solid rgba(255,255,255,.15);border-top-color:var(–arancione);border-radius:50%;animation:spin .8s linear infinite;margin-top:2rem;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.lmsg{color:rgba(255,255,255,.4);font-weight:700;font-size:.75rem;letter-spacing:.1em;margin-top:1rem;}
-#login{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;z-index:100;}
+
+/* LOGIN */
+#login{position:fixed;inset:0;background:var(–blu);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;z-index:100;}
 #login.show{display:flex;}
 .login-logo{font-size:1.9rem;font-weight:900;color:white;letter-spacing:.2em;text-align:center;line-height:1.2;margin-bottom:3rem;}
 .lbtns{display:flex;flex-direction:column;gap:1rem;width:100%;max-width:320px;}
-.lbtn{display:flex;align-items:center;justify-content:center;gap:.75rem;padding:1.3rem;border-radius:18px;border:none;cursor:pointer;font-family:'Barlow',sans-serif;font-size:1.15rem;font-weight:900;letter-spacing:.18em;color:white;transition:transform .12s,opacity .12s;}
+.lbtn{display:flex;align-items:center;justify-content:center;gap:.75rem;padding:1.3rem;border-radius:18px;border:none;cursor:pointer;font-family:‘Barlow’,sans-serif;font-size:1.15rem;font-weight:900;letter-spacing:.18em;color:white;transition:transform .12s,opacity .12s;}
 .lbtn:active{transform:scale(.96);opacity:.85;}
 .ba{background:linear-gradient(135deg,#1A3A5C,#0d2238);border:2px solid rgba(255,255,255,.2);}
 .bd{background:linear-gradient(135deg,#2B5F8E,#1d4266);}
 .br{background:linear-gradient(135deg,#E8600A,#c44f08);}
-.ver{color:rgba(255,255,255,.15);font-size:.6rem;font-weight:700;margin-top:2rem;}
-#rider-lista{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;padding:2rem 1.5rem;z-index:100;overflow-y:auto;}
+
+/* RIDER LISTA */
+#rider-lista{position:fixed;inset:0;background:var(–blu);display:none;flex-direction:column;align-items:center;padding:2rem 1.5rem;z-index:100;overflow-y:auto;}
 #rider-lista.show{display:flex;}
-.back{align-self:flex-start;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;font-family:'Barlow',sans-serif;font-weight:900;font-size:.8rem;padding:8px 18px;border-radius:20px;cursor:pointer;letter-spacing:.08em;margin-bottom:2rem;}
+.back{align-self:flex-start;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;font-family:‘Barlow’,sans-serif;font-weight:900;font-size:.8rem;padding:8px 18px;border-radius:20px;cursor:pointer;letter-spacing:.08em;margin-bottom:2rem;}
 .sct{font-size:1.4rem;font-weight:900;color:white;letter-spacing:.15em;margin-bottom:.3rem;}
 .scs{color:rgba(255,255,255,.4);font-weight:700;font-size:.75rem;letter-spacing:.1em;margin-bottom:1.5rem;}
-.rbtn{width:100%;max-width:320px;display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,.07);border-radius:14px;border:1px solid rgba(255,255,255,.12);margin-bottom:.75rem;cursor:pointer;color:white;font-family:'Barlow',sans-serif;}
+.rbtn{width:100%;max-width:320px;display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,.07);border-radius:14px;border:1px solid rgba(255,255,255,.12);margin-bottom:.75rem;cursor:pointer;color:white;font-family:‘Barlow’,sans-serif;}
 .rbtn:active{background:rgba(255,255,255,.15);}
-.rav{width:46px;height:46px;border-radius:50%;background:var(--arancione);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;flex-shrink:0;}
+.rav{width:46px;height:46px;border-radius:50%;background:var(–arancione);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;flex-shrink:0;}
 .rav.new{background:rgba(255,255,255,.12);}
 .rn{font-weight:900;font-size:1rem;}
 .rs{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.4);}
-#pin{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;z-index:100;}
+
+/* PIN */
+#pin{position:fixed;inset:0;background:var(–blu);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;z-index:100;}
 #pin.show{display:flex;}
 .pf{font-size:.8rem;font-weight:900;color:rgba(255,255,255,.4);letter-spacing:.15em;margin-bottom:.3rem;}
 .pn{font-size:1.6rem;font-weight:900;color:white;letter-spacing:.08em;margin-bottom:2rem;text-align:center;}
 .pdots{display:flex;gap:1rem;margin-bottom:2.5rem;}
 .dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:transparent;transition:all .15s;}
-.dot.on{background:var(--arancione);border-color:var(--arancione);transform:scale(1.1);}
+.dot.on{background:var(–arancione);border-color:var(–arancione);transform:scale(1.1);}
 .kpad{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;width:100%;max-width:270px;}
-.key{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:1.1rem;font-family:'Barlow',sans-serif;font-size:1.6rem;font-weight:900;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s;}
+.key{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:1.1rem;font-family:‘Barlow’,sans-serif;font-size:1.6rem;font-weight:900;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s;}
 .key:active{background:rgba(255,255,255,.22);}
 .key.gh{background:transparent;border:none;pointer-events:none;}
 .key.dl{font-size:1.1rem;}
 .perr{color:#ff6b6b;font-weight:900;font-size:.9rem;letter-spacing:.08em;margin-top:1.2rem;display:none;}
-#primo{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;padding:2rem 1.5rem;z-index:100;overflow-y:auto;}
+
+/* PRIMO ACCESSO */
+#primo{position:fixed;inset:0;background:var(–blu);display:none;flex-direction:column;align-items:center;padding:2rem 1.5rem;z-index:100;overflow-y:auto;}
 #primo.show{display:flex;}
 .ff{width:100%;max-width:320px;margin-bottom:1rem;}
 .ff label{display:block;color:rgba(255,255,255,.45);font-weight:900;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.4rem;}
-.ff input{width:100%;padding:.9rem 1rem;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;color:white;font-family:'Barlow',sans-serif;font-size:1rem;font-weight:700;outline:none;}
-.ff input:focus{border-color:var(--arancione);}
+.ff input{width:100%;padding:.9rem 1rem;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;color:white;font-family:‘Barlow’,sans-serif;font-size:1rem;font-weight:700;outline:none;}
+.ff input:focus{border-color:var(–arancione);}
 .ff input::placeholder{color:rgba(255,255,255,.22);}
-.sbtn{width:100%;max-width:320px;padding:1rem;background:var(--arancione);border:none;border-radius:14px;color:white;font-family:'Barlow',sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:.12em;cursor:pointer;margin-top:.5rem;}
+.sbtn{width:100%;max-width:320px;padding:1rem;background:var(–arancione);border:none;border-radius:14px;color:white;font-family:‘Barlow’,sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:.12em;cursor:pointer;margin-top:.5rem;}
 .sbtn:active{opacity:.85;}
+
+/* APP */
 #app{display:none;height:100vh;flex-direction:column;}
 #app.show{display:flex;}
-.hdr{background:var(--blu);color:white;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;flex-shrink:0;}
+.hdr{background:var(–blu);color:white;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;flex-shrink:0;}
 .htit{font-size:1.1rem;font-weight:900;letter-spacing:.2em;}
-.rbadge{background:var(--arancione);color:white;font-size:.6rem;font-weight:900;padding:2px 10px;border-radius:20px;letter-spacing:.08em;}
-.lout{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:white;font-family:'Barlow',sans-serif;font-weight:900;font-size:.65rem;padding:5px 12px;border-radius:20px;cursor:pointer;}
-.cnt{flex:1;overflow-y:auto;padding:1.2rem 1rem 90px;}
+.rbadge{background:var(–arancione);color:white;font-size:.6rem;font-weight:900;padding:2px 10px;border-radius:20px;letter-spacing:.08em;}
+.lout{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:white;font-family:‘Barlow’,sans-serif;font-weight:900;font-size:.65rem;padding:5px 12px;border-radius:20px;cursor:pointer;}
+
+/* CONTENT */
+.cnt{flex:1;overflow-y:auto;padding:1rem 1rem 80px;}
 .cnt::-webkit-scrollbar{display:none;}
-.wcard{background:var(--blu);border-radius:20px;padding:1.5rem;color:white;margin-bottom:1rem;}
-.wt{font-size:1.3rem;font-weight:900;letter-spacing:.05em;margin-bottom:.3rem;}
-.ws{color:rgba(255,255,255,.5);font-weight:700;font-size:.85rem;}
-.okcard{display:flex;align-items:center;gap:.75rem;background:#EAFAF1;border:2px solid #82E0AA;border-radius:14px;padding:1rem;margin-bottom:.75rem;}
-.oktxt{font-weight:900;font-size:.9rem;color:var(--verde);}
-.icard{background:#F0F4F8;border-radius:14px;padding:1rem;margin-bottom:.75rem;border:2px solid #D0DCE8;}
-.il{font-size:.6rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:.3rem;}
-.iv{font-size:1rem;font-weight:900;}
-.fcard{background:#FEF9E7;border:2px solid var(--giallo);border-radius:14px;padding:1rem;font-weight:700;font-size:.85rem;color:#7D6608;line-height:1.6;}
-.nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid #D0DCE8;display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:50;}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;border:none;background:none;cursor:pointer;font-family:'Barlow',sans-serif;color:#aaa;gap:2px;}
-.ni.active{color:var(--blu);}
+.section{display:none;}
+.section.active{display:block;}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(–bordo);display:flex;overflow-x:auto;padding-bottom:env(safe-area-inset-bottom);z-index:50;}
+.nav::-webkit-scrollbar{display:none;}
+.ni{flex:none;min-width:60px;display:flex;flex-direction:column;align-items:center;padding:8px 12px;border:none;background:none;cursor:pointer;font-family:‘Barlow’,sans-serif;color:#aaa;gap:2px;}
+.ni.active{color:var(–blu);}
 .nic{font-size:1.3rem;}
 .nil{font-size:.5rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;}
-.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:var(--blu);color:white;padding:.65rem 1.5rem;border-radius:30px;font-weight:900;font-size:.8rem;z-index:600;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;letter-spacing:.06em;}
+
+/* FORM ELEMENTS */
+.form-group{margin-bottom:1rem;}
+.form-label{display:block;font-weight:900;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(–blu2);margin-bottom:.4rem;}
+.form-input{width:100%;padding:.85rem 1rem;background:var(–grigio);border:2px solid var(–bordo);border-radius:12px;font-family:‘Barlow’,sans-serif;font-size:.95rem;font-weight:700;color:var(–blu);outline:none;}
+.form-input:focus{border-color:var(–blu2);}
+.form-input::placeholder{color:#aaa;}
+.form-select{width:100%;padding:.85rem 1rem;background:var(–grigio);border:2px solid var(–bordo);border-radius:12px;font-family:‘Barlow’,sans-serif;font-size:.95rem;font-weight:700;color:var(–blu);outline:none;-webkit-appearance:none;}
+.form-select:focus{border-color:var(–blu2);}
+
+/* SEZIONE TITOLO */
+.stit{font-size:.7rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(–blu2);margin-bottom:.75rem;margin-top:1.2rem;}
+
+/* FONTE BTNS */
+.fonte-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.2rem;}
+.fonte-btn{padding:1rem;border-radius:14px;border:2px solid var(–bordo);background:var(–grigio);font-family:‘Barlow’,sans-serif;font-size:.9rem;font-weight:900;cursor:pointer;color:var(–blu);text-align:center;letter-spacing:.05em;transition:all .1s;}
+.fonte-btn.sel{background:var(–blu);color:white;border-color:var(–blu);}
+.fonte-btn:active{opacity:.85;}
+
+/* AUTOCOMPLETE */
+.autocomplete{background:white;border:2px solid var(–blu2);border-radius:12px;margin-top:-0.5rem;margin-bottom:.75rem;overflow:hidden;display:none;}
+.ac-item{padding:.75rem 1rem;cursor:pointer;border-bottom:1px solid var(–bordo);font-weight:700;font-size:.9rem;}
+.ac-item:last-child{border-bottom:none;}
+.ac-item:active{background:var(–grigio);}
+.ac-nome{font-weight:900;}
+.ac-det{font-size:.75rem;color:#888;margin-top:2px;}
+
+/* PRODOTTI */
+.prodotti-box{border:2px solid var(–bordo);border-radius:14px;overflow:hidden;margin-bottom:.75rem;}
+.prod-row{display:flex;gap:.4rem;padding:.5rem;border-bottom:1px solid var(–bordo);align-items:center;}
+.prod-row:last-child{border-bottom:none;}
+.prod-qty{width:44px;padding:.4rem;text-align:center;border:1px solid var(–bordo);border-radius:8px;font-family:‘Barlow’,sans-serif;font-weight:900;font-size:.9rem;color:var(–blu);background:var(–grigio);}
+.prod-nome{flex:1;padding:.4rem;border:1px solid var(–bordo);border-radius:8px;font-family:‘Barlow’,sans-serif;font-weight:700;font-size:.85rem;color:var(–blu);background:var(–grigio);}
+.prod-prezzo{width:60px;padding:.4rem;text-align:right;border:1px solid var(–bordo);border-radius:8px;font-family:‘Barlow’,sans-serif;font-weight:700;font-size:.85rem;color:var(–blu);background:var(–grigio);}
+.prod-tot{width:52px;font-weight:900;font-size:.8rem;text-align:right;color:var(–blu);flex-shrink:0;}
+.prod-del{background:none;border:none;font-size:1rem;cursor:pointer;padding:0 2px;flex-shrink:0;}
+.add-prod-btn{width:100%;padding:.7rem;background:var(–grigio);border:2px dashed var(–bordo);border-radius:12px;font-family:‘Barlow’,sans-serif;font-weight:900;font-size:.8rem;cursor:pointer;color:#888;letter-spacing:.05em;margin-bottom:.75rem;}
+
+/* TOTALE */
+.tot-row{display:flex;justify-content:space-between;padding:.4rem 0;font-size:.9rem;font-weight:700;color:#666;}
+.tot-row.finale{font-size:1.15rem;font-weight:900;color:var(–blu);border-top:2px solid var(–bordo);margin-top:.3rem;padding-top:.75rem;}
+
+/* AVVISO ZONA */
+.avviso-zona{background:#FEF9E7;border:2px solid var(–giallo);border-radius:12px;padding:.75rem 1rem;margin-top:.5rem;margin-bottom:.5rem;display:none;gap:.5rem;align-items:flex-start;}
+.avviso-zona.show{display:flex;}
+.avviso-testo{font-size:.8rem;font-weight:700;color:#7D6608;line-height:1.4;}
+
+/* BTN PRIMARIO */
+.btn-primary{width:100%;padding:1rem;background:var(–arancione);border:none;border-radius:14px;color:white;font-family:‘Barlow’,sans-serif;font-size:1rem;font-weight:900;letter-spacing:.1em;cursor:pointer;margin-top:.5rem;margin-bottom:1rem;}
+.btn-primary:active{opacity:.85;}
+.btn-secondary{padding:.7rem 1.2rem;background:var(–grigio);border:2px solid var(–bordo);border-radius:12px;font-family:‘Barlow’,sans-serif;font-size:.85rem;font-weight:900;cursor:pointer;color:var(–blu);}
+
+/* CLIENTI */
+.search-box{position:relative;margin-bottom:1rem;}
+.search-input{width:100%;padding:.85rem 1rem .85rem 2.8rem;background:var(–grigio);border:2px solid var(–bordo);border-radius:14px;font-family:‘Barlow’,sans-serif;font-size:.95rem;font-weight:700;color:var(–blu);outline:none;}
+.search-input:focus{border-color:var(–blu2);}
+.search-icon{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none;}
+.cliente-card{background:var(–grigio);border-radius:12px;padding:.85rem 1rem;margin-bottom:.5rem;border:2px solid var(–bordo);display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.cliente-card:active{background:var(–bordo);}
+.cl-nome{font-weight:900;font-size:.95rem;}
+.cl-det{font-size:.75rem;font-weight:700;color:#888;margin-top:2px;}
+.empty{text-align:center;padding:3rem 1rem;color:#aaa;}
+.empty-icon{font-size:3rem;margin-bottom:.5rem;}
+.empty-txt{font-weight:900;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:none;align-items:flex-end;justify-content:center;}
+.modal-ov.show{display:flex;}
+.modal{background:white;border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-height:90vh;overflow-y:auto;}
+.modal::-webkit-scrollbar{display:none;}
+.modal-title{font-size:1rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.2rem;}
+.modal-btns{display:flex;gap:.75rem;margin-top:1rem;}
+.mbtn-cancel{flex:1;padding:.9rem;background:var(–grigio);border:2px solid var(–bordo);border-radius:12px;font-family:‘Barlow’,sans-serif;font-size:.9rem;font-weight:900;cursor:pointer;color:var(–blu);}
+.mbtn-confirm{flex:1;padding:.9rem;background:var(–verde);border:none;border-radius:12px;font-family:‘Barlow’,sans-serif;font-size:.9rem;font-weight:900;cursor:pointer;color:white;}
+.mbtn-danger{flex:1;padding:.9rem;background:var(–rosso);border:none;border-radius:12px;font-family:‘Barlow’,sans-serif;font-size:.9rem;font-weight:900;cursor:pointer;color:white;}
+
+/* TOAST */
+.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:var(–blu);color:white;padding:.65rem 1.5rem;border-radius:30px;font-weight:900;font-size:.8rem;z-index:600;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;letter-spacing:.06em;}
 .toast.show{opacity:1;}
 </style>
+
 </head>
 <body>
 
 <div id="loading">
   <div class="logo">SAVERIO<br>DELIVERY</div>
   <div class="spinner"></div>
-  <div class="lmsg">CARICAMENTO...</div>
 </div>
 
 <div id="login">
@@ -105,7 +190,6 @@ html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(
     <button class="lbtn bd" onclick="avviaLogin('dispatch','DISPATCH')">📦 DISPATCH</button>
     <button class="lbtn br" onclick="apriRider()">🛵 RIDERS</button>
   </div>
-  <div class="ver">SAVERIO DELIVERY · FASE 1</div>
 </div>
 
 <div id="rider-lista">
@@ -123,18 +207,10 @@ html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(
     <div class="dot" id="d2"></div><div class="dot" id="d3"></div>
   </div>
   <div class="kpad">
-    <button class="key" onclick="k('1')">1</button>
-    <button class="key" onclick="k('2')">2</button>
-    <button class="key" onclick="k('3')">3</button>
-    <button class="key" onclick="k('4')">4</button>
-    <button class="key" onclick="k('5')">5</button>
-    <button class="key" onclick="k('6')">6</button>
-    <button class="key" onclick="k('7')">7</button>
-    <button class="key" onclick="k('8')">8</button>
-    <button class="key" onclick="k('9')">9</button>
-    <button class="key gh"></button>
-    <button class="key" onclick="k('0')">0</button>
-    <button class="key dl" onclick="kd()">⌫</button>
+    <button class="key" onclick="k('1')">1</button><button class="key" onclick="k('2')">2</button><button class="key" onclick="k('3')">3</button>
+    <button class="key" onclick="k('4')">4</button><button class="key" onclick="k('5')">5</button><button class="key" onclick="k('6')">6</button>
+    <button class="key" onclick="k('7')">7</button><button class="key" onclick="k('8')">8</button><button class="key" onclick="k('9')">9</button>
+    <button class="key gh"></button><button class="key" onclick="k('0')">0</button><button class="key dl" onclick="kd()">⌫</button>
   </div>
   <div class="perr" id="perr">❌ PIN ERRATO — RIPROVA</div>
   <button class="back" style="margin-top:1.5rem" onclick="tornaLogin()">← INDIETRO</button>
@@ -150,6 +226,8 @@ html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(
   <button class="sbtn" onclick="registra()">REGISTRATI →</button>
 </div>
 
+<!-- APP -->
+
 <div id="app">
   <div class="hdr">
     <div class="htit">SAVERIO DELIVERY</div>
@@ -158,57 +236,139 @@ html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(
       <button class="lout" onclick="logout()">ESCI</button>
     </div>
   </div>
+
   <div class="cnt">
-    <div class="wcard">
-      <div class="wt" id="wnome">BENVENUTO!</div>
-      <div class="ws" id="wruolo">—</div>
-    </div>
-    <div class="okcard">
-      <span style="font-size:1.5rem">✅</span>
-      <span class="oktxt">FIREBASE CONNESSO E FUNZIONANTE</span>
-    </div>
-    <div class="icard"><div class="il">PROGETTO</div><div class="iv">saverio-delivery</div></div>
-    <div class="icard"><div class="il">RUOLO</div><div class="iv" id="iruolo">—</div></div>
-    <div class="icard"><div class="il">UTENTE</div><div class="iv" id="iutente">—</div></div>
-    <div class="fcard">
-      ⚙️ <strong>FASE 1 OK</strong><br><br>
-      ✅ Login Admin / Dispatch / Rider<br>
-      ✅ Firebase connesso<br>
-      ✅ PIN verificato su database<br>
-      ✅ Sessione persistente<br>
-      ✅ Reset mezzanotte<br><br>
-      👉 Se funziona, passiamo alla Fase 2!
+
+```
+<!-- NUOVO ORDINE -->
+<div id="sec-ordine" class="section">
+  <div class="stit">FONTE ORDINE</div>
+  <div class="fonte-row">
+    <button class="fonte-btn sel" id="btn-tel" onclick="setFonte('telefono')">📞 TELEFONO</button>
+    <button class="fonte-btn" id="btn-wa" onclick="setFonte('whatsapp')">💬 WHATSAPP</button>
+  </div>
+
+  <div class="stit">CLIENTE</div>
+  <div class="form-group">
+    <label class="form-label">CERCA PER COGNOME O TELEFONO</label>
+    <input class="form-input" type="text" id="cerca-cl" placeholder="Scrivi per cercare..." oninput="cercaCliente(this.value)">
+  </div>
+  <div class="autocomplete" id="autocomplete"></div>
+
+  <div class="form-group">
+    <label class="form-label">COGNOME</label>
+    <input class="form-input" type="text" id="o-cognome" placeholder="Cognome">
+  </div>
+  <div class="form-group">
+    <label class="form-label">NOME</label>
+    <input class="form-input" type="text" id="o-nome" placeholder="Nome">
+  </div>
+  <div class="form-group">
+    <label class="form-label">TELEFONO</label>
+    <input class="form-input" type="tel" id="o-tel" placeholder="Telefono">
+  </div>
+  <div class="form-group">
+    <label class="form-label">INDIRIZZO</label>
+    <input class="form-input" type="text" id="o-indirizzo" placeholder="Via, numero civico">
+  </div>
+
+  <div class="stit">ZONA DI CONSEGNA</div>
+  <div class="form-group">
+    <select class="form-select" id="o-zona" onchange="cambiaZona()">
+      <option value="">— SELEZIONA ZONA —</option>
+      <option value="centro" data-costo="1" data-tipo="verde">🔴 CENTRO / ZONA ROSSA — €1</option>
+      <option value="altarello" data-costo="2" data-tipo="blu">🔵 ALTARELLO / ZISA / BONAGIA — €2</option>
+      <option value="ficarazzi" data-costo="3" data-tipo="blu">🔵 FICARAZZI / VILLABATE / CANNITA — €3</option>
+    </select>
+  </div>
+  <div class="avviso-zona" id="avviso-zona">
+    <span>⚠️</span>
+    <span class="avviso-testo" id="avviso-testo"></span>
+  </div>
+
+  <div class="stit">PRODOTTI</div>
+  <div class="prodotti-box" id="prodotti-box"></div>
+  <button class="add-prod-btn" onclick="aggiungiProdotto()">+ AGGIUNGI PRODOTTO</button>
+
+  <div class="tot-row"><span>PRODOTTI</span><span id="sub-prod">€0.00</span></div>
+  <div class="tot-row"><span>CONSEGNA</span><span id="sub-cons">€0.00</span></div>
+  <div class="tot-row finale"><span>TOTALE</span><span id="sub-tot">€0.00</span></div>
+
+  <div class="form-group" style="margin-top:1rem">
+    <label class="form-label">NOTE (CITOFONO, PIANO, ECC.)</label>
+    <input class="form-input" type="text" id="o-note" placeholder="Es. Citofono Rossi, 3° piano">
+  </div>
+
+  <button class="btn-primary" onclick="inviaOrdine()">📤 INVIA IN CUCINA</button>
+</div>
+
+<!-- CLIENTI -->
+<div id="sec-clienti" class="section">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" type="text" id="cerca-rubrica" placeholder="Cerca cognome o telefono..." oninput="cercaRubrica(this.value)">
+  </div>
+  <div id="lista-clienti"></div>
+</div>
+```
+
+  </div>
+
+  <nav class="nav" id="nav"></nav>
+</div>
+
+<!-- MODAL CLIENTE -->
+
+<div class="modal-ov" id="modal-cliente">
+  <div class="modal">
+    <div class="modal-title">DETTAGLIO CLIENTE</div>
+    <div id="modal-cliente-body"></div>
+    <div class="modal-btns">
+      <button class="mbtn-danger" id="btn-elimina-cl" onclick="eliminaCliente()" style="display:none">ELIMINA</button>
+      <button class="mbtn-cancel" onclick="chiudiModal('modal-cliente')">CHIUDI</button>
     </div>
   </div>
-  <nav class="nav">
-    <button class="ni active"><span class="nic">🏠</span><span class="nil">HOME</span></button>
-  </nav>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 var cfg={apiKey:"AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",authDomain:"saverio-delivery.firebaseapp.com",databaseURL:"https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",projectId:"saverio-delivery",storageBucket:"saverio-delivery.firebasestorage.app",messagingSenderId:"913928598350",appId:"1:913928598350:web:98489624879baabe27241f"};
-var db,pinBuf='',pinId=null,pinNome=null;
+
+var db, pinBuf='', pinId=null, pinNome=null;
+var statoUtente={id:null,ruolo:null,utente:null};
+var prodotti=[], costoZona=0, fonte='telefono', clienteSelId=null, clienteDetId=null;
+var cacheClienti={};
+
+// ===== INIT =====
 window.onload=function(){
   try{
     firebase.initializeApp(cfg);
     db=firebase.database();
-    db.ref('utenti/admin').once('value').then(function(snap){
-      if(!snap.exists()){
+    db.ref('utenti/admin').once('value').then(function(s){
+      if(!s.exists()){
         db.ref('utenti/admin').set({nome:'Saverio',cognome:'',telefono:'',ruolo:'admin',pin:'1234',softpos:false,attivo:true});
         db.ref('utenti/dispatch').set({nome:'Dispatch',cognome:'',telefono:'',ruolo:'dispatch',pin:'0000',softpos:false,attivo:true});
       }
       if(!ripristinaSessione()) mostraLogin();
     }).catch(function(){mostraLogin();});
   }catch(e){mostraLogin();}
-  setTimeout(function(){if(document.getElementById('loading').style.display!=='none') mostraLogin();},4000);
+  setTimeout(function(){if(document.getElementById('loading').style.display!=='none')mostraLogin();},4000);
   resetMezzanotte();
 };
+
 function resetMezzanotte(){var d=new Date(),k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),u=localStorage.getItem('rd');if(u&&u!==k)sessionStorage.clear();localStorage.setItem('rd',k);var mn=new Date();mn.setHours(24,0,10,0);setTimeout(function(){sessionStorage.clear();location.reload();},mn-d);}
-function nascondi(){document.getElementById('loading').style.display='none';['login','rider-lista','pin','primo','app'].forEach(function(id){document.getElementById(id).classList.remove('show');});}
+
+// ===== SCHERMATA =====
+function nascondi(){
+  document.getElementById('loading').style.display='none';
+  ['login','rider-lista','pin','primo','app'].forEach(function(id){document.getElementById(id).classList.remove('show');});
+}
 function mostraLogin(){nascondi();document.getElementById('login').classList.add('show');}
+
+// ===== LOGIN =====
 function avviaLogin(uid,nome){pinId=uid;pinNome=nome;nascondi();document.getElementById('pin').classList.add('show');document.getElementById('pnome').textContent=nome;document.getElementById('perr').style.display='none';pinBuf='';dots();}
+
 function apriRider(){
   nascondi();document.getElementById('rider-lista').classList.add('show');
   db.ref('utenti').once('value').then(function(snap){
@@ -226,8 +386,235 @@ function dots(){for(var i=0;i<4;i++)document.getElementById('d'+i).classList.tog
 function verificaPin(){db.ref('utenti/'+pinId).once('value').then(function(snap){if(!snap.exists()){errPin();return;}var u=snap.val();if(u.pin===pinBuf){sessionStorage.setItem('s',JSON.stringify({id:pinId,ruolo:u.ruolo}));avviaApp(pinId,u);}else errPin();}).catch(function(){errPin();});}
 function errPin(){document.getElementById('perr').style.display='block';pinBuf='';dots();setTimeout(function(){document.getElementById('perr').style.display='none';},2500);}
 function ripristinaSessione(){var s=sessionStorage.getItem('s');if(!s)return false;try{var p=JSON.parse(s);db.ref('utenti/'+p.id).once('value').then(function(snap){if(!snap.exists()){sessionStorage.clear();mostraLogin();return;}avviaApp(p.id,snap.val());});return true;}catch(e){return false;}}
-function avviaApp(id,u){nascondi();document.getElementById('app').classList.add('show');var nome=((u.nome||'')+' '+(u.cognome||'')).trim()||u.ruolo;document.getElementById('rbadge').textContent=u.ruolo.toUpperCase();document.getElementById('wnome').textContent='CIAO, '+(u.nome||u.ruolo).toUpperCase()+'!';document.getElementById('wruolo').textContent='Accesso come '+u.ruolo;document.getElementById('iruolo').textContent=u.ruolo.toUpperCase();document.getElementById('iutente').textContent=nome;toast('✅ ACCESSO EFFETTUATO');}
 function logout(){sessionStorage.clear();location.reload();}
+
+// ===== APP =====
+function avviaApp(id,u){
+  statoUtente={id:id,ruolo:u.ruolo,utente:u};
+  nascondi();
+  document.getElementById('app').classList.add('show');
+  document.getElementById('rbadge').textContent=u.ruolo.toUpperCase();
+  costruisciNav(u.ruolo);
+  if(u.ruolo==='rider') mostraSezione('ordine');
+  else mostraSezione('ordine');
+  toast('✅ CIAO, '+(u.nome||u.ruolo).toUpperCase()+'!');
+}
+
+function costruisciNav(ruolo){
+  var nav=document.getElementById('nav');
+  nav.innerHTML='';
+  var voci=[];
+  if(ruolo==='admin'||ruolo==='dispatch'){
+    voci=[{id:'ordine',ic:'🆕',lb:'ORDINE'},{id:'clienti',ic:'👥',lb:'CLIENTI'}];
+  } else {
+    voci=[{id:'ordine',ic:'🆕',lb:'ORDINE'}];
+  }
+  voci.forEach(function(v){
+    var b=document.createElement('button');
+    b.className='ni';b.id='nav-'+v.id;
+    b.innerHTML='<span class="nic">'+v.ic+'</span><span class="nil">'+v.lb+'</span>';
+    b.onclick=function(){mostraSezione(v.id);};
+    nav.appendChild(b);
+  });
+}
+
+function mostraSezione(id){
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.ni').forEach(function(b){b.classList.remove('active');});
+  var sec=document.getElementById('sec-'+id);
+  if(sec)sec.classList.add('active');
+  var nb=document.getElementById('nav-'+id);
+  if(nb)nb.classList.add('active');
+  if(id==='ordine')initOrdine();
+  if(id==='clienti')caricaClienti('');
+}
+
+// ===== NUOVO ORDINE =====
+function initOrdine(){
+  prodotti=[];costoZona=0;fonte='telefono';clienteSelId=null;
+  document.getElementById('btn-tel').classList.add('sel');
+  document.getElementById('btn-wa').classList.remove('sel');
+  ['cerca-cl','o-cognome','o-nome','o-tel','o-indirizzo','o-note'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.value='';
+  });
+  document.getElementById('o-zona').value='';
+  document.getElementById('avviso-zona').classList.remove('show');
+  document.getElementById('autocomplete').style.display='none';
+  aggiornaRighe();
+  aggiungiProdotto();
+  aggiornaTotali();
+}
+
+function setFonte(f){
+  fonte=f;
+  document.getElementById('btn-tel').classList.toggle('sel',f==='telefono');
+  document.getElementById('btn-wa').classList.toggle('sel',f==='whatsapp');
+}
+
+function cercaCliente(val){
+  var ac=document.getElementById('autocomplete');
+  if(!val||val.length<2){ac.style.display='none';return;}
+  db.ref('clienti').once('value').then(function(snap){
+    var ris=[];
+    if(snap.exists())snap.forEach(function(c){
+      var cl=c.val();
+      var txt=((cl.cognome||'')+(cl.nome||'')+(cl.telefono||'')).toLowerCase();
+      if(txt.includes(val.toLowerCase()))ris.push({id:c.key,cognome:cl.cognome||'',nome:cl.nome||'',telefono:cl.telefono||'',indirizzo:cl.indirizzo||''});
+    });
+    if(!ris.length){ac.style.display='none';return;}
+    ac.style.display='block';
+    ac.innerHTML=ris.slice(0,6).map(function(cl){
+      return '<div class="ac-item" onclick="selCliente(\''+cl.id+'\')"><div class="ac-nome">'+cl.cognome+' '+cl.nome+'</div><div class="ac-det">📞 '+cl.telefono+' — 📍 '+cl.indirizzo+'</div></div>';
+    }).join('');
+  });
+}
+
+function selCliente(id){
+  clienteSelId=id;
+  db.ref('clienti/'+id).once('value').then(function(snap){
+    var cl=snap.val();if(!cl)return;
+    document.getElementById('o-cognome').value=cl.cognome||'';
+    document.getElementById('o-nome').value=cl.nome||'';
+    document.getElementById('o-tel').value=cl.telefono||'';
+    document.getElementById('o-indirizzo').value=cl.indirizzo||'';
+    document.getElementById('cerca-cl').value=(cl.cognome||'')+' '+(cl.nome||'');
+    document.getElementById('autocomplete').style.display='none';
+  });
+}
+
+function cambiaZona(){
+  var sel=document.getElementById('o-zona');
+  var opt=sel.options[sel.selectedIndex];
+  costoZona=parseFloat(opt.getAttribute('data-costo')||0);
+  var tipo=opt.getAttribute('data-tipo')||'';
+  var av=document.getElementById('avviso-zona');
+  if(tipo==='blu'){
+    var adesso=new Date(),ore=adesso.getHours()*60+adesso.getMinutes();
+    var inOrario=(ore>=1110&&ore<=1140)||(ore>=1275&&ore<=1305);
+    var sabdom=[0,6].includes(adesso.getDay());
+    if(!inOrario){
+      document.getElementById('avviso-testo').textContent='ZONA BLU FUORI ORARIO CONSIGLIATO (18:30-19:00 e 21:15-21:45)'+(sabdom?' · SABATO/DOMENICA: EVITARE SE POSSIBILE':'');
+      av.classList.add('show');
+    } else av.classList.remove('show');
+  } else av.classList.remove('show');
+  aggiornaTotali();
+}
+
+function aggiungiProdotto(){
+  prodotti.push({qty:1,nome:'',prezzo:0});
+  aggiornaRighe();
+  aggiornaTotali();
+}
+
+function aggiornaRighe(){
+  var box=document.getElementById('prodotti-box');
+  box.innerHTML=prodotti.map(function(p,i){
+    return '<div class="prod-row">'+
+      '<input class="prod-qty" type="number" min="1" value="'+p.qty+'" onchange="updProd('+i+',\'qty\',this.value)">'+
+      '<input class="prod-nome" type="text" placeholder="Prodotto" value="'+p.nome+'" oninput="updProd('+i+',\'nome\',this.value)">'+
+      '<input class="prod-prezzo" type="number" min="0" step="0.5" placeholder="€" value="'+(p.prezzo||'')+'" onchange="updProd('+i+',\'prezzo\',this.value)">'+
+      '<span class="prod-tot" id="ptot-'+i+'">'+fmtE((p.qty||1)*(p.prezzo||0))+'</span>'+
+      '<button class="prod-del" onclick="delProd('+i+')">🗑️</button>'+
+    '</div>';
+  }).join('');
+}
+
+function updProd(i,campo,val){
+  prodotti[i][campo]=campo==='nome'?val:(parseFloat(val)||0);
+  var el=document.getElementById('ptot-'+i);
+  if(el)el.textContent=fmtE((prodotti[i].qty||1)*(prodotti[i].prezzo||0));
+  aggiornaTotali();
+}
+
+function delProd(i){
+  if(prodotti.length<=1)return;
+  prodotti.splice(i,1);aggiornaRighe();aggiornaTotali();
+}
+
+function aggiornaTotali(){
+  var sp=prodotti.reduce(function(s,p){return s+(p.qty||1)*(p.prezzo||0);},0);
+  document.getElementById('sub-prod').textContent=fmtE(sp);
+  document.getElementById('sub-cons').textContent=fmtE(costoZona);
+  document.getElementById('sub-tot').textContent=fmtE(sp+costoZona);
+}
+
+function fmtE(n){return '€'+parseFloat(n||0).toFixed(2);}
+
+function dataOggi(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+
+function inviaOrdine(){
+  var cognome=document.getElementById('o-cognome').value.trim();
+  var nome=document.getElementById('o-nome').value.trim();
+  var tel=document.getElementById('o-tel').value.trim();
+  var indirizzo=document.getElementById('o-indirizzo').value.trim();
+  var note=document.getElementById('o-note').value.trim();
+  var sel=document.getElementById('o-zona');
+  var zona=sel.value;
+  var zonaNome=zona?(sel.options[sel.selectedIndex].text.replace(/^[🔴🔵] /,'')):'';
+  if(!cognome&&!nome){alert('Inserisci cognome o nome del cliente');return;}
+  if(!indirizzo){alert('Inserisci indirizzo');return;}
+  if(!zona){alert('Seleziona zona di consegna');return;}
+  var sp=prodotti.reduce(function(s,p){return s+(p.qty||1)*(p.prezzo||0);},0);
+  var totale=sp+costoZona;
+  // Salva/aggiorna cliente
+  var datiCl={cognome:cognome,nome:nome,telefono:tel,indirizzo:indirizzo};
+  if(clienteSelId){db.ref('clienti/'+clienteSelId).update(datiCl);}
+  else if(cognome||nome){var ref=db.ref('clienti').push();ref.set(datiCl);clienteSelId=ref.key;}
+  // Crea ordine
+  var ordine={cognome:cognome,nome:nome,telefono:tel,indirizzo:indirizzo,note:note,zona:zona,zonaNome:zonaNome,costoConsegna:costoZona,prodotti:prodotti.filter(function(p){return p.nome;}),totale:totale,stato:'in_cucina',fonte:fonte,clienteId:clienteSelId||null,data:dataOggi(),ts:Date.now(),creatoDa:statoUtente.id};
+  db.ref('ordini').push(ordine).then(function(){
+    toast('✅ ORDINE INVIATO IN CUCINA');
+    initOrdine();
+  });
+}
+
+// ===== CLIENTI =====
+function caricaClienti(query){
+  var cont=document.getElementById('lista-clienti');
+  cont.innerHTML='<div class="empty"><div class="empty-icon">⏳</div><div class="empty-txt">CARICAMENTO...</div></div>';
+  db.ref('clienti').once('value').then(function(snap){
+    cacheClienti={};
+    if(snap.exists())snap.forEach(function(c){cacheClienti[c.key]=c.val();});
+    renderClienti(query);
+  });
+}
+
+function cercaRubrica(val){renderClienti(val);}
+
+function renderClienti(query){
+  var cont=document.getElementById('lista-clienti');
+  var cl=Object.entries(cacheClienti);
+  if(query)cl=cl.filter(function(e){return ((e[1].cognome||'')+(e[1].nome||'')+(e[1].telefono||'')).toLowerCase().includes(query.toLowerCase());});
+  cl.sort(function(a,b){return (a[1].cognome||'').localeCompare(b[1].cognome||'');});
+  if(!cl.length){cont.innerHTML='<div class="empty"><div class="empty-icon">👥</div><div class="empty-txt">NESSUN CLIENTE</div></div>';return;}
+  cont.innerHTML=cl.map(function(e){
+    var id=e[0],c=e[1];
+    return '<div class="cliente-card" onclick="apriCliente(\''+id+'\')"><div><div class="cl-nome">'+(c.cognome||'')+' '+(c.nome||'')+'</div><div class="cl-det">📞 '+(c.telefono||'—')+' · 📍 '+(c.indirizzo||'—')+'</div></div><span style="font-size:1.2rem;color:#aaa">›</span></div>';
+  }).join('');
+}
+
+function apriCliente(id){
+  clienteDetId=id;
+  var c=cacheClienti[id];if(!c)return;
+  document.getElementById('modal-cliente-body').innerHTML='<div style="background:var(--grigio);border-radius:12px;padding:1rem;"><div style="font-size:1.1rem;font-weight:900;margin-bottom:.5rem">'+(c.cognome||'')+' '+(c.nome||'')+'</div><div style="font-weight:700;margin-bottom:3px">📞 '+(c.telefono||'—')+'</div><div style="font-weight:700">📍 '+(c.indirizzo||'—')+'</div></div>';
+  document.getElementById('btn-elimina-cl').style.display=statoUtente.ruolo==='admin'?'flex':'none';
+  document.getElementById('modal-cliente').classList.add('show');
+}
+
+function eliminaCliente(){
+  if(!clienteDetId)return;
+  if(!confirm('Eliminare questo cliente?'))return;
+  db.ref('clienti/'+clienteDetId).remove().then(function(){
+    delete cacheClienti[clienteDetId];
+    chiudiModal('modal-cliente');
+    renderClienti(document.getElementById('cerca-rubrica').value);
+    toast('CLIENTE ELIMINATO');
+  });
+}
+
+function chiudiModal(id){document.getElementById(id).classList.remove('show');}
+document.querySelectorAll('.modal-ov').forEach(function(ov){ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('show');});});
+
 function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 </script>
 
