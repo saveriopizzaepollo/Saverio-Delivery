@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Saverio Delivery Pro v10</title>
+    <title>Saverio Delivery Pro v11</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -12,33 +12,32 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; }
         body { background: var(--gri); color: var(--blu); height: 100vh; overflow: hidden; }
 
-        /* Struttura */
+        /* UI Base */
         .page { position: fixed; inset: 0; background: var(--blu); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
         .page.show { display: flex; }
         #app { display: none; flex-direction: column; height: 100vh; background: white; }
         #app.show { display: flex; }
-        .hdr { background: var(--blu); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; height: 60px; flex-shrink: 0; }
+        .hdr { background: var(--blu); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; height: 60px; }
         .cnt { flex: 1; overflow-y: auto; padding: 15px 15px 120px; }
         
-        /* Navigazione */
         .nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid var(--bor); display: flex; padding-bottom: env(safe-area-inset-bottom); z-index: 99; }
         .ni { flex: 1; padding: 15px 5px; text-align: center; background: none; border: none; color: #aaa; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; }
         .ni.active { color: var(--blu); border-top: 5px solid var(--ora); }
 
-        /* Nuovo Ordine - Design Schizzo */
-        .f-input { width: 100%; padding: 15px; border: 2px solid var(--bor); border-radius: 15px; font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; }
+        /* Form Ordine - Design Extra Large */
+        .f-input { width: 100%; padding: 15px; border: 2px solid var(--bor); border-radius: 15px; font-weight: 700; font-size: 1.3rem; margin-bottom: 10px; outline: none; }
         .f-input.error { border-color: var(--ros) !important; background: #FFF5F5; }
         
         .scrivania { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 15px; margin-bottom: 20px; }
         .box-pizze { border: 4px solid var(--blu); border-radius: 15px; padding: 12px; background: #fff; min-height: 250px; }
         .p-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
-        .btn-gf { width: 45px; height: 45px; border-radius: 10px; border: 2px solid var(--ver); color: var(--ver); font-weight: 900; background: white; font-size: 0.8rem; flex-shrink: 0; }
+        .btn-gf { width: 45px; height: 45px; border-radius: 10px; border: 2px solid var(--ver); color: var(--ver); font-weight: 900; background: white; font-size: 0.8rem; }
         .btn-gf.active { background: var(--ver); color: white; }
-        .p-nome { flex: 1; border: none; border-bottom: 2px dashed #ccc; font-weight: 900; font-size: 1.3rem; padding: 5px; }
-        .p-prezzo { width: 80px; border: 2px solid var(--bor); text-align: right; font-weight: 900; border-radius: 8px; padding: 8px; font-size: 1.1rem; }
+        .p-nome { flex: 1; border: none; border-bottom: 2px dashed #ccc; font-weight: 900; font-size: 1.4rem; padding: 5px; }
+        .p-prezzo { width: 85px; border: 2px solid var(--bor); text-align: right; font-weight: 900; border-radius: 8px; padding: 8px; font-size: 1.2rem; }
 
         .box-special { display: flex; flex-direction: column; gap: 10px; }
-        .btn-main { width: 100%; padding: 20px; background: white; border: 4px solid var(--blu); border-radius: 15px; font-weight: 900; font-size: 1.4rem; cursor: pointer; }
+        .btn-main { width: 100%; padding: 18px; background: white; border: 4px solid var(--blu); border-radius: 15px; font-weight: 900; font-size: 1.3rem; cursor: pointer; }
         .grid-v { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
         .v-btn { padding: 10px 2px; font-size: 0.65rem; font-weight: 900; border: none; border-radius: 6px; background: var(--ros); color: white; }
         .v-gf { background: var(--ver) !important; }
@@ -49,14 +48,14 @@
         .q-btn.sel { background: var(--blu); color: white; }
         .q-btn.sel-paga { background: var(--ora); color: white; border-color: var(--ora); }
 
-        /* Card Ordine - 4 Liste */
+        /* Card Liste Professionali */
         .card { background: white; border: 2px solid var(--bor); border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .c-cog { font-size: 2.2rem; font-weight: 900; display: block; line-height: 1; }
-        .c-ind { font-size: 1.5rem; font-weight: 700; color: var(--blu2); display: block; margin: 8px 0; }
-        .badge { position: absolute; top: 20px; right: 20px; padding: 8px 15px; border-radius: 10px; font-weight: 900; font-size: 1.1rem; text-align: center; }
+        .c-cog { font-size: 2.3rem; font-weight: 900; display: block; line-height: 1; }
+        .c-ind { font-size: 1.6rem; font-weight: 700; color: var(--blu2); display: block; margin: 10px 0; }
+        .badge { position: absolute; top: 20px; right: 20px; padding: 10px 15px; border-radius: 12px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; }
         .p-pos { background: var(--ros); color: white; }
         .p-pag { background: var(--ver); color: white; }
-        .p-cont { background: #FFD700; color: var(--blu); }
+        .p-con { background: #FFD700; color: var(--blu); }
 
         .btn-azione { width: 100%; margin-top: 15px; padding: 18px; border-radius: 15px; border: none; font-weight: 900; color: white; font-size: 1.2rem; cursor: pointer; }
         
@@ -64,7 +63,7 @@
         #mappa-overlay { position: fixed; inset: 0; background: white; z-index: 200; display: none; flex-direction: column; }
         #mappa-overlay.show { display: flex; }
 
-        /* PIN Pad */
+        /* PIN */
         .dot { width: 20px; height: 20px; border: 2px solid white; border-radius: 50%; margin: 0 8px; }
         .dot.on { background: var(--ora); border-color: var(--ora); }
         .key { width: 85px; height: 85px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 2rem; font-weight: 900; border-radius: 20px; margin: 8px; }
@@ -103,7 +102,7 @@
         <button onclick="toggleMappa()" style="background:white; color:var(--blu); border:none; padding:8px 15px; border-radius:10px; font-weight:900">CHIUDI X</button>
     </div>
     <div style="flex:1; background:#eee; display:flex; align-items:center; justify-content:center; text-align:center; padding:40px">
-        <h2 style="color:#666">Qui vedrai la mappa con gli ordini attivi per coordinare le zone senza perdere i dati dell'ordine.</h2>
+        <h2 style="color:#666">Qui vedrai gli ordini attivi per coordinare le zone senza perdere i dati dell'ordine.</h2>
     </div>
 </div>
 
@@ -119,10 +118,10 @@
             <button class="btn-azione" style="background:var(--blu2); margin-bottom:20px" onclick="toggleMappa()">🗺️ CONTROLLA ZONE E ORARI</button>
             
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
-                <input type="text" id="o-cog" class="f-input" style="font-size:1.8rem" placeholder="COGNOME *">
+                <input type="text" id="o-cog" class="f-input" placeholder="COGNOME *">
                 <input type="tel" id="o-cel" class="f-input" placeholder="CELLULARE *">
             </div>
-            <input type="text" id="o-ind" class="f-input" style="font-size:1.4rem" placeholder="INDIRIZZO (VIA E CIVICO) *">
+            <input type="text" id="o-ind" class="f-input" placeholder="INDIRIZZO (VIA E CIVICO) *">
             
             <div class="scrivania">
                 <div class="box-pizze">
@@ -148,17 +147,17 @@
                             <button class="v-btn v-gf" onclick="addCV('GF')">GF</button>
                         </div>
                     </div>
-                    <input type="number" id="p-euro-pc" class="p-prezzo" style="width:100%; border:3px solid var(--blu); height:50px; font-size:1.3rem" placeholder="€" oninput="aggiornaTot()">
+                    <input type="number" id="p-euro-pc" class="p-prezzo" style="width:100%; border:3px solid var(--blu); height:55px; font-size:1.4rem" placeholder="€" oninput="aggiornaTot()">
                 </div>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px">
                 <div style="border:2px solid #ddd; padding:10px; border-radius:15px">
-                    <input type="text" id="o-rost" class="p-nome" style="font-size:1rem" placeholder="MIGNON / ROST">
+                    <input type="text" id="o-rost" class="p-nome" placeholder="MIGNON / ROST">
                     <input type="number" id="p-euro-rost" class="p-prezzo" style="width:100%" oninput="aggiornaTot()">
                 </div>
                 <div style="border:2px solid #ddd; padding:10px; border-radius:15px">
-                    <input type="text" id="o-sfinc" class="p-nome" style="font-size:1rem" placeholder="SFINCIONE / TAGLIO">
+                    <input type="text" id="o-sfinc" class="p-nome" placeholder="SFINCIONE / TAGLIO">
                     <input type="number" id="p-euro-sfinc" class="p-prezzo" style="width:100%" oninput="aggiornaTot()">
                 </div>
             </div>
@@ -185,27 +184,45 @@
                 <button class="q-btn b-resto" onclick="setResto('50€', this)">R. 50€</button>
                 <button class="q-btn b-resto" onclick="setResto('100€', this)">R. 100€</button>
             </div>
+            
+            <div style="display:flex; gap:10px; margin-top:15px">
+                <input type="number" id="o-sconto" class="f-input" style="width:90px" placeholder="SCONTO" value="0" oninput="aggiornaTot()">
+                <input type="text" id="o-nota-sconto" class="f-input" placeholder="Motivo sconto...">
+            </div>
 
             <div style="background:var(--blu); color:white; padding:25px; border-radius:25px; text-align:center; margin-top:15px">
                 <div style="font-size:3.5rem; font-weight:900" id="tot-vis">€ 0.00</div>
-                <button class="btn-azione" style="background:var(--ora); font-size:1.5rem" onclick="inviaOrdine()">🔥 INVIA IN PREPARAZIONE</button>
+                <button class="btn-azione" style="background:var(--ora); font-size:1.6rem" onclick="inviaOrdine()">📤 INVIA IN PREPARAZIONE</button>
             </div>
         </div>
 
         <div id="sec-ordini" class="section">
-            <h3 class="stit">1. IN PREPARAZIONE</h3><div id="l-preparazione"></div>
-            <h3 class="stit">2. PRONTI (IN SEDE)</h3><div id="l-pronto"></div>
-            <h3 class="stit">3. IN VIAGGIO</h3><div id="l-viaggio"></div>
-            <h3 class="stit">4. CONSEGNATI</h3><div id="l-consegnati"></div>
+            <h3 style="border-left:5px solid var(--ora); padding-left:10px; font-weight:900; margin:15px 0">1. IN PREPARAZIONE</h3><div id="l-preparazione"></div>
+            <h3 style="border-left:5px solid var(--ver); padding-left:10px; font-weight:900; margin:15px 0">2. PRONTI (IN SEDE)</h3><div id="l-pronto"></div>
+            <h3 style="border-left:5px solid var(--blu2); padding-left:10px; font-weight:900; margin:15px 0">3. IN VIAGGIO</h3><div id="l-viaggio"></div>
+            <h3 style="border-left:5px solid #aaa; padding-left:10px; font-weight:900; margin:15px 0">4. CONSEGNATI</h3><div id="l-consegnati"></div>
         </div>
 
         <div id="sec-rider" class="section">
             <div style="background:var(--ver); color:white; padding:25px; border-radius:20px; text-align:center; margin-bottom:20px">
-                <div style="font-size:1rem">IL TUO INCASSO</div>
-                <div id="r-inc" style="font-size:2.5rem; font-weight:900">€ 0.00</div>
+                <div style="font-size:1rem; font-weight:900">INCASSO STASERA</div>
+                <div id="r-inc" style="font-size:2.8rem; font-weight:900">€ 0.00</div>
             </div>
-            <h3 class="stit">MIE CONSEGNE ATTUALI</h3><div id="r-mie"></div>
-            <h3 class="stit">STORICO STASERA</h3><div id="r-sto"></div>
+            <h3 style="font-weight:900; margin-bottom:10px">MIE CONSEGNE ATTUALI</h3><div id="r-mie"></div>
+            <h3 style="font-weight:900; margin:20px 0 10px">STORICO CONSEGNATI</h3><div id="r-sto"></div>
+        </div>
+
+        <div id="sec-settings" class="section">
+            <div class="card">
+                <h3 style="margin-bottom:15px">CAMBIO PIN PERSONALE</h3>
+                <input type="password" id="s-old-pin" class="f-input" placeholder="VECCHIO PIN">
+                <input type="password" id="s-new-pin" class="f-input" placeholder="NUOVO PIN">
+                <button class="btn-azione" style="background:var(--blu)" onclick="aggiornaPin()">AGGIORNA PIN</button>
+            </div>
+            <div id="admin-inc-box" class="card" style="display:none; background:var(--blu); color:white; margin-top:20px">
+                <h3>INCASSO TOTALE SERATA (ADMIN)</h3>
+                <div id="admin-tot-inc" style="font-size:2.5rem; font-weight:900">€ 0.00</div>
+            </div>
         </div>
     </div>
     <nav class="nav" id="main-nav"></nav>
@@ -231,7 +248,7 @@
         db.ref('utenti').once('value', s => {
             const c = document.getElementById('rider-container'); c.innerHTML = '';
             s.forEach(u => { if(u.val().ruolo === 'rider') {
-                let d = document.createElement('div'); d.style = "background:rgba(255,255,255,0.1); color:white; padding:20px; border-radius:15px; margin-bottom:12px; font-weight:900; cursor:pointer; font-size:1.2rem; text-align:center";
+                let d = document.createElement('div'); d.style = "background:rgba(255,255,255,0.1); color:white; padding:20px; border-radius:15px; margin-bottom:12px; font-weight:900; cursor:pointer; font-size:1.3rem; text-align:center";
                 d.innerText = u.val().nome.toUpperCase(); d.onclick = () => startPin(u.key, u.val().nome); c.appendChild(d);
             }});
         });
@@ -252,9 +269,12 @@
         user = tU; document.getElementById('pin-pad').classList.remove('show'); document.getElementById('app').classList.add('show');
         document.getElementById('u-info').innerText = user.nome.toUpperCase();
         const n = document.getElementById('main-nav'); let h = '';
-        if(user.ruolo === 'admin') { h += `<button class="ni active" id="n-ordine" onclick="vai('ordine')">NUOVO ORDINE</button><button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`; }
-        else if(user.ruolo === 'dispatch') { h += `<button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`; }
+        if(user.ruolo === 'admin') { 
+            h += `<button class="ni active" id="n-ordine" onclick="vai('ordine')">NUOVO ORDINE</button><button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`;
+            document.getElementById('admin-inc-box').style.display = 'block';
+        } else if(user.ruolo === 'dispatch') { h += `<button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`; }
         else { h += `<button class="ni" id="n-rider" onclick="vai('rider')">CONSEGNE</button>`; }
+        h += `<button class="ni" id="n-settings" onclick="vai('settings')">⚙️</button>`;
         n.innerHTML = h; vai(user.ruolo === 'rider' ? 'rider' : (user.ruolo === 'admin' ? 'ordine' : 'ordini')); ascoltaDb();
     }
 
@@ -283,7 +303,8 @@
 
     function aggiornaTot() {
         let t = 0; document.querySelectorAll('.p-prezzo').forEach(i => t += parseFloat(i.value || 0));
-        t += dC; document.getElementById('tot-vis').innerText = "€ " + t.toFixed(2); return t;
+        t += dC; t -= parseFloat(document.getElementById('o-sconto').value || 0);
+        document.getElementById('tot-vis').innerText = "€ " + t.toFixed(2); return t;
     }
 
     function toggleMappa() { document.getElementById('mappa-overlay').classList.toggle('show'); }
@@ -295,7 +316,7 @@
             cognome: document.getElementById('o-cog').value.toUpperCase(), indirizzo: document.getElementById('o-ind').value.toUpperCase(), cell: document.getElementById('o-cel').value, orario: document.getElementById('o-ora').value,
             pizze: getPS(), pollo: polC > 0 ? (fP(polC) + " POLLO ("+polV.join(",")+")") : "", coscia: cosC > 0 ? (cosC + " COSCIA ("+cosV.join(",")+")") : "",
             rost: document.getElementById('o-rost').value + " €" + (document.getElementById('p-euro-rost').value || 0), sfinc: document.getElementById('o-sfinc').value + " €" + (document.getElementById('p-euro-sfinc').value || 0),
-            pagamento: tP, resto: tR, totale: aggiornaTot(), stato: 'preparazione', ts: Date.now()
+            pagamento: tP, resto: tR, sconto: document.getElementById('o-sconto').value, notaSconto: document.getElementById('o-nota-sconto').value, totale: aggiornaTot(), stato: 'preparazione', ts: Date.now()
         };
         db.ref('ordini').push(o).then(() => { alert("INVIATO!"); location.reload(); });
     }
@@ -307,23 +328,27 @@
     function renderStaff(ordini) {
         const ids = { preparazione: 'l-preparazione', pronto: 'l-pronto', viaggio: 'l-viaggio', consegnato: 'l-consegnati' };
         Object.values(ids).forEach(id => document.getElementById(id).innerHTML = '');
+        let incSera = 0;
         for(let id in ordini) {
-            const o = ordini[id]; const c = document.createElement('div'); c.className = 'card';
+            const o = ordini[id]; if(o.stato === 'consegnato') incSera += o.totale;
+            const c = document.createElement('div'); c.className = 'card';
             let bC = o.pagamento === 'POS' ? 'p-pos' : (o.pagamento === 'PAGATO' ? 'p-pag' : 'p-cont');
             let res = o.pagamento === 'CONTANTI' ? `<br>RESTO: ${o.resto}` : '';
-            c.innerHTML = `<span class="badge ${bC}">${o.pagamento}${res}</span><span style="color:var(--ora); font-weight:900">🕒 ${o.orario}</span><span class="c-cog">${o.cognome}</span><span class="c-ind">${o.indirizzo}</span>
-                <div style="font-size:1.1rem; background:var(--gri); padding:12px; border-radius:12px; margin-top:10px">
-                    ${o.pizze ? '🍕 '+o.pizze+'<br>':''} ${o.pollo ? '🍗 '+o.pollo+'<br>':''} ${o.coscia ? '🍗 '+o.coscia+'<br>':''} <b>TOTALE: €${o.totale.toFixed(2)}</b>
+            c.innerHTML = `<span class="badge ${bC}">${o.pagamento}${res}</span><span style="color:var(--ora); font-weight:900; font-size:1.1rem">🕒 ${o.orario}</span><span class="c-cog">${o.cognome}</span><span class="c-ind">${o.indirizzo}</span>
+                <div style="font-size:1.2rem; background:var(--gri); padding:15px; border-radius:15px; margin-top:10px; font-weight:700">
+                    ${o.pizze ? '🍕 '+o.pizze+'<br>':''} ${o.pollo ? '🍗 '+o.pollo+'<br>':''} ${o.coscia ? '🍗 '+o.coscia+'<br>':''}
+                    <div style="color:var(--ora); border-top:1px solid #ccc; padding-top:5px"><b>TOTALE: €${o.totale.toFixed(2)}</b></div>
                 </div>`;
             if(o.stato === 'preparazione') { const b = document.createElement('button'); b.className = 'btn-azione'; b.style.background = 'var(--ver)'; b.innerText = "PRONTO ✅"; b.onclick = () => db.ref('ordini/'+id).update({stato: 'pronto'}); c.appendChild(b); }
             else if(o.stato === 'pronto') {
-                const s = document.createElement('select'); s.className = 'f-input'; s.style.marginTop = '10px'; s.innerHTML = '<option>AFFIDA A RIDER...</option>';
+                const s = document.createElement('select'); s.className = 'f-input'; s.innerHTML = '<option>AFFIDA A RIDER...</option>';
                 db.ref('utenti').once('value', us => { us.forEach(u => { if(u.val().ruolo === 'rider') s.innerHTML += `<option value="${u.key}">${u.val().nome}</option>`; }); });
                 s.onchange = () => { if(s.value) db.ref('ordini/'+id).update({stato:'viaggio', rider_id: s.value, rider_nome: s.options[s.selectedIndex].text}); };
                 c.appendChild(s);
             }
             if(document.getElementById(ids[o.stato])) document.getElementById(ids[o.stato]).appendChild(c);
         }
+        if(user.ruolo === 'admin') document.getElementById('admin-tot-inc').innerText = "€ " + incSera.toFixed(2);
     }
 
     function renderRider(ordini) {
@@ -331,11 +356,19 @@
         mie.innerHTML = ''; sto.innerHTML = ''; let inc = 0;
         for(let id in ordini) {
             const o = ordini[id]; if(o.rider_id !== user.id) continue;
-            const c = document.createElement('div'); c.className = 'card'; c.innerHTML = `<b>${o.cognome}</b><br>${o.indirizzo}<br>💰 €${o.totale.toFixed(2)}`;
+            const c = document.createElement('div'); c.className = 'card';
+            c.innerHTML = `<span class="c-cog" style="font-size:1.6rem">${o.cognome}</span><span class="c-ind" style="font-size:1.1rem">${o.indirizzo}</span><div style="font-weight:900; font-size:1.3rem">💰 €${o.totale.toFixed(2)}</div>`;
             if(o.stato === 'viaggio') { const b = document.createElement('button'); b.className = 'btn-azione'; b.style.background = 'var(--ora)'; b.innerText = "CONSEGNATO 🏁"; b.onclick = () => db.ref('ordini/'+id).update({stato: 'consegnato'}); c.appendChild(b); mie.appendChild(c); }
             else if(o.stato === 'consegnato') { inc += o.totale; sto.appendChild(c); }
         }
         document.getElementById('r-inc').innerText = "€ " + inc.toFixed(2);
+    }
+
+    function aggiornaPin() {
+        const old = document.getElementById('s-old-pin').value;
+        const nio = document.getElementById('s-new-pin').value;
+        if(old === user.pin && nio.length === 4) { db.ref('utenti/'+user.id).update({pin: nio}).then(() => { alert("PIN AGGIORNATO!"); location.reload(); }); }
+        else alert("ERRORE PIN!");
     }
 
     function genK() {
