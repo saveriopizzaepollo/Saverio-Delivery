@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Saverio Delivery Pro v11</title>
+    <title>Saverio Delivery Pro - FASE 1</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <style>
-        :root { --blu: #1A3A5C; --blu2: #2B5F8E; --ora: #E8600A; --ver: #1B8A4A; --ros: #C0392B; --gri: #F0F4F8; --bor: #D0DCE8; }
+        :root { --blu: #1A3A5C; --ora: #E8600A; --ver: #1B8A4A; --ros: #C0392B; --gri: #F0F4F8; --bor: #D0DCE8; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; }
         body { background: var(--gri); color: var(--blu); height: 100vh; overflow: hidden; }
 
-        /* UI Base */
+        /* Schermate */
         .page { position: fixed; inset: 0; background: var(--blu); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
         .page.show { display: flex; }
         #app { display: none; flex-direction: column; height: 100vh; background: white; }
         #app.show { display: flex; }
+        
         .hdr { background: var(--blu); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; height: 60px; }
         .cnt { flex: 1; overflow-y: auto; padding: 15px 15px 120px; }
         
@@ -24,49 +25,16 @@
         .ni { flex: 1; padding: 15px 5px; text-align: center; background: none; border: none; color: #aaa; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; }
         .ni.active { color: var(--blu); border-top: 5px solid var(--ora); }
 
-        /* Form Ordine - Design Extra Large */
-        .f-input { width: 100%; padding: 15px; border: 2px solid var(--bor); border-radius: 15px; font-weight: 700; font-size: 1.3rem; margin-bottom: 10px; outline: none; }
-        .f-input.error { border-color: var(--ros) !important; background: #FFF5F5; }
-        
-        .scrivania { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 15px; margin-bottom: 20px; }
-        .box-pizze { border: 4px solid var(--blu); border-radius: 15px; padding: 12px; background: #fff; min-height: 250px; }
-        .p-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
-        .btn-gf { width: 45px; height: 45px; border-radius: 10px; border: 2px solid var(--ver); color: var(--ver); font-weight: 900; background: white; font-size: 0.8rem; }
-        .btn-gf.active { background: var(--ver); color: white; }
-        .p-nome { flex: 1; border: none; border-bottom: 2px dashed #ccc; font-weight: 900; font-size: 1.4rem; padding: 5px; }
-        .p-prezzo { width: 85px; border: 2px solid var(--bor); text-align: right; font-weight: 900; border-radius: 8px; padding: 8px; font-size: 1.2rem; }
+        /* Card con Testo Grande */
+        .card { background: white; border: 2px solid var(--bor); border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .c-cog { font-size: 2.2rem; font-weight: 900; display: block; line-height: 1; text-transform: uppercase; }
+        .c-ind { font-size: 1.5rem; font-weight: 700; color: #555; display: block; margin-top: 5px; }
+        .stit { font-size: 0.8rem; font-weight: 900; color: var(--blu); margin: 20px 0 10px; border-left: 5px solid var(--ora); padding-left: 10px; text-transform: uppercase; }
 
-        .box-special { display: flex; flex-direction: column; gap: 10px; }
-        .btn-main { width: 100%; padding: 18px; background: white; border: 4px solid var(--blu); border-radius: 15px; font-weight: 900; font-size: 1.3rem; cursor: pointer; }
-        .grid-v { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-        .v-btn { padding: 10px 2px; font-size: 0.65rem; font-weight: 900; border: none; border-radius: 6px; background: var(--ros); color: white; }
-        .v-gf { background: var(--ver) !important; }
-
-        /* Tasti Rapidi */
-        .q-row { display: flex; gap: 8px; margin-top: 5px; margin-bottom: 15px; }
-        .q-btn { flex: 1; padding: 12px; border: 2px solid var(--bor); border-radius: 12px; background: white; font-weight: 900; font-size: 0.9rem; }
-        .q-btn.sel { background: var(--blu); color: white; }
-        .q-btn.sel-paga { background: var(--ora); color: white; border-color: var(--ora); }
-
-        /* Card Liste Professionali */
-        .card { background: white; border: 2px solid var(--bor); border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
-        .c-cog { font-size: 2.3rem; font-weight: 900; display: block; line-height: 1; }
-        .c-ind { font-size: 1.6rem; font-weight: 700; color: var(--blu2); display: block; margin: 10px 0; }
-        .badge { position: absolute; top: 20px; right: 20px; padding: 10px 15px; border-radius: 12px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; }
-        .p-pos { background: var(--ros); color: white; }
-        .p-pag { background: var(--ver); color: white; }
-        .p-con { background: #FFD700; color: var(--blu); }
-
-        .btn-azione { width: 100%; margin-top: 15px; padding: 18px; border-radius: 15px; border: none; font-weight: 900; color: white; font-size: 1.2rem; cursor: pointer; }
-        
-        /* Mappa Overlay */
-        #mappa-overlay { position: fixed; inset: 0; background: white; z-index: 200; display: none; flex-direction: column; }
-        #mappa-overlay.show { display: flex; }
-
-        /* PIN */
-        .dot { width: 20px; height: 20px; border: 2px solid white; border-radius: 50%; margin: 0 8px; }
-        .dot.on { background: var(--ora); border-color: var(--ora); }
-        .key { width: 85px; height: 85px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 2rem; font-weight: 900; border-radius: 20px; margin: 8px; }
+        /* Bottoni */
+        .btn-act { width: 100%; padding: 18px; border-radius: 15px; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; color: white; margin-top: 10px; }
+        .btn-ora { background: var(--ora); }
+        .btn-ver { background: var(--ver); }
     </style>
 </head>
 <body>
@@ -76,307 +44,121 @@
 </div>
 
 <div id="login" class="page">
-    <h2 style="color:white; margin-bottom:40px; font-weight:900; letter-spacing:3px">ACCESSO SISTEMA</h2>
-    <button class="btn-azione" style="background:var(--ora); max-width:350px" onclick="apriRiders()">🛵 RIDERS</button>
-    <button class="btn-azione" style="background:var(--blu2); max-width:350px" onclick="startPin('dispatch', 'BANCO')">📦 BANCO / DISPATCH</button>
-    <button class="btn-azione" style="background:var(--ver); max-width:350px" onclick="startPin('admin', 'SAVERIO')">👑 ADMIN</button>
-</div>
-
-<div id="rider-lista" class="page">
-    <button onclick="tornaLogin()" style="position:absolute; top:30px; left:30px; color:white; background:none; border:none; font-weight:900; font-size:1.2rem">← INDIETRO</button>
-    <div id="rider-container" style="width:100%; max-width:350px"></div>
-</div>
-
-<div id="pin-pad" class="page">
-    <h3 id="pin-label" style="color:white; margin-bottom:30px; font-size:1.5rem"></h3>
-    <div style="display:flex; margin-bottom:50px">
-        <div class="dot" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div>
-    </div>
-    <div id="keypad" style="display:grid; grid-template-columns:repeat(3,1fr)"></div>
-    <button onclick="tornaLogin()" style="margin-top:30px; color:white; background:none; border:none; font-weight:900">ANNULLA</button>
-</div>
-
-<div id="mappa-overlay">
-    <div class="hdr">
-        <span style="font-weight:900">MAPPA ZONE ATTIVE</span>
-        <button onclick="toggleMappa()" style="background:white; color:var(--blu); border:none; padding:8px 15px; border-radius:10px; font-weight:900">CHIUDI X</button>
-    </div>
-    <div style="flex:1; background:#eee; display:flex; align-items:center; justify-content:center; text-align:center; padding:40px">
-        <h2 style="color:#666">Qui vedrai gli ordini attivi per coordinare le zone senza perdere i dati dell'ordine.</h2>
-    </div>
+    <button class="btn-act btn-ora" style="max-width:300px" onclick="login('admin')">ENTRA COME ADMIN</button>
+    <button class="btn-act" style="background:#2B5F8E; max-width:300px" onclick="login('dispatch')">ENTRA COME BANCO</button>
 </div>
 
 <div id="app">
     <div class="hdr">
-        <span id="u-info" style="font-weight:900; font-size:1.1rem"></span>
-        <span id="u-clock" style="font-weight:900; color:var(--ora); font-size:1.2rem">19:00</span>
-        <button onclick="location.reload()" style="background:none; border:1px solid white; color:white; padding:5px 12px; border-radius:10px; font-weight:900; font-size:0.8rem">ESCI</button>
+        <span id="user-role" style="font-weight:900">SAVERIO DELIVERY</span>
+        <button onclick="location.reload()" style="background:none; border:1px solid white; color:white; padding:4px 10px; border-radius:10px; font-size:0.7rem">ESCI</button>
     </div>
 
     <div class="cnt">
         <div id="sec-ordine" class="section">
-            <button class="btn-azione" style="background:var(--blu2); margin-bottom:20px" onclick="toggleMappa()">🗺️ CONTROLLA ZONE E ORARI</button>
-            
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
-                <input type="text" id="o-cog" class="f-input" placeholder="COGNOME *">
-                <input type="tel" id="o-cel" class="f-input" placeholder="CELLULARE *">
-            </div>
-            <input type="text" id="o-ind" class="f-input" placeholder="INDIRIZZO (VIA E CIVICO) *">
-            
-            <div class="scrivania">
-                <div class="box-pizze">
-                    <h4 style="font-size:0.8rem; color:var(--blu2); margin-bottom:10px">PIZZE</h4>
-                    <div id="pizze-list"></div>
-                    <button onclick="addPizzaRow()" style="color:var(--ora); font-weight:900; font-size:0.8rem; background:none; border:none; margin-top:10px">+ AGGIUNGI RIGA PIZZA</button>
-                </div>
-
-                <div class="box-special">
-                    <div style="border-bottom:2px solid #eee; padding-bottom:15px">
-                        <button class="btn-main" onclick="addP()">POLLO: <span id="p-cnt" style="color:var(--ora)">0</span></button>
-                        <div class="grid-v">
-                            <button class="v-btn" onclick="addPV('P.MB')">P.MB</button>
-                            <button class="v-btn" onclick="addPV('P.MR')">P.MR</button>
-                            <button class="v-btn v-gf" onclick="addPV('GF')">GF</button>
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn-main" onclick="addC()" style="border-color:var(--ora)">COSCIA: <span id="c-cnt" style="color:var(--ora)">0</span></button>
-                        <div class="grid-v">
-                            <button class="v-btn" onclick="addCV('P.MB')">P.MB</button>
-                            <button class="v-btn" onclick="addCV('P.MR')">P.MR</button>
-                            <button class="v-btn v-gf" onclick="addCV('GF')">GF</button>
-                        </div>
-                    </div>
-                    <input type="number" id="p-euro-pc" class="p-prezzo" style="width:100%; border:3px solid var(--blu); height:55px; font-size:1.4rem" placeholder="€" oninput="aggiornaTot()">
-                </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px">
-                <div style="border:2px solid #ddd; padding:10px; border-radius:15px">
-                    <input type="text" id="o-rost" class="p-nome" placeholder="MIGNON / ROST">
-                    <input type="number" id="p-euro-rost" class="p-prezzo" style="width:100%" oninput="aggiornaTot()">
-                </div>
-                <div style="border:2px solid #ddd; padding:10px; border-radius:15px">
-                    <input type="text" id="o-sfinc" class="p-nome" placeholder="SFINCIONE / TAGLIO">
-                    <input type="number" id="p-euro-sfinc" class="p-prezzo" style="width:100%" oninput="aggiornaTot()">
-                </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
-                <input type="time" id="o-ora" class="f-input">
-                <div class="q-row">
-                    <button class="q-btn b-dom" onclick="setDom(1, this)">1€</button>
-                    <button class="q-btn b-dom" onclick="setDom(2, this)">2€</button>
-                    <button class="q-btn b-dom" onclick="setDom(3, this)">3€</button>
-                    <button class="q-btn b-dom" onclick="setDom(4, this)">4€</button>
-                    <button class="q-btn b-dom" onclick="setDom(5, this)">5€</button>
-                </div>
-            </div>
-
-            <div class="q-row">
-                <button class="q-btn b-paga sel-paga" id="btn-cont" onclick="setPaga('CONTANTI', this)">CONTANTI</button>
-                <button class="q-btn b-paga" id="btn-pos" onclick="setPaga('POS', this)">POS</button>
-                <button class="q-btn b-paga" id="btn-online" onclick="setPaga('PAGATO', this)">PAGATO</button>
-            </div>
-            <div id="row-resto" class="q-row">
-                <button class="q-btn b-resto" onclick="setResto('10€', this)">R. 10€</button>
-                <button class="q-btn b-resto" onclick="setResto('20€', this)">R. 20€</button>
-                <button class="q-btn b-resto" onclick="setResto('50€', this)">R. 50€</button>
-                <button class="q-btn b-resto" onclick="setResto('100€', this)">R. 100€</button>
-            </div>
-            
-            <div style="display:flex; gap:10px; margin-top:15px">
-                <input type="number" id="o-sconto" class="f-input" style="width:90px" placeholder="SCONTO" value="0" oninput="aggiornaTot()">
-                <input type="text" id="o-nota-sconto" class="f-input" placeholder="Motivo sconto...">
-            </div>
-
-            <div style="background:var(--blu); color:white; padding:25px; border-radius:25px; text-align:center; margin-top:15px">
-                <div style="font-size:3.5rem; font-weight:900" id="tot-vis">€ 0.00</div>
-                <button class="btn-azione" style="background:var(--ora); font-size:1.6rem" onclick="inviaOrdine()">📤 INVIA IN PREPARAZIONE</button>
-            </div>
+            <h2 style="margin-bottom:15px">NUOVO ORDINE</h2>
+            <input type="text" id="o-cog" style="width:100%; padding:15px; font-size:1.5rem; margin-bottom:10px; border-radius:10px; border:2px solid #ccc" placeholder="COGNOME">
+            <input type="text" id="o-ind" style="width:100%; padding:15px; font-size:1.2rem; margin-bottom:10px; border-radius:10px; border:2px solid #ccc" placeholder="INDIRIZZO">
+            <button class="btn-act btn-ora" onclick="inviaTest()">PROVA INVIO IN PREPARAZIONE</button>
         </div>
 
-        <div id="sec-ordini" class="section">
-            <h3 style="border-left:5px solid var(--ora); padding-left:10px; font-weight:900; margin:15px 0">1. IN PREPARAZIONE</h3><div id="l-preparazione"></div>
-            <h3 style="border-left:5px solid var(--ver); padding-left:10px; font-weight:900; margin:15px 0">2. PRONTI (IN SEDE)</h3><div id="l-pronto"></div>
-            <h3 style="border-left:5px solid var(--blu2); padding-left:10px; font-weight:900; margin:15px 0">3. IN VIAGGIO</h3><div id="l-viaggio"></div>
-            <h3 style="border-left:5px solid #aaa; padding-left:10px; font-weight:900; margin:15px 0">4. CONSEGNATI</h3><div id="l-consegnati"></div>
-        </div>
-
-        <div id="sec-rider" class="section">
-            <div style="background:var(--ver); color:white; padding:25px; border-radius:20px; text-align:center; margin-bottom:20px">
-                <div style="font-size:1rem; font-weight:900">INCASSO STASERA</div>
-                <div id="r-inc" style="font-size:2.8rem; font-weight:900">€ 0.00</div>
-            </div>
-            <h3 style="font-weight:900; margin-bottom:10px">MIE CONSEGNE ATTUALI</h3><div id="r-mie"></div>
-            <h3 style="font-weight:900; margin:20px 0 10px">STORICO CONSEGNATI</h3><div id="r-sto"></div>
-        </div>
-
-        <div id="sec-settings" class="section">
-            <div class="card">
-                <h3 style="margin-bottom:15px">CAMBIO PIN PERSONALE</h3>
-                <input type="password" id="s-old-pin" class="f-input" placeholder="VECCHIO PIN">
-                <input type="password" id="s-new-pin" class="f-input" placeholder="NUOVO PIN">
-                <button class="btn-azione" style="background:var(--blu)" onclick="aggiornaPin()">AGGIORNA PIN</button>
-            </div>
-            <div id="admin-inc-box" class="card" style="display:none; background:var(--blu); color:white; margin-top:20px">
-                <h3>INCASSO TOTALE SERATA (ADMIN)</h3>
-                <div id="admin-tot-inc" style="font-size:2.5rem; font-weight:900">€ 0.00</div>
-            </div>
+        <div id="sec-ordini" class="section" style="display:none">
+            <div class="stit">1. In Preparazione</div>
+            <div id="l-preparazione"></div>
+            <div class="stit">2. Pronti</div>
+            <div id="l-pronto"></div>
+            <div class="stit">3. In Consegna</div>
+            <div id="l-viaggio"></div>
+            <div class="stit">4. Consegnati</div>
+            <div id="l-consegnati"></div>
         </div>
     </div>
+
     <nav class="nav" id="main-nav"></nav>
 </div>
 
 <script>
-    const fbCfg = { apiKey: "AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw", databaseURL: "https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app", projectId: "saverio-delivery" };
-    firebase.initializeApp(fbCfg); const db = firebase.database();
+    // Configurazione Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",
+        databaseURL: "https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "saverio-delivery",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    let user = null; let pB = ""; let tU = null;
-    let polC = 0; let polV = []; let cosC = 0; let cosV = [];
-    let dC = 0; let tP = "CONTANTI"; let tR = "NO RESTO";
+    let userRole = '';
 
     window.onload = () => {
-        setTimeout(() => { document.getElementById('loading').classList.remove('show'); tornaLogin(); }, 1000);
-        addPizzaRow(); genK();
+        setTimeout(() => { document.getElementById('loading').classList.remove('show'); document.getElementById('login').classList.add('show'); }, 1000);
     };
 
-    function tornaLogin() { document.querySelectorAll('.page').forEach(p => p.classList.remove('show')); document.getElementById('login').classList.add('show'); }
-
-    function apriRiders() {
-        document.getElementById('login').classList.remove('show'); document.getElementById('rider-lista').classList.add('show');
-        db.ref('utenti').once('value', s => {
-            const c = document.getElementById('rider-container'); c.innerHTML = '';
-            s.forEach(u => { if(u.val().ruolo === 'rider') {
-                let d = document.createElement('div'); d.style = "background:rgba(255,255,255,0.1); color:white; padding:20px; border-radius:15px; margin-bottom:12px; font-weight:900; cursor:pointer; font-size:1.3rem; text-align:center";
-                d.innerText = u.val().nome.toUpperCase(); d.onclick = () => startPin(u.key, u.val().nome); c.appendChild(d);
-            }});
-        });
-    }
-
-    function startPin(id, n) {
-        db.ref('utenti/'+id).once('value', s => {
-            tU = {id: id, ...s.val()}; document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-            document.getElementById('pin-pad').classList.add('show'); document.getElementById('pin-label').innerText = "ACCESSO " + n;
-            pB = ""; uD();
-        });
-    }
-
-    function pK(k) { if(pB.length < 4) pB += k; uD(); if(pB.length === 4) { if(pB === tU.pin) loginOk(); else { alert("PIN ERRATO!"); pB = ""; uD(); }} }
-    function uD() { for(let i=0; i<4; i++) document.getElementById('d'+i).classList.toggle('on', i < pB.length); }
-
-    function loginOk() {
-        user = tU; document.getElementById('pin-pad').classList.remove('show'); document.getElementById('app').classList.add('show');
-        document.getElementById('u-info').innerText = user.nome.toUpperCase();
-        const n = document.getElementById('main-nav'); let h = '';
-        if(user.ruolo === 'admin') { 
-            h += `<button class="ni active" id="n-ordine" onclick="vai('ordine')">NUOVO ORDINE</button><button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`;
-            document.getElementById('admin-inc-box').style.display = 'block';
-        } else if(user.ruolo === 'dispatch') { h += `<button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`; }
-        else { h += `<button class="ni" id="n-rider" onclick="vai('rider')">CONSEGNE</button>`; }
-        h += `<button class="ni" id="n-settings" onclick="vai('settings')">⚙️</button>`;
-        n.innerHTML = h; vai(user.ruolo === 'rider' ? 'rider' : (user.ruolo === 'admin' ? 'ordine' : 'ordini')); ascoltaDb();
+    function login(role) {
+        userRole = role;
+        document.getElementById('login').classList.remove('show');
+        document.getElementById('app').classList.add('show');
+        document.getElementById('user-role').innerText = role.toUpperCase();
+        
+        const nav = document.getElementById('main-nav');
+        nav.innerHTML = `
+            <button class="ni active" id="n-ordine" onclick="vai('ordine')">NUOVO ORDINE</button>
+            <button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>
+        `;
+        ascoltaDatabase();
     }
 
     function vai(id) {
-        document.querySelectorAll('.section').forEach(s => s.style.display = 'none'); document.getElementById('sec-' + id).style.display = 'block';
-        document.querySelectorAll('.ni').forEach(n => n.classList.remove('active')); if(document.getElementById('n-'+id)) document.getElementById('n-'+id).classList.add('active');
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.getElementById('sec-' + id).style.display = 'block';
+        document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+        document.getElementById('n-' + id).classList.add('active');
     }
 
-    function addPizzaRow() {
-        const id = Date.now(); const r = document.createElement('div'); r.className = 'p-row'; r.id = 'row-'+id;
-        r.innerHTML = `<button class="btn-gf" id="gf-${id}" onclick="tGF('${id}')" data-gf="false">GF</button><input type="text" class="p-nome" placeholder="Pizza..."><input type="number" class="p-prezzo" step="0.50" oninput="aggiornaTot()">`;
-        document.getElementById('pizze-list').appendChild(r);
-    }
-    function tGF(id) { const b = document.getElementById('gf-'+id); const st = b.getAttribute('data-gf')==='true'; b.setAttribute('data-gf', !st); b.classList.toggle('active', !st); }
-
-    function addP() { polC += 0.5; document.getElementById('p-cnt').innerText = fP(polC); cSpec(); }
-    function addC() { cosC += 1; document.getElementById('c-cnt').innerText = cosC; cSpec(); }
-    function fP(n) { if(n === 0) return "0"; let i = Math.floor(n); let m = n % 1 !== 0 ? " 1/2" : ""; return (i>0?i:"") + m; }
-    function addPV(v) { polV.push(v); if(polC === 0) polC = 0.5; document.getElementById('p-cnt').innerText = fP(polC); cSpec(); }
-    function addCV(v) { cosV.push(v); if(cosC === 0) cosC = 1; document.getElementById('c-cnt').innerText = cosC; cSpec(); }
-    function cSpec() { let t = (polC / 0.5) * 7.5; t += cosC * 4.5; document.getElementById('p-euro-pc').value = t.toFixed(2); aggiornaTot(); }
-
-    function setDom(v, b) { dC = v; document.querySelectorAll('.b-dom').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); aggiornaTot(); }
-    function setPaga(v, b) { tP = v; document.querySelectorAll('.b-paga').forEach(x => x.classList.remove('sel-paga')); b.classList.add('sel-paga'); document.getElementById('row-resto').style.display = v === 'CONTANTI' ? 'flex' : 'none'; aggiornaTot(); }
-    function setResto(v, b) { tR = v; document.querySelectorAll('.b-resto').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); }
-
-    function aggiornaTot() {
-        let t = 0; document.querySelectorAll('.p-prezzo').forEach(i => t += parseFloat(i.value || 0));
-        t += dC; t -= parseFloat(document.getElementById('o-sconto').value || 0);
-        document.getElementById('tot-vis').innerText = "€ " + t.toFixed(2); return t;
+    function inviaTest() {
+        const cog = document.getElementById('o-cog').value;
+        const ind = document.getElementById('o-ind').value;
+        if(!cog || !ind) return alert("Inserisci i dati!");
+        
+        db.ref('ordini').push({
+            cognome: cog.toUpperCase(),
+            indirizzo: ind.toUpperCase(),
+            stato: 'preparazione',
+            timestamp: Date.now()
+        });
+        document.getElementById('o-cog').value = '';
+        document.getElementById('o-ind').value = '';
+        alert("Ordine inviato!");
     }
 
-    function toggleMappa() { document.getElementById('mappa-overlay').classList.toggle('show'); }
+    function ascoltaDatabase() {
+        db.ref('ordini').on('value', snap => {
+            const data = snap.val();
+            const lists = { preparazione: 'l-preparazione', pronto: 'l-pronto', viaggio: 'l-viaggio', consegnati: 'l-consegnati' };
+            Object.values(lists).forEach(id => document.getElementById(id).innerHTML = '');
 
-    function inviaOrdine() {
-        let err = false; ['o-cog', 'o-ind', 'o-cel', 'o-ora'].forEach(id => { const el = document.getElementById(id); if(!el.value) { el.classList.add('error'); err = true; } else el.classList.remove('error'); });
-        if(err) { alert("DATI MANCANTI!"); return; }
-        const o = {
-            cognome: document.getElementById('o-cog').value.toUpperCase(), indirizzo: document.getElementById('o-ind').value.toUpperCase(), cell: document.getElementById('o-cel').value, orario: document.getElementById('o-ora').value,
-            pizze: getPS(), pollo: polC > 0 ? (fP(polC) + " POLLO ("+polV.join(",")+")") : "", coscia: cosC > 0 ? (cosC + " COSCIA ("+cosV.join(",")+")") : "",
-            rost: document.getElementById('o-rost').value + " €" + (document.getElementById('p-euro-rost').value || 0), sfinc: document.getElementById('o-sfinc').value + " €" + (document.getElementById('p-euro-sfinc').value || 0),
-            pagamento: tP, resto: tR, sconto: document.getElementById('o-sconto').value, notaSconto: document.getElementById('o-nota-sconto').value, totale: aggiornaTot(), stato: 'preparazione', ts: Date.now()
-        };
-        db.ref('ordini').push(o).then(() => { alert("INVIATO!"); location.reload(); });
-    }
-
-    function getPS() { let s = ""; document.querySelectorAll('.p-row').forEach(r => { const n = r.querySelector('.p-nome').value; const gf = r.querySelector('.btn-gf').getAttribute('data-gf') === 'true'; if(n) s += (gf ? "🚫[GF] " : "") + n + " | "; }); return s; }
-
-    function ascoltaDb() { db.ref('ordini').on('value', snap => { const data = snap.val(); renderStaff(data); renderRider(data); }); }
-
-    function renderStaff(ordini) {
-        const ids = { preparazione: 'l-preparazione', pronto: 'l-pronto', viaggio: 'l-viaggio', consegnato: 'l-consegnati' };
-        Object.values(ids).forEach(id => document.getElementById(id).innerHTML = '');
-        let incSera = 0;
-        for(let id in ordini) {
-            const o = ordini[id]; if(o.stato === 'consegnato') incSera += o.totale;
-            const c = document.createElement('div'); c.className = 'card';
-            let bC = o.pagamento === 'POS' ? 'p-pos' : (o.pagamento === 'PAGATO' ? 'p-pag' : 'p-cont');
-            let res = o.pagamento === 'CONTANTI' ? `<br>RESTO: ${o.resto}` : '';
-            c.innerHTML = `<span class="badge ${bC}">${o.pagamento}${res}</span><span style="color:var(--ora); font-weight:900; font-size:1.1rem">🕒 ${o.orario}</span><span class="c-cog">${o.cognome}</span><span class="c-ind">${o.indirizzo}</span>
-                <div style="font-size:1.2rem; background:var(--gri); padding:15px; border-radius:15px; margin-top:10px; font-weight:700">
-                    ${o.pizze ? '🍕 '+o.pizze+'<br>':''} ${o.pollo ? '🍗 '+o.pollo+'<br>':''} ${o.coscia ? '🍗 '+o.coscia+'<br>':''}
-                    <div style="color:var(--ora); border-top:1px solid #ccc; padding-top:5px"><b>TOTALE: €${o.totale.toFixed(2)}</b></div>
-                </div>`;
-            if(o.stato === 'preparazione') { const b = document.createElement('button'); b.className = 'btn-azione'; b.style.background = 'var(--ver)'; b.innerText = "PRONTO ✅"; b.onclick = () => db.ref('ordini/'+id).update({stato: 'pronto'}); c.appendChild(b); }
-            else if(o.stato === 'pronto') {
-                const s = document.createElement('select'); s.className = 'f-input'; s.innerHTML = '<option>AFFIDA A RIDER...</option>';
-                db.ref('utenti').once('value', us => { us.forEach(u => { if(u.val().ruolo === 'rider') s.innerHTML += `<option value="${u.key}">${u.val().nome}</option>`; }); });
-                s.onchange = () => { if(s.value) db.ref('ordini/'+id).update({stato:'viaggio', rider_id: s.value, rider_nome: s.options[s.selectedIndex].text}); };
-                c.appendChild(s);
+            for(let id in data) {
+                const o = data[id];
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<span class="c-cog">${o.cognome}</span><span class="c-ind">${o.indirizzo}</span>`;
+                
+                if(o.stato === 'preparazione') {
+                    card.innerHTML += `<button class="btn-act btn-ver" onclick="cambiaStato('${id}', 'pronto')">PRONTO ✅</button>`;
+                    document.getElementById('l-preparazione').appendChild(card);
+                } else if(o.stato === 'pronto') {
+                    card.innerHTML += `<button class="btn-act" style="background:var(--blu2)" onclick="cambiaStato('${id}', 'viaggio')">AFFIDA A RIDER 🛵</button>`;
+                    document.getElementById('l-pronto').appendChild(card);
+                } else if(o.stato === 'viaggio') {
+                    card.innerHTML += `<button class="btn-act btn-ora" onclick="cambiaStato('${id}', 'consegnati')">CONSEGNATO 🏁</button>`;
+                    document.getElementById('l-viaggio').appendChild(card);
+                } else {
+                    document.getElementById('l-consegnati').appendChild(card);
+                }
             }
-            if(document.getElementById(ids[o.stato])) document.getElementById(ids[o.stato]).appendChild(c);
-        }
-        if(user.ruolo === 'admin') document.getElementById('admin-tot-inc').innerText = "€ " + incSera.toFixed(2);
+        });
     }
 
-    function renderRider(ordini) {
-        const mie = document.getElementById('r-mie'); const sto = document.getElementById('r-sto');
-        mie.innerHTML = ''; sto.innerHTML = ''; let inc = 0;
-        for(let id in ordini) {
-            const o = ordini[id]; if(o.rider_id !== user.id) continue;
-            const c = document.createElement('div'); c.className = 'card';
-            c.innerHTML = `<span class="c-cog" style="font-size:1.6rem">${o.cognome}</span><span class="c-ind" style="font-size:1.1rem">${o.indirizzo}</span><div style="font-weight:900; font-size:1.3rem">💰 €${o.totale.toFixed(2)}</div>`;
-            if(o.stato === 'viaggio') { const b = document.createElement('button'); b.className = 'btn-azione'; b.style.background = 'var(--ora)'; b.innerText = "CONSEGNATO 🏁"; b.onclick = () => db.ref('ordini/'+id).update({stato: 'consegnato'}); c.appendChild(b); mie.appendChild(c); }
-            else if(o.stato === 'consegnato') { inc += o.totale; sto.appendChild(c); }
-        }
-        document.getElementById('r-inc').innerText = "€ " + inc.toFixed(2);
-    }
-
-    function aggiornaPin() {
-        const old = document.getElementById('s-old-pin').value;
-        const nio = document.getElementById('s-new-pin').value;
-        if(old === user.pin && nio.length === 4) { db.ref('utenti/'+user.id).update({pin: nio}).then(() => { alert("PIN AGGIORNATO!"); location.reload(); }); }
-        else alert("ERRORE PIN!");
-    }
-
-    function genK() {
-        const g = document.getElementById('keypad'); for(let i=1; i<=9; i++) { let b = document.createElement('button'); b.className = 'key'; b.innerText = i; b.onclick = () => pK(i.toString()); g.appendChild(b); }
-        let b0 = document.createElement('button'); b0.className = 'key'; b0.innerText = '0'; b0.onclick = () => pK('0'); g.appendChild(document.createElement('div')); g.appendChild(b0);
-    }
-
-    setInterval(() => { const d = new Date(); document.getElementById('u-clock').innerText = d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes(); }, 1000);
+    function cambiaStato(id, nuovo) { db.ref('ordini/' + id).update({ stato: nuovo }); }
 </script>
 </body>
 </html>
