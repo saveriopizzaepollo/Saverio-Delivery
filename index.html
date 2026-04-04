@@ -13,101 +13,84 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
-:root {
-  --blu-scuro: #1A3A5C;
-  --blu: #2B5F8E;
-  --arancione: #E8600A;
-  --verde: #1B8A4A;
-  --rosso: #C0392B;
-  --giallo: #D4A017;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; background: #fff; font-family: 'Barlow', sans-serif; color: var(--blu-scuro); overflow: hidden; }
-
-#loading {
-position: fixed; inset: 0; background: var(–blu-scuro);
-display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999;
-}
-.logo { font-size: 2rem; font-weight: 900; color: white; letter-spacing: 0.2em; text-align: center; line-height: 1.2; }
-.logo-sub { color: rgba(255,255,255,0.4); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.25em; margin-top: 0.5rem; }
-.spinner { width: 44px; height: 44px; border: 5px solid rgba(255,255,255,0.15); border-top-color: var(–arancione); border-radius: 50%; animation: spin 0.8s linear infinite; margin-top: 2.5rem; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-msg { color: rgba(255,255,255,0.4); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 1rem; }
-
-#login { position: fixed; inset: 0; background: var(–blu-scuro); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; z-index: 100; }
-#login.show { display: flex; }
-.login-logo { font-size: 1.9rem; font-weight: 900; color: white; letter-spacing: 0.2em; text-align: center; line-height: 1.2; margin-bottom: 0.5rem; }
-.login-tag { color: rgba(255,255,255,0.4); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.25em; margin-bottom: 3rem; }
-.login-btns { display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 320px; }
-.login-btn { display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1.3rem; border-radius: 18px; border: none; cursor: pointer; font-family: ‘Barlow’, sans-serif; font-size: 1.15rem; font-weight: 900; letter-spacing: 0.18em; color: white; transition: transform 0.12s, opacity 0.12s; }
-.login-btn:active { transform: scale(0.96); opacity: 0.85; }
-.btn-admin { background: linear-gradient(135deg, #1A3A5C, #0d2238); border: 2px solid rgba(255,255,255,0.2); }
-.btn-dispatch { background: linear-gradient(135deg, #2B5F8E, #1d4266); }
-.btn-riders { background: linear-gradient(135deg, #E8600A, #c44f08); }
-.ver { color: rgba(255,255,255,0.15); font-size: 0.6rem; font-weight: 700; margin-top: 2rem; }
-
-#rider-lista { position: fixed; inset: 0; background: var(–blu-scuro); display: none; flex-direction: column; align-items: center; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; }
-#rider-lista.show { display: flex; }
-.back-btn { align-self: flex-start; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-family: ‘Barlow’, sans-serif; font-weight: 900; font-size: 0.8rem; padding: 8px 18px; border-radius: 20px; cursor: pointer; letter-spacing: 0.08em; margin-bottom: 2rem; }
-.sc-title { font-size: 1.4rem; font-weight: 900; color: white; letter-spacing: 0.15em; margin-bottom: 0.3rem; }
-.sc-sub { color: rgba(255,255,255,0.4); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
-.rider-btn { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 1rem; padding: 1rem 1.2rem; background: rgba(255,255,255,0.07); border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); margin-bottom: 0.75rem; cursor: pointer; color: white; font-family: ‘Barlow’, sans-serif; transition: background 0.1s; }
-.rider-btn:active { background: rgba(255,255,255,0.15); }
-.r-av { width: 46px; height: 46px; border-radius: 50%; background: var(–arancione); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; flex-shrink: 0; }
-.r-av.new { background: rgba(255,255,255,0.12); }
-.r-nome { font-weight: 900; font-size: 1rem; }
-.r-sub { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.4); }
-
-#pin { position: fixed; inset: 0; background: var(–blu-scuro); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; z-index: 100; }
-#pin.show { display: flex; }
-.pin-for { font-size: 0.8rem; font-weight: 900; color: rgba(255,255,255,0.4); letter-spacing: 0.15em; margin-bottom: 0.3rem; }
-.pin-name { font-size: 1.6rem; font-weight: 900; color: white; letter-spacing: 0.08em; margin-bottom: 2rem; text-align: center; }
-.pin-dots { display: flex; gap: 1rem; margin-bottom: 2.5rem; }
-.dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); background: transparent; transition: all 0.15s; }
-.dot.on { background: var(–arancione); border-color: var(–arancione); transform: scale(1.1); }
-.keypad { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem; width: 100%; max-width: 270px; }
-.key { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 1.1rem; font-family: ‘Barlow’, sans-serif; font-size: 1.6rem; font-weight: 900; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.1s; }
-.key:active { background: rgba(255,255,255,0.22); }
-.key.ghost { background: transparent; border: none; pointer-events: none; }
-.key.del { font-size: 1.1rem; }
-.pin-err { color: #ff6b6b; font-weight: 900; font-size: 0.9rem; letter-spacing: 0.08em; margin-top: 1.2rem; display: none; }
-
-#primo-accesso { position: fixed; inset: 0; background: var(–blu-scuro); display: none; flex-direction: column; align-items: center; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; }
-#primo-accesso.show { display: flex; }
-.ff { width: 100%; max-width: 320px; margin-bottom: 1rem; }
-.ff label { display: block; color: rgba(255,255,255,0.45); font-weight: 900; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.4rem; }
-.ff input { width: 100%; padding: 0.9rem 1rem; background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 12px; color: white; font-family: ‘Barlow’, sans-serif; font-size: 1rem; font-weight: 700; outline: none; }
-.ff input:focus { border-color: var(–arancione); }
-.ff input::placeholder { color: rgba(255,255,255,0.22); }
-.submit-btn { width: 100%; max-width: 320px; padding: 1rem; background: var(–arancione); border: none; border-radius: 14px; color: white; font-family: ‘Barlow’, sans-serif; font-size: 1.05rem; font-weight: 900; letter-spacing: 0.12em; cursor: pointer; margin-top: 0.5rem; }
-.submit-btn:active { opacity: 0.85; }
-
-#app { display: none; height: 100vh; flex-direction: column; }
-#app.show { display: flex; }
-.header { background: var(–blu-scuro); color: white; height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; flex-shrink: 0; }
-.header-title { font-size: 1.1rem; font-weight: 900; letter-spacing: 0.2em; }
-.ruolo-badge { background: var(–arancione); color: white; font-size: 0.6rem; font-weight: 900; padding: 2px 10px; border-radius: 20px; letter-spacing: 0.08em; }
-.logout-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: white; font-family: ‘Barlow’, sans-serif; font-weight: 900; font-size: 0.65rem; padding: 5px 12px; border-radius: 20px; cursor: pointer; }
-.content { flex: 1; overflow-y: auto; padding: 1.2rem 1rem 90px; }
-.content::-webkit-scrollbar { display: none; }
-.welcome-card { background: var(–blu-scuro); border-radius: 20px; padding: 1.5rem; color: white; margin-bottom: 1rem; }
-.welcome-t { font-size: 1.3rem; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
-.welcome-s { color: rgba(255,255,255,0.5); font-weight: 700; font-size: 0.85rem; }
-.ok-card { display: flex; align-items: center; gap: 0.75rem; background: #EAFAF1; border: 2px solid #82E0AA; border-radius: 14px; padding: 1rem; margin-bottom: 0.75rem; }
-.ok-text { font-weight: 900; font-size: 0.9rem; color: var(–verde); }
-.info-card { background: #F0F4F8; border-radius: 14px; padding: 1rem; margin-bottom: 0.75rem; border: 2px solid #D0DCE8; }
-.info-l { font-size: 0.6rem; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #888; margin-bottom: 0.3rem; }
-.info-v { font-size: 1rem; font-weight: 900; }
-.fase-card { background: #FEF9E7; border: 2px solid var(–giallo); border-radius: 14px; padding: 1rem; font-weight: 700; font-size: 0.85rem; color: #7D6608; line-height: 1.6; }
-.nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #D0DCE8; display: flex; padding-bottom: env(safe-area-inset-bottom); z-index: 50; }
-.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 4px; border: none; background: none; cursor: pointer; font-family: ‘Barlow’, sans-serif; color: #aaa; gap: 2px; }
-.nav-item.active { color: var(–blu-scuro); }
-.nav-icon { font-size: 1.3rem; }
-.nav-label { font-size: 0.5rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
-.toast { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); background: var(–blu-scuro); color: white; padding: 0.65rem 1.5rem; border-radius: 30px; font-weight: 900; font-size: 0.8rem; z-index: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; letter-spacing: 0.06em; }
-.toast.show { opacity: 1; }
+:root{--blu:#1A3A5C;--blu2:#2B5F8E;--arancione:#E8600A;--verde:#1B8A4A;--rosso:#C0392B;--giallo:#D4A017;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:#fff;font-family:'Barlow',sans-serif;color:var(--blu);overflow:hidden;}
+#loading{position:fixed;inset:0;background:var(--blu);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;}
+.logo{font-size:2rem;font-weight:900;color:white;letter-spacing:.2em;text-align:center;line-height:1.2;}
+.logo-sub{color:rgba(255,255,255,.4);font-weight:700;font-size:.7rem;letter-spacing:.25em;margin-top:.5rem;}
+.spinner{width:44px;height:44px;border:5px solid rgba(255,255,255,.15);border-top-color:var(--arancione);border-radius:50%;animation:spin .8s linear infinite;margin-top:2rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.lmsg{color:rgba(255,255,255,.4);font-weight:700;font-size:.75rem;letter-spacing:.1em;margin-top:1rem;}
+#login{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;z-index:100;}
+#login.show{display:flex;}
+.login-logo{font-size:1.9rem;font-weight:900;color:white;letter-spacing:.2em;text-align:center;line-height:1.2;margin-bottom:.5rem;}
+.login-tag{color:rgba(255,255,255,.4);font-weight:700;font-size:.7rem;letter-spacing:.25em;margin-bottom:3rem;}
+.lbtns{display:flex;flex-direction:column;gap:1rem;width:100%;max-width:320px;}
+.lbtn{display:flex;align-items:center;justify-content:center;gap:.75rem;padding:1.3rem;border-radius:18px;border:none;cursor:pointer;font-family:'Barlow',sans-serif;font-size:1.15rem;font-weight:900;letter-spacing:.18em;color:white;transition:transform .12s,opacity .12s;}
+.lbtn:active{transform:scale(.96);opacity:.85;}
+.ba{background:linear-gradient(135deg,#1A3A5C,#0d2238);border:2px solid rgba(255,255,255,.2);}
+.bd{background:linear-gradient(135deg,#2B5F8E,#1d4266);}
+.br{background:linear-gradient(135deg,#E8600A,#c44f08);}
+.ver{color:rgba(255,255,255,.15);font-size:.6rem;font-weight:700;margin-top:2rem;}
+#rider-lista{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;padding:2rem 1.5rem;z-index:100;overflow-y:auto;}
+#rider-lista.show{display:flex;}
+.back{align-self:flex-start;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;font-family:'Barlow',sans-serif;font-weight:900;font-size:.8rem;padding:8px 18px;border-radius:20px;cursor:pointer;letter-spacing:.08em;margin-bottom:2rem;}
+.sct{font-size:1.4rem;font-weight:900;color:white;letter-spacing:.15em;margin-bottom:.3rem;}
+.scs{color:rgba(255,255,255,.4);font-weight:700;font-size:.75rem;letter-spacing:.1em;margin-bottom:1.5rem;}
+.rbtn{width:100%;max-width:320px;display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,.07);border-radius:14px;border:1px solid rgba(255,255,255,.12);margin-bottom:.75rem;cursor:pointer;color:white;font-family:'Barlow',sans-serif;}
+.rbtn:active{background:rgba(255,255,255,.15);}
+.rav{width:46px;height:46px;border-radius:50%;background:var(--arancione);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;flex-shrink:0;}
+.rav.new{background:rgba(255,255,255,.12);}
+.rn{font-weight:900;font-size:1rem;}
+.rs{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.4);}
+#pin{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;z-index:100;}
+#pin.show{display:flex;}
+.pf{font-size:.8rem;font-weight:900;color:rgba(255,255,255,.4);letter-spacing:.15em;margin-bottom:.3rem;}
+.pn{font-size:1.6rem;font-weight:900;color:white;letter-spacing:.08em;margin-bottom:2rem;text-align:center;}
+.pdots{display:flex;gap:1rem;margin-bottom:2.5rem;}
+.dot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:transparent;transition:all .15s;}
+.dot.on{background:var(--arancione);border-color:var(--arancione);transform:scale(1.1);}
+.kpad{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;width:100%;max-width:270px;}
+.key{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:1.1rem;font-family:'Barlow',sans-serif;font-size:1.6rem;font-weight:900;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s;}
+.key:active{background:rgba(255,255,255,.22);}
+.key.gh{background:transparent;border:none;pointer-events:none;}
+.key.dl{font-size:1.1rem;}
+.perr{color:#ff6b6b;font-weight:900;font-size:.9rem;letter-spacing:.08em;margin-top:1.2rem;display:none;}
+#primo{position:fixed;inset:0;background:var(--blu);display:none;flex-direction:column;align-items:center;padding:2rem 1.5rem;z-index:100;overflow-y:auto;}
+#primo.show{display:flex;}
+.ff{width:100%;max-width:320px;margin-bottom:1rem;}
+.ff label{display:block;color:rgba(255,255,255,.45);font-weight:900;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.4rem;}
+.ff input{width:100%;padding:.9rem 1rem;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;color:white;font-family:'Barlow',sans-serif;font-size:1rem;font-weight:700;outline:none;}
+.ff input:focus{border-color:var(--arancione);}
+.ff input::placeholder{color:rgba(255,255,255,.22);}
+.sbtn{width:100%;max-width:320px;padding:1rem;background:var(--arancione);border:none;border-radius:14px;color:white;font-family:'Barlow',sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:.12em;cursor:pointer;margin-top:.5rem;}
+.sbtn:active{opacity:.85;}
+#app{display:none;height:100vh;flex-direction:column;}
+#app.show{display:flex;}
+.hdr{background:var(--blu);color:white;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;flex-shrink:0;}
+.htit{font-size:1.1rem;font-weight:900;letter-spacing:.2em;}
+.rbadge{background:var(--arancione);color:white;font-size:.6rem;font-weight:900;padding:2px 10px;border-radius:20px;letter-spacing:.08em;}
+.lout{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:white;font-family:'Barlow',sans-serif;font-weight:900;font-size:.65rem;padding:5px 12px;border-radius:20px;cursor:pointer;}
+.cnt{flex:1;overflow-y:auto;padding:1.2rem 1rem 90px;}
+.cnt::-webkit-scrollbar{display:none;}
+.wcard{background:var(--blu);border-radius:20px;padding:1.5rem;color:white;margin-bottom:1rem;}
+.wt{font-size:1.3rem;font-weight:900;letter-spacing:.05em;margin-bottom:.3rem;}
+.ws{color:rgba(255,255,255,.5);font-weight:700;font-size:.85rem;}
+.okcard{display:flex;align-items:center;gap:.75rem;background:#EAFAF1;border:2px solid #82E0AA;border-radius:14px;padding:1rem;margin-bottom:.75rem;}
+.oktxt{font-weight:900;font-size:.9rem;color:var(--verde);}
+.icard{background:#F0F4F8;border-radius:14px;padding:1rem;margin-bottom:.75rem;border:2px solid #D0DCE8;}
+.il{font-size:.6rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:.3rem;}
+.iv{font-size:1rem;font-weight:900;}
+.fcard{background:#FEF9E7;border:2px solid var(--giallo);border-radius:14px;padding:1rem;font-weight:700;font-size:.85rem;color:#7D6608;line-height:1.6;}
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid #D0DCE8;display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:50;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;border:none;background:none;cursor:pointer;font-family:'Barlow',sans-serif;color:#aaa;gap:2px;}
+.ni.active{color:var(--blu);}
+.nic{font-size:1.3rem;}
+.nil{font-size:.5rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;}
+.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:var(--blu);color:white;padding:.65rem 1.5rem;border-radius:30px;font-weight:900;font-size:.8rem;z-index:600;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;letter-spacing:.06em;}
+.toast.show{opacity:1;}
 </style>
-
 </head>
 <body>
 
@@ -115,35 +98,35 @@ display: flex; flex-direction: column; align-items: center; justify-content: cen
   <div class="logo">🍕 SAVERIO<br>DELIVERY</div>
   <div class="logo-sub">PIZZERIA · PALERMO</div>
   <div class="spinner"></div>
-  <div class="loading-msg" id="loading-msg">CONNESSIONE IN CORSO...</div>
+  <div class="lmsg" id="lmsg">CARICAMENTO...</div>
 </div>
 
 <div id="login">
   <div class="login-logo">🍕 SAVERIO<br>DELIVERY</div>
   <div class="login-tag">PIZZERIA SAVERIO · PALERMO</div>
-  <div class="login-btns">
-    <button class="login-btn btn-admin" onclick="avviaLogin('admin','ADMIN')">🔑 ADMIN</button>
-    <button class="login-btn btn-dispatch" onclick="avviaLogin('dispatch','DISPATCH')">📦 DISPATCH</button>
-    <button class="login-btn btn-riders" onclick="apriListaRider()">🛵 RIDERS</button>
+  <div class="lbtns">
+    <button class="lbtn ba" onclick="avviaLogin('admin','ADMIN')">🔑 ADMIN</button>
+    <button class="lbtn bd" onclick="avviaLogin('dispatch','DISPATCH')">📦 DISPATCH</button>
+    <button class="lbtn br" onclick="apriRider()">🛵 RIDERS</button>
   </div>
-  <div class="ver">FASE 1 · SAVERIO DELIVERY</div>
+  <div class="ver">SAVERIO DELIVERY · FASE 1</div>
 </div>
 
 <div id="rider-lista">
-  <button class="back-btn" onclick="tornaLogin()">← INDIETRO</button>
-  <div class="sc-title">CHI SEI?</div>
-  <div class="sc-sub">SCEGLI IL TUO NOME</div>
+  <button class="back" onclick="tornaLogin()">← INDIETRO</button>
+  <div class="sct">CHI SEI?</div>
+  <div class="scs">SCEGLI IL TUO NOME</div>
   <div id="rider-items" style="width:100%;max-width:320px"></div>
 </div>
 
 <div id="pin">
-  <div class="pin-for">INSERISCI PIN PER</div>
-  <div class="pin-name" id="pin-nome"></div>
-  <div class="pin-dots">
+  <div class="pf">INSERISCI PIN PER</div>
+  <div class="pn" id="pnome"></div>
+  <div class="pdots">
     <div class="dot" id="d0"></div><div class="dot" id="d1"></div>
     <div class="dot" id="d2"></div><div class="dot" id="d3"></div>
   </div>
-  <div class="keypad">
+  <div class="kpad">
     <button class="key" onclick="k('1')">1</button>
     <button class="key" onclick="k('2')">2</button>
     <button class="key" onclick="k('3')">3</button>
@@ -153,234 +136,228 @@ display: flex; flex-direction: column; align-items: center; justify-content: cen
     <button class="key" onclick="k('7')">7</button>
     <button class="key" onclick="k('8')">8</button>
     <button class="key" onclick="k('9')">9</button>
-    <button class="key ghost"></button>
+    <button class="key gh"></button>
     <button class="key" onclick="k('0')">0</button>
-    <button class="key del" onclick="kDel()">⌫</button>
+    <button class="key dl" onclick="kd()">⌫</button>
   </div>
-  <div class="pin-err" id="pin-err">❌ PIN ERRATO — RIPROVA</div>
-  <button class="back-btn" style="margin-top:1.5rem" onclick="tornaLogin()">← INDIETRO</button>
+  <div class="perr" id="perr">❌ PIN ERRATO — RIPROVA</div>
+  <button class="back" style="margin-top:1.5rem" onclick="tornaLogin()">← INDIETRO</button>
 </div>
 
-<div id="primo-accesso">
-  <button class="back-btn" onclick="apriListaRider()">← INDIETRO</button>
-  <div class="sc-title">PRIMO ACCESSO</div>
-  <div class="sc-sub">INSERISCI I TUOI DATI</div>
+<div id="primo">
+  <button class="back" onclick="apriRider()">← INDIETRO</button>
+  <div class="sct">PRIMO ACCESSO</div>
+  <div class="scs">INSERISCI I TUOI DATI</div>
   <div class="ff"><label>NOME</label><input type="text" id="pa-nome" placeholder="Es. Mario"></div>
   <div class="ff"><label>COGNOME</label><input type="text" id="pa-cognome" placeholder="Es. Rossi"></div>
   <div class="ff"><label>CELLULARE</label><input type="tel" id="pa-tel" placeholder="Es. 3331234567"></div>
-  <button class="submit-btn" onclick="registraRider()">REGISTRATI →</button>
+  <button class="sbtn" onclick="registra()">REGISTRATI →</button>
 </div>
 
 <div id="app">
-  <div class="header">
-    <div class="header-title">🛵 SAVERIO DELIVERY</div>
-    <div style="display:flex;align-items:center;gap:0.5rem">
-      <span class="ruolo-badge" id="badge-ruolo">—</span>
-      <button class="logout-btn" onclick="logout()">ESCI</button>
+  <div class="hdr">
+    <div class="htit">🛵 SAVERIO DELIVERY</div>
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <span class="rbadge" id="rbadge">—</span>
+      <button class="lout" onclick="logout()">ESCI</button>
     </div>
   </div>
-  <div class="content">
-    <div class="welcome-card">
-      <div class="welcome-t" id="w-nome">BENVENUTO!</div>
-      <div class="welcome-s" id="w-ruolo">—</div>
+  <div class="cnt">
+    <div class="wcard">
+      <div class="wt" id="wnome">BENVENUTO!</div>
+      <div class="ws" id="wruolo">—</div>
     </div>
-    <div class="ok-card">
+    <div class="okcard">
       <span style="font-size:1.5rem">✅</span>
-      <span class="ok-text">FIREBASE CONNESSO E FUNZIONANTE</span>
+      <span class="oktxt">FIREBASE CONNESSO E FUNZIONANTE</span>
     </div>
-    <div class="info-card"><div class="info-l">PROGETTO FIREBASE</div><div class="info-v">saverio-delivery</div></div>
-    <div class="info-card"><div class="info-l">RUOLO</div><div class="info-v" id="info-ruolo">—</div></div>
-    <div class="info-card"><div class="info-l">UTENTE</div><div class="info-v" id="info-utente">—</div></div>
-    <div class="fase-card">
-      ⚙️ <strong>FASE 1 COMPLETATA</strong><br><br>
+    <div class="icard"><div class="il">PROGETTO</div><div class="iv">saverio-delivery</div></div>
+    <div class="icard"><div class="il">RUOLO</div><div class="iv" id="iruolo">—</div></div>
+    <div class="icard"><div class="il">UTENTE</div><div class="iv" id="iutente">—</div></div>
+    <div class="fcard">
+      ⚙️ <strong>FASE 1 OK</strong><br><br>
       ✅ Login Admin / Dispatch / Rider<br>
       ✅ Firebase connesso<br>
       ✅ PIN verificato su database<br>
       ✅ Sessione persistente<br>
       ✅ Reset mezzanotte<br><br>
-      👉 Testa il login su iPhone e iPad.<br>
-      Poi passiamo alla Fase 2: Ordini e Dispatch.
+      👉 Se funziona, passiamo alla Fase 2!
     </div>
   </div>
   <nav class="nav">
-    <button class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-label">HOME</span></button>
+    <button class="ni active"><span class="nic">🏠</span><span class="nil">HOME</span></button>
   </nav>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-var firebaseConfig = {
-  apiKey: "AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",
-  authDomain: "saverio-delivery.firebaseapp.com",
-  databaseURL: "https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "saverio-delivery",
-  storageBucket: "saverio-delivery.firebasestorage.app",
-  messagingSenderId: "913928598350",
-  appId: "1:913928598350:web:98489624879baabe27241f"
+// CONFIG FIREBASE
+var cfg = {
+  apiKey:"AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",
+  authDomain:"saverio-delivery.firebaseapp.com",
+  databaseURL:"https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"saverio-delivery",
+  storageBucket:"saverio-delivery.firebasestorage.app",
+  messagingSenderId:"913928598350",
+  appId:"1:913928598350:web:98489624879baabe27241f"
 };
 
-var db = null;
-var pinBuf = '';
-var pinId = null;
-var pinNome = null;
+var db, pinBuf='', pinId=null, pinNome=null;
 
+// INIT — avvia subito senza aspettare .info/connected
 window.onload = function() {
   try {
-    firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(cfg);
     db = firebase.database();
-    var connesso = false;
-    var t1 = setTimeout(function() { document.getElementById('loading-msg').textContent = 'CONNESSIONE LENTA...'; }, 2000);
-    var t2 = setTimeout(function() { if (!connesso) mostraLogin(); }, 5000);
-    db.ref('.info/connected').on('value', function(snap) {
-      if (snap.val() === true && !connesso) {
-        connesso = true;
-        clearTimeout(t1); clearTimeout(t2);
-        initDati();
-        if (!ripristinaSessione()) mostraLogin();
+    // Testa subito leggendo un nodo
+    db.ref('utenti/admin').once('value').then(function(snap) {
+      if (!snap.exists()) {
+        db.ref('utenti/admin').set({nome:'Saverio',cognome:'',telefono:'',ruolo:'admin',pin:'1234',softpos:false,attivo:true});
+        db.ref('utenti/dispatch').set({nome:'Dispatch',cognome:'',telefono:'',ruolo:'dispatch',pin:'0000',softpos:false,attivo:true});
       }
+      if (!ripristinaSessione()) mostraLogin();
+    }).catch(function(e) {
+      console.error('Firebase error:', e);
+      mostraLogin();
     });
-  } catch(e) { mostraLogin(); }
+  } catch(e) {
+    console.error(e);
+    mostraLogin();
+  }
+  // Safety timeout
+  setTimeout(function() {
+    if (document.getElementById('loading').style.display !== 'none') mostraLogin();
+  }, 4000);
   resetMezzanotte();
 };
 
-function initDati() {
-  db.ref('utenti/admin').once('value', function(s) {
-    if (!s.exists()) db.ref('utenti/admin').set({ nome:'Saverio', cognome:'', telefono:'', ruolo:'admin', pin:'1234', softpos:false, attivo:true });
-  });
-  db.ref('utenti/dispatch').once('value', function(s) {
-    if (!s.exists()) db.ref('utenti/dispatch').set({ nome:'Dispatch', cognome:'', telefono:'', ruolo:'dispatch', pin:'0000', softpos:false, attivo:true });
-  });
-}
-
 function resetMezzanotte() {
-  var oggi = new Date(); var chiave = oggi.getFullYear()+'-'+(oggi.getMonth()+1)+'-'+oggi.getDate();
-  var ultimo = localStorage.getItem('rdata');
-  if (ultimo && ultimo !== chiave) sessionStorage.clear();
-  localStorage.setItem('rdata', chiave);
-  var mn = new Date(); mn.setHours(24,0,10,0);
-  setTimeout(function() { sessionStorage.clear(); location.reload(); }, mn - oggi);
+  var d=new Date(), k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+  var u=localStorage.getItem('rd');
+  if(u&&u!==k) sessionStorage.clear();
+  localStorage.setItem('rd',k);
+  var mn=new Date(); mn.setHours(24,0,10,0);
+  setTimeout(function(){sessionStorage.clear();location.reload();},mn-d);
 }
 
 function nascondi() {
-  var ids = ['loading','login','rider-lista','pin','primo-accesso','app'];
-  ids.forEach(function(id) {
-    var el = document.getElementById(id);
-    if (id === 'loading') { el.style.display = 'none'; return; }
-    el.classList.remove('show');
+  document.getElementById('loading').style.display='none';
+  ['login','rider-lista','pin','primo','app'].forEach(function(id){
+    document.getElementById(id).classList.remove('show');
   });
 }
 
-function mostraLogin() { nascondi(); document.getElementById('login').classList.add('show'); }
+function mostraLogin() {
+  nascondi();
+  document.getElementById('login').classList.add('show');
+}
 
 function avviaLogin(uid, nome) {
-  pinId = uid; pinNome = nome;
-  nascondi(); document.getElementById('pin').classList.add('show');
-  document.getElementById('pin-nome').textContent = nome;
-  document.getElementById('pin-err').style.display = 'none';
-  pinBuf = ''; aggiornaDots();
+  pinId=uid; pinNome=nome;
+  nascondi();
+  document.getElementById('pin').classList.add('show');
+  document.getElementById('pnome').textContent=nome;
+  document.getElementById('perr').style.display='none';
+  pinBuf=''; dots();
 }
 
-function apriListaRider() {
-  nascondi(); document.getElementById('rider-lista').classList.add('show');
-  if (!db) return;
-  db.ref('utenti').once('value', function(snap) {
-    var cont = document.getElementById('rider-items'); cont.innerHTML = '';
-    if (snap.exists()) {
-      snap.forEach(function(c) {
-        var u = c.val();
-        if (u.ruolo !== 'rider' || u.attivo === false) return;
-        var d = document.createElement('div'); d.className = 'rider-btn';
-        d.innerHTML = '<div class="r-av">'+((u.nome||'?').charAt(0).toUpperCase())+'</div><div><div class="r-nome">'+(u.nome||'')+' '+(u.cognome||'')+'</div><div class="r-sub">RIDER</div></div>';
-        d.onclick = (function(id,u){ return function(){ pinId=id; pinNome=((u.nome||'')+' '+(u.cognome||'')).trim(); avviaLoginPin(); }; })(c.key,u);
-        cont.appendChild(d);
-      });
-    }
-    var bn = document.createElement('div'); bn.className = 'rider-btn'; bn.style.borderColor = 'rgba(232,96,10,0.35)';
-    bn.innerHTML = '<div class="r-av new">+</div><div><div class="r-nome">SONO NUOVO</div><div class="r-sub">PRIMO ACCESSO</div></div>';
-    bn.onclick = function() { nascondi(); document.getElementById('primo-accesso').classList.add('show'); };
-    cont.appendChild(bn);
+function apriRider() {
+  nascondi();
+  document.getElementById('rider-lista').classList.add('show');
+  db.ref('utenti').once('value').then(function(snap) {
+    var c=document.getElementById('rider-items'); c.innerHTML='';
+    if(snap.exists()) snap.forEach(function(ch){
+      var u=ch.val();
+      if(u.ruolo!=='rider'||u.attivo===false) return;
+      var d=document.createElement('div'); d.className='rbtn';
+      d.innerHTML='<div class="rav">'+((u.nome||'?').charAt(0).toUpperCase())+'</div><div><div class="rn">'+(u.nome||'')+' '+(u.cognome||'')+'</div><div class="rs">RIDER</div></div>';
+      d.onclick=(function(id,u){return function(){pinId=id;pinNome=((u.nome||'')+' '+(u.cognome||'')).trim();apriPin();};})(ch.key,u);
+      c.appendChild(d);
+    });
+    var bn=document.createElement('div'); bn.className='rbtn'; bn.style.borderColor='rgba(232,96,10,.35)';
+    bn.innerHTML='<div class="rav new">+</div><div><div class="rn">SONO NUOVO</div><div class="rs">PRIMO ACCESSO</div></div>';
+    bn.onclick=function(){nascondi();document.getElementById('primo').classList.add('show');};
+    c.appendChild(bn);
   });
 }
 
-function avviaLoginPin() {
-  nascondi(); document.getElementById('pin').classList.add('show');
-  document.getElementById('pin-nome').textContent = (pinNome||'').toUpperCase();
-  document.getElementById('pin-err').style.display = 'none';
-  pinBuf = ''; aggiornaDots();
+function apriPin() {
+  nascondi();
+  document.getElementById('pin').classList.add('show');
+  document.getElementById('pnome').textContent=(pinNome||'').toUpperCase();
+  document.getElementById('perr').style.display='none';
+  pinBuf=''; dots();
 }
 
-function registraRider() {
-  var nome = document.getElementById('pa-nome').value.trim();
-  var cognome = document.getElementById('pa-cognome').value.trim();
-  var tel = document.getElementById('pa-tel').value.trim();
-  if (!nome) { alert('Inserisci il nome'); return; }
-  var ref = db.ref('utenti').push();
-  ref.set({ nome:nome, cognome:cognome, telefono:tel, ruolo:'rider', pin:'0000', softpos:false, attivo:true });
-  pinId = ref.key; pinNome = (nome+' '+cognome).trim();
-  avviaLoginPin();
+function registra() {
+  var nome=document.getElementById('pa-nome').value.trim();
+  var cognome=document.getElementById('pa-cognome').value.trim();
+  var tel=document.getElementById('pa-tel').value.trim();
+  if(!nome){alert('Inserisci il nome');return;}
+  var ref=db.ref('utenti').push();
+  ref.set({nome:nome,cognome:cognome,telefono:tel,ruolo:'rider',pin:'0000',softpos:false,attivo:true});
+  pinId=ref.key; pinNome=(nome+' '+cognome).trim(); apriPin();
 }
 
-function tornaLogin() { pinBuf=''; mostraLogin(); }
+function tornaLogin(){pinBuf='';mostraLogin();}
 
-function k(c) {
-  if (pinBuf.length >= 4) return;
-  pinBuf += c; aggiornaDots();
-  if (pinBuf.length === 4) setTimeout(verificaPin, 150);
+function k(c){
+  if(pinBuf.length>=4) return;
+  pinBuf+=c; dots();
+  if(pinBuf.length===4) setTimeout(verificaPin,150);
 }
-function kDel() { pinBuf = pinBuf.slice(0,-1); aggiornaDots(); }
-function aggiornaDots() {
-  for (var i=0;i<4;i++) document.getElementById('d'+i).classList.toggle('on', i < pinBuf.length);
-}
+function kd(){pinBuf=pinBuf.slice(0,-1);dots();}
+function dots(){for(var i=0;i<4;i++) document.getElementById('d'+i).classList.toggle('on',i<pinBuf.length);}
 
 function verificaPin() {
-  if (!db || !pinId) return;
-  db.ref('utenti/'+pinId).once('value', function(snap) {
-    if (!snap.exists()) { errPin(); return; }
-    var u = snap.val();
-    if (u.pin === pinBuf) {
-      sessionStorage.setItem('s', JSON.stringify({id:pinId, ruolo:u.ruolo}));
-      avviaApp(pinId, u);
-    } else { errPin(); }
-  });
+  db.ref('utenti/'+pinId).once('value').then(function(snap) {
+    if(!snap.exists()){errPin();return;}
+    var u=snap.val();
+    if(u.pin===pinBuf){
+      sessionStorage.setItem('s',JSON.stringify({id:pinId,ruolo:u.ruolo}));
+      avviaApp(pinId,u);
+    } else errPin();
+  }).catch(function(){errPin();});
 }
 
-function errPin() {
-  document.getElementById('pin-err').style.display = 'block';
-  pinBuf = ''; aggiornaDots();
-  setTimeout(function(){ document.getElementById('pin-err').style.display='none'; }, 2500);
+function errPin(){
+  document.getElementById('perr').style.display='block';
+  pinBuf=''; dots();
+  setTimeout(function(){document.getElementById('perr').style.display='none';},2500);
 }
 
 function ripristinaSessione() {
-  var s = sessionStorage.getItem('s');
-  if (!s || !db) return false;
+  var s=sessionStorage.getItem('s');
+  if(!s) return false;
   try {
-    var p = JSON.parse(s);
-    db.ref('utenti/'+p.id).once('value', function(snap) {
-      if (!snap.exists()) { sessionStorage.clear(); mostraLogin(); return; }
-      avviaApp(p.id, snap.val());
+    var p=JSON.parse(s);
+    db.ref('utenti/'+p.id).once('value').then(function(snap) {
+      if(!snap.exists()){sessionStorage.clear();mostraLogin();return;}
+      avviaApp(p.id,snap.val());
     });
     return true;
-  } catch(e) { return false; }
+  } catch(e){return false;}
 }
 
-function avviaApp(id, u) {
-  nascondi(); document.getElementById('app').classList.add('show');
-  var nome = ((u.nome||'')+' '+(u.cognome||'')).trim() || u.ruolo;
-  document.getElementById('badge-ruolo').textContent = u.ruolo.toUpperCase();
-  document.getElementById('w-nome').textContent = 'CIAO, '+(u.nome||u.ruolo).toUpperCase()+'!';
-  document.getElementById('w-ruolo').textContent = 'Accesso come '+u.ruolo;
-  document.getElementById('info-ruolo').textContent = u.ruolo.toUpperCase();
-  document.getElementById('info-utente').textContent = nome;
+function avviaApp(id,u) {
+  nascondi();
+  document.getElementById('app').classList.add('show');
+  var nome=((u.nome||'')+' '+(u.cognome||'')).trim()||u.ruolo;
+  document.getElementById('rbadge').textContent=u.ruolo.toUpperCase();
+  document.getElementById('wnome').textContent='CIAO, '+(u.nome||u.ruolo).toUpperCase()+'!';
+  document.getElementById('wruolo').textContent='Accesso come '+u.ruolo;
+  document.getElementById('iruolo').textContent=u.ruolo.toUpperCase();
+  document.getElementById('iutente').textContent=nome;
   toast('✅ ACCESSO EFFETTUATO');
 }
 
-function logout() { sessionStorage.clear(); location.reload(); }
+function logout(){sessionStorage.clear();location.reload();}
 
-function toast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
 }
 </script>
 
