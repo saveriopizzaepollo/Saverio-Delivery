@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Saverio Delivery Pro v8</title>
+    <title>Saverio Delivery Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -11,74 +11,50 @@
         :root { --blu: #1A3A5C; --blu2: #2B5F8E; --ora: #E8600A; --ver: #1B8A4A; --ros: #C0392B; --gri: #F0F4F8; --bor: #D0DCE8; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; }
         body { background: var(--gri); color: var(--blu); height: 100vh; overflow: hidden; }
-
-        /* UI Base */
         .page { position: fixed; inset: 0; background: var(--blu); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
         .page.show { display: flex; }
         #app { display: none; flex-direction: column; height: 100vh; background: white; }
         #app.show { display: flex; }
         .hdr { background: var(--blu); color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; height: 50px; }
-        .cnt { flex: 1; overflow-y: auto; padding: 10px 15px 100px; }
-        
+        .cnt { flex: 1; overflow-y: auto; padding: 10px 15px 120px; }
         .nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid var(--bor); display: flex; padding-bottom: env(safe-area-inset-bottom); z-index: 90; }
-        .ni { flex: 1; padding: 12px 5px; text-align: center; background: none; border: none; color: #aaa; font-weight: 900; font-size: 0.65rem; text-transform: uppercase; }
+        .ni { flex: 1; padding: 12px; text-align: center; background: none; border: none; color: #aaa; font-weight: 900; font-size: 0.65rem; }
         .ni.active { color: var(--blu); border-top: 4px solid var(--ora); }
-
-        /* Form Ordine */
-        .form-input { width: 100%; padding: 10px; border: 2px solid var(--bor); border-radius: 10px; font-weight: 700; margin-bottom: 8px; font-size: 1rem; }
-        .form-input.err { border-color: var(--ros) !important; background: #FFF5F5; }
-        .scrivania { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 10px; margin-bottom: 15px; }
-        
-        .box-pizze { border: 3px solid var(--blu); border-radius: 12px; padding: 10px; background: #fff; min-height: 180px; }
+        .form-input { width: 100%; padding: 10px; border: 2px solid var(--bor); border-radius: 10px; font-weight: 700; margin-bottom: 8px; }
+        .form-input.err { border: 2px solid var(--ros) !important; background: #FFF5F5; }
+        .scrivania { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 10px; margin-bottom: 10px; }
+        .box-pizze { border: 3px solid var(--blu); border-radius: 12px; padding: 8px; background: #fff; min-height: 180px; }
         .p-row { display: flex; gap: 4px; margin-bottom: 6px; align-items: center; }
-        .btn-gf { width: 32px; height: 32px; border-radius: 6px; border: 2px solid var(--ver); color: var(--ver); font-weight: 900; background: white; font-size: 0.6rem; flex-shrink: 0; }
+        .btn-gf { width: 32px; height: 32px; border-radius: 6px; border: 2px solid var(--ver); color: var(--ver); font-weight: 900; background: white; font-size: 0.6rem; }
         .btn-gf.active { background: var(--ver); color: white; }
-        .p-nome { flex: 1; border: none; border-bottom: 1px dashed #ccc; font-weight: 700; font-size: 1rem; padding: 2px; }
-        .p-prezzo { width: 55px; border: 1px solid var(--bor); text-align: right; font-weight: 900; border-radius: 5px; padding: 4px; font-size: 0.9rem; }
-
+        .p-nome { flex: 1; border: none; border-bottom: 1px dashed #ccc; font-weight: 700; }
+        .p-prezzo { width: 55px; border: 1px solid var(--bor); text-align: right; font-weight: 900; border-radius: 5px; }
         .box-special { border: 2px solid #ccc; border-radius: 12px; padding: 8px; background: white; display: flex; flex-direction: column; gap: 8px; }
-        .btn-main { width: 100%; padding: 12px; background: white; border: 3px solid var(--blu); border-radius: 10px; font-weight: 900; font-size: 1.1rem; }
-        .grid-v { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
-        .v-btn { padding: 6px 2px; font-size: 0.55rem; font-weight: 900; border: none; border-radius: 4px; background: var(--ros); color: white; }
-        .v-btn.v-gf { background: var(--ver); }
-
-        .q-row { display: flex; gap: 4px; margin-bottom: 8px; }
-        .q-btn { flex: 1; padding: 8px 2px; border: 1px solid var(--bor); border-radius: 6px; background: white; font-weight: 900; font-size: 0.7rem; }
-        .q-btn.sel { background: var(--blu); color: white; }
-        .q-btn.sel-p { background: var(--ora); color: white; border-color: var(--ora); }
-
-        /* Card Liste */
+        .btn-main { width: 100%; padding: 10px; background: white; border: 3px solid var(--blu); border-radius: 10px; font-weight: 900; font-size: 1rem; }
+        .v-btn { padding: 6px; font-size: 0.55rem; font-weight: 900; border: none; border-radius: 4px; background: var(--ros); color: white; }
         .card { background: white; border: 2px solid var(--bor); border-radius: 15px; padding: 12px; margin-bottom: 10px; position: relative; }
-        .c-cog { font-size: 1.6rem; font-weight: 900; display: block; }
-        .c-ind { font-size: 1.1rem; font-weight: 700; color: var(--blu2); display: block; }
+        .c-cog { font-size: 1.6rem; font-weight: 900; }
         .badge { position: absolute; top: 12px; right: 12px; padding: 4px 8px; border-radius: 6px; font-weight: 900; font-size: 0.8rem; }
-        .b-pos { background: var(--ros); color: white; }
-        .b-pag { background: var(--ver); color: white; }
-        .b-con { background: #FFD700; color: var(--blu); }
-
-        .btn-act { width: 100%; margin-top: 8px; padding: 12px; border-radius: 10px; border: none; font-weight: 900; color: white; font-size: 0.9rem; }
-        
-        /* PIN */
+        .key { width: 65px; height: 65px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 1.4rem; font-weight: 900; border-radius: 12px; margin: 4px; }
         .dot { width: 14px; height: 14px; border: 2px solid white; border-radius: 50%; margin: 0 4px; }
         .dot.on { background: var(--ora); border-color: var(--ora); }
-        .key { width: 65px; height: 65px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 1.4rem; font-weight: 900; border-radius: 12px; margin: 4px; }
     </style>
 </head>
 <body>
 
 <div id="loading" class="page show">
-    <div style="font-size:2rem; font-weight:900; color:white; text-align:center">SAVERIO<br>DELIVERY PRO</div>
+    <div style="font-size:2rem; font-weight:900; color:white">SAVERIO DELIVERY</div>
 </div>
 
 <div id="login" class="page">
-    <button class="btn-act" style="background:var(--ora); max-width:280px" onclick="apriRider()">🛵 RIDERS</button>
-    <button class="btn-act" style="background:var(--blu2); max-width:280px" onclick="setUPin('dispatch', 'BANCO')">📦 BANCO / DISPATCH</button>
-    <button class="btn-act" style="background:var(--ver); max-width:280px" onclick="setUPin('admin', 'SAVERIO')">👑 ADMIN</button>
+    <button onclick="apriRider()" style="background:var(--ora); color:white; width:280px; padding:15px; border-radius:12px; border:none; font-weight:900; margin-bottom:10px">🛵 RIDERS</button>
+    <button onclick="setUPin('dispatch', 'BANCO')" style="background:var(--blu2); color:white; width:280px; padding:15px; border-radius:12px; border:none; font-weight:900; margin-bottom:10px">📦 BANCO</button>
+    <button onclick="setUPin('admin', 'SAVERIO')" style="background:var(--ver); color:white; width:280px; padding:15px; border-radius:12px; border:none; font-weight:900">👑 ADMIN</button>
 </div>
 
 <div id="rider-lista" class="page">
-    <button onclick="tornaLogin()" style="color:white; margin-bottom:20px; background:none; border:none; font-weight:900">← INDIETRO</button>
     <div id="rider-container" style="width:100%; max-width:280px"></div>
+    <button onclick="tornaLogin()" style="color:white; margin-top:20px; background:none; border:none">← INDIETRO</button>
 </div>
 
 <div id="pin-pad" class="page">
@@ -91,252 +67,95 @@
 </div>
 
 <div id="app">
-    <div class="hdr">
-        <span id="u-nome" style="font-weight:900"></span>
-        <span id="orologio" style="font-weight:900; color:var(--ora)"></span>
-        <button onclick="location.reload()" style="background:none; border:1px solid white; color:white; padding:2px 8px; border-radius:8px; font-size:0.6rem">ESCI</button>
-    </div>
-
+    <div class="hdr"><span id="u-nome" style="font-weight:900"></span><span id="orologio" style="font-weight:900; color:var(--ora)"></span><button onclick="location.reload()" style="background:none; border:1px solid white; color:white; padding:2px 8px; border-radius:8px; font-size:0.6rem">ESCI</button></div>
     <div class="cnt">
         <div id="sec-ordine" class="section">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
-                <input type="text" id="o-cog" class="form-input" placeholder="COGNOME *">
-                <input type="tel" id="o-cel" class="form-input" placeholder="CELLULARE *">
-            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px"><input type="text" id="o-cog" class="form-input" placeholder="COGNOME *"><input type="tel" id="o-cel" class="form-input" placeholder="CELLULARE *"></div>
             <input type="text" id="o-ind" class="form-input" placeholder="INDIRIZZO *">
-            
             <div class="scrivania">
-                <div class="box-pizze">
-                    <div id="pizze-list"></div>
-                    <button onclick="addPRow()" style="color:var(--ora); font-weight:900; font-size:0.65rem; background:none; border:none; margin-top:10px">+ AGGIUNGI PIZZA</button>
-                </div>
-
+                <div class="box-pizze"><div id="pizze-list"></div><button onclick="addPRow()" style="color:var(--ora); font-weight:900; font-size:0.65rem; background:none; border:none; margin-top:10px">+ AGGIUNGI PIZZA</button></div>
                 <div class="box-special">
-                    <div style="border-bottom:1px solid #eee; padding-bottom:8px">
-                        <button class="btn-main" onclick="addPollo()">POLLO: <span id="p-cnt">0</span></button>
-                        <div class="grid-v">
-                            <button class="v-btn" onclick="addPVar('P.MB')">P.MB</button>
-                            <button class="v-btn" onclick="addPVar('P.MR')">P.MR</button>
-                            <button class="v-btn v-gf" onclick="addPVar('GF')">GF</button>
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn-main" onclick="addCoscia()" style="border-color:var(--ora)">COSCIA: <span id="c-cnt">0</span></button>
-                        <div class="grid-v">
-                            <button class="v-btn" onclick="addCVar('P.MB')">P.MB</button>
-                            <button class="v-btn" onclick="addCVar('P.MR')">P.MR</button>
-                            <button class="v-btn v-gf" onclick="addCVar('GF')">GF</button>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:5px; margin-top:5px">
-                        <input type="number" id="p-euro-pc" class="p-prezzo" style="width:100%; border:2px solid var(--blu)" placeholder="€ POLLO/COSCIA" oninput="aggTot()">
-                    </div>
+                    <button class="btn-main" onclick="addPollo()">POLLO: <span id="p-cnt">0</span></button>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:4px"><button class="v-btn" onclick="addPVar('P.MB')">P.MB</button><button class="v-btn" onclick="addPVar('P.MR')">P.MR</button><button class="v-btn" style="background:var(--ver)" onclick="addPVar('GF')">GF</button></div>
+                    <button class="btn-main" onclick="addCoscia()" style="border-color:var(--ora)">COSCIA: <span id="c-cnt">0</span></button>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:4px"><button class="v-btn" onclick="addCVar('P.MB')">P.MB</button><button class="v-btn" onclick="addCVar('P.MR')">P.MR</button><button class="v-btn" style="background:var(--ver)" onclick="addCVar('GF')">GF</button></div>
+                    <input type="number" id="p-euro-pc" class="p-prezzo" style="width:100%; border:2px solid var(--blu); height:40px" placeholder="€" oninput="aggTot()">
                 </div>
             </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px">
-                <div style="border:1px solid #ddd; padding:5px; border-radius:8px">
-                    <input type="text" id="o-rost" class="p-nome" style="font-size:0.75rem" placeholder="ROST/MIGNON">
-                    <input type="number" id="p-euro-rost" class="p-prezzo" style="width:100%" oninput="aggTot()">
-                </div>
-                <div style="border:1px solid #ddd; padding:5px; border-radius:8px">
-                    <input type="text" id="o-sfinc" class="p-nome" style="font-size:0.75rem" placeholder="SFINC/TAGLIO">
-                    <input type="number" id="p-euro-sfinc" class="p-prezzo" style="width:100%" oninput="aggTot()">
-                </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
-                <input type="time" id="o-ora" class="form-input">
-                <div class="q-row">
-                    <button class="q-btn b-dom" onclick="setD(1, this)">1€</button>
-                    <button class="q-btn b-dom" onclick="setD(2, this)">2€</button>
-                    <button class="q-btn b-dom" onclick="setD(3, this)">3€</button>
-                </div>
-            </div>
-
-            <div class="q-row">
-                <button class="q-btn b-paga sel-p" id="btn-cont" onclick="setP('CONTANTI', this)">CONTANTI</button>
-                <button class="q-btn b-paga" id="btn-pos" onclick="setP('POS', this)">POS</button>
-                <button class="q-btn b-paga" id="btn-on" onclick="setP('PAGATO', this)">PAGATO</button>
-            </div>
-            <div id="row-res" class="q-row">
-                <button class="q-btn b-res" onclick="setR('10€', this)">R. 10€</button>
-                <button class="q-btn b-res" onclick="setR('20€', this)">R. 20€</button>
-                <button class="q-btn b-res" onclick="setR('50€', this)">R. 50€</button>
-            </div>
-
-            <div style="background:var(--blu); color:white; padding:15px; border-radius:15px; text-align:center">
-                <div style="font-size:2.2rem; font-weight:900" id="tot-vis">€ 0.00</div>
-                <button class="btn-act" style="background:var(--ora)" onclick="invOrd()">🔥 INVIA IN PREPARAZIONE</button>
-            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px"><input type="time" id="o-ora" class="form-input"><div style="display:flex; gap:4px"><button class="ni" style="background:white; border:1px solid #ccc; border-radius:8px" onclick="setD(1, this)">1€</button><button class="ni" style="background:white; border:1px solid #ccc; border-radius:8px" onclick="setD(2, this)">2€</button><button class="ni" style="background:white; border:1px solid #ccc; border-radius:8px" onclick="setD(3, this)">3€</button></div></div>
+            <div style="background:var(--blu); color:white; padding:15px; border-radius:15px; text-align:center; margin-top:10px"><div style="font-size:2rem; font-weight:900" id="tot-vis">€ 0.00</div><button onclick="invOrd()" style="width:100%; padding:15px; background:var(--ora); border:none; border-radius:12px; color:white; font-weight:900; margin-top:10px">🔥 INVIA ORDINE</button></div>
         </div>
-
-        <div id="sec-ordini" class="section">
-            <div id="l-preparazione"></div><div id="l-pronto"></div><div id="l-viaggio"></div><div id="l-consegnato"></div>
-        </div>
-
-        <div id="sec-rider" class="section">
-            <div style="background:var(--ver); color:white; padding:15px; border-radius:15px; text-align:center; margin-bottom:10px">
-                <div id="r-inc" style="font-size:1.8rem; font-weight:900">€ 0.00</div>
-            </div>
-            <div id="r-mie"></div><div id="r-sto"></div>
-        </div>
+        <div id="sec-ordini" class="section"><div id="l-preparazione"></div><div id="l-pronto"></div><div id="l-viaggio"></div><div id="l-consegnato"></div></div>
+        <div id="sec-rider" class="section"><div id="r-inc" style="background:var(--ver); color:white; padding:15px; border-radius:15px; text-align:center; font-size:1.5rem; font-weight:900">€ 0.00</div><div id="r-mie"></div><div id="r-sto"></div></div>
     </div>
     <nav class="nav" id="main-nav"></nav>
 </div>
 
 <script>
-    const fbC = { apiKey: "AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw", databaseURL: "https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app", projectId: "saverio-delivery" };
-    firebase.initializeApp(fbC); const db = firebase.database();
-
-    let user = null; let pB = ""; let tU = null;
-    let polC = 0; let polV = []; 
-    let cosC = 0; let cosV = [];
-    let dC = 0; let tP = "CONTANTI"; let tR = "NO RESTO";
-
-    const PREZZO_MEZZO_POLLO = 7.50;
-    const PREZZO_COSCETTA = 4.50;
-
-    window.onload = () => { setTimeout(() => { document.getElementById('loading').classList.remove('show'); tornaLogin(); }, 800); addPRow(); genPad(); };
-
-    function tornaLogin() { document.querySelectorAll('.page').forEach(p => p.classList.remove('show')); document.getElementById('login').classList.add('show'); }
-
-    function apriRider() {
+    const fbC={apiKey:"AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",databaseURL:"https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",projectId:"saverio-delivery"};
+    firebase.initializeApp(fbC); const db=firebase.database();
+    let user=null; let pB=""; let tU=null; let polC=0; let polV=[]; let cosC=0; let cosV=[]; let dC=0;
+    window.onload=()=>{ setTimeout(()=>{document.getElementById('loading').classList.remove('show'); tornaLogin();},1000); addPRow(); genPad(); };
+    function tornaLogin(){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('show')); document.getElementById('login').classList.add('show'); }
+    function apriRider(){
         document.getElementById('login').classList.remove('show'); document.getElementById('rider-lista').classList.add('show');
-        db.ref('utenti').once('value', s => {
-            const c = document.getElementById('rider-container'); c.innerHTML = '';
-            s.forEach(u => { if(u.val().ruolo === 'rider') {
-                let d = document.createElement('div'); d.style = "background:rgba(255,255,255,0.1); color:white; padding:15px; border-radius:12px; margin-bottom:10px; font-weight:900; cursor:pointer";
-                d.innerText = u.val().nome.toUpperCase(); d.onclick = () => setUPin(u.key, u.val().nome); c.appendChild(d);
-            }});
+        db.ref('utenti').once('value', s=>{ const c=document.getElementById('rider-container'); c.innerHTML=''; s.forEach(u=>{ if(u.val().ruolo==='rider'){
+            let d=document.createElement('div'); d.style="background:rgba(255,255,255,0.1); color:white; padding:15px; border-radius:12px; margin-bottom:10px; font-weight:900; cursor:pointer";
+            d.innerText=u.val().nome.toUpperCase(); d.onclick=()=>setUPin(u.key, u.val().nome); c.appendChild(d);
+        }});});
+    }
+    function setUPin(id,n){
+        db.ref('utenti/'+id).once('value', s=>{ tU={id:id,...s.val()}; document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+            document.getElementById('pin-pad').classList.add('show'); document.getElementById('pin-label').innerText="PIN: "+n; pB=""; uD();
         });
     }
-
-    function setUPin(id, n) {
-        db.ref('utenti/'+id).once('value', s => {
-            tU = {id: id, ...s.val()}; document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-            document.getElementById('pin-pad').classList.add('show'); document.getElementById('pin-label').innerText = "ACCESSO " + n;
-            pB = ""; uD();
-        });
+    function pressK(k){ if(pB.length<4)pB+=k; uD(); if(pB.length===4){ if(pB===tU.pin)loginOk(); else{alert("ERRORE!");pB="";uD();}} }
+    function delK(){pB=pB.slice(0,-1);uD();}
+    function uD(){for(let i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('on',i<pB.length);}
+    function loginOk(){
+        user=tU; document.getElementById('pin-pad').classList.remove('show'); document.getElementById('app').classList.add('show');
+        document.getElementById('u-nome').innerText=user.nome.toUpperCase(); const n=document.getElementById('main-nav'); let h='';
+        if(user.ruolo==='admin'){h+=`<button class="ni active" id="n-ordine" onclick="vai('ordine')">NUOVO</button><button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`;}
+        else if(user.ruolo==='dispatch'){h+=`<button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`;}
+        else{h+=`<button class="ni" id="n-rider" onclick="vai('rider')">CONSEGNE</button>`;}
+        n.innerHTML=h; vai(user.ruolo==='rider'?'rider':(user.ruolo==='admin'?'ordine':'ordini')); ascoltaO();
     }
-
-    function pressK(k) {
-        if(pB.length < 4) pB += k; uD();
-        if(pB.length === 4) { if(pB === tU.pin) loginOk(); else { alert("ERRORE!"); pB = ""; uD(); }}
+    function vai(id){ document.querySelectorAll('.section').forEach(s=>s.style.display='none'); document.getElementById('sec-'+id).style.display='block';
+        document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active')); if(document.getElementById('n-'+id))document.getElementById('n-'+id).classList.add('active');
     }
-    function delK() { pB = pB.slice(0,-1); uD(); }
-    function uD() { for(let i=0; i<4; i++) document.getElementById('d'+i).classList.toggle('on', i < pB.length); }
-
-    function loginOk() {
-        user = tU; document.getElementById('pin-pad').classList.remove('show'); document.getElementById('app').classList.add('show');
-        document.getElementById('u-nome').innerText = user.nome.toUpperCase();
-        const n = document.getElementById('main-nav'); let h = '';
-        if(user.ruolo === 'admin') { h += `<button class="ni active" id="n-ordine" onclick="vai('ordine')">NUOVO ORDINE</button><button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`; }
-        else if(user.ruolo === 'dispatch') { h += `<button class="ni" id="n-ordini" onclick="vai('ordini')">ORDINI</button>`; }
-        else { h += `<button class="ni" id="n-rider" onclick="vai('rider')">CONSEGNE</button>`; }
-        n.innerHTML = h; vai(user.ruolo === 'rider' ? 'rider' : (user.ruolo === 'admin' ? 'ordine' : 'ordini')); ascoltaO();
-    }
-
-    function vai(id) {
-        document.querySelectorAll('.section').forEach(s => s.style.display = 'none'); document.getElementById('sec-' + id).style.display = 'block';
-        document.querySelectorAll('.ni').forEach(n => n.classList.remove('active')); if(document.getElementById('n-'+id)) document.getElementById('n-'+id).classList.add('active');
-    }
-
-    function addPRow() {
-        const id = Date.now(); const r = document.createElement('div'); r.className = 'p-row'; r.id = 'row-'+id;
-        r.innerHTML = `<button class="btn-gf" id="gf-${id}" onclick="tGF('${id}')" data-gf="false">GF</button>
-            <input type="text" class="p-nome" placeholder="Pizza...">
-            <input type="number" class="p-prezzo" step="0.50" oninput="aggTot()">
-            <button onclick="this.parentElement.remove(); aggTot()" style="color:red; background:none; border:none; font-weight:900; margin-left:3px">X</button>`;
+    function addPRow(){
+        const id=Date.now(); const r=document.createElement('div'); r.className='p-row'; r.id='row-'+id;
+        r.innerHTML=`<button class="btn-gf" id="gf-${id}" onclick="tGF('${id}')" data-gf="false">GF</button><input type="text" class="p-nome" placeholder="Pizza..."><input type="number" class="p-prezzo" step="0.50" oninput="aggTot()">`;
         document.getElementById('pizze-list').appendChild(r);
     }
-    function tGF(id) { const b = document.getElementById('gf-'+id); const st = b.getAttribute('data-gf')==='true'; b.setAttribute('data-gf', !st); b.classList.toggle('active', !st); }
-
-    function addPollo() { polC += 0.5; document.getElementById('p-cnt').innerText = fP(polC); calcSpec(); }
-    function addCoscia() { cosC += 1; document.getElementById('c-cnt').innerText = cosC; calcSpec(); }
-    function fP(n) { if(n === 0) return "0"; let i = Math.floor(n); let m = n % 1 !== 0 ? " 1/2" : ""; return (i>0?i:"") + m; }
-    
-    function addPVar(v) { polV.push(v); if(polC === 0) polC = 0.5; document.getElementById('p-cnt').innerText = fP(polC); calcSpec(); }
-    function addCVar(v) { cosV.push(v); if(cosC === 0) cosC = 1; document.getElementById('c-cnt').innerText = cosC; calcSpec(); }
-
-    function calcSpec() {
-        let tot = (polC / 0.5) * PREZZO_MEZZO_POLLO;
-        tot += cosC * PREZZO_COSCETTA;
-        document.getElementById('p-euro-pc').value = tot.toFixed(2);
-        aggTot();
+    function tGF(id){const b=document.getElementById('gf-'+id);const st=b.getAttribute('data-gf')==='true';b.setAttribute('data-gf',!st);b.classList.toggle('active',!st);}
+    function addPollo(){polC+=0.5; document.getElementById('p-cnt').innerText=fP(polC); calcSpec();}
+    function addCoscia(){cosC+=1; document.getElementById('c-cnt').innerText=cosC; calcSpec();}
+    function fP(n){if(n===0)return "0";let i=Math.floor(n);let m=n%1!==0?" 1/2":"";return (i>0?i:"")+m;}
+    function addPVar(v){polV.push(v);if(polC===0)polC=0.5;document.getElementById('p-cnt').innerText=fP(polC);calcSpec();}
+    function addCVar(v){cosV.push(v);if(cosC===0)cosC=1;document.getElementById('c-cnt').innerText=cosC;calcSpec();}
+    function calcSpec(){ let tot=(polC/0.5)*7.5; tot+=cosC*4.5; document.getElementById('p-euro-pc').value=tot.toFixed(2); aggTot(); }
+    function setD(v,b){dC=v;document.querySelectorAll('.ni').forEach(x=>x.style.background='white');b.style.background='var(--ora)';aggTot();}
+    function aggTot(){ let t=0; document.querySelectorAll('.p-prezzo').forEach(i=>t+=parseFloat(i.value||0)); t+=dC; document.getElementById('tot-vis').innerText="€ "+t.toFixed(2); return t; }
+    function invOrd(){
+        let err=false; ['o-cog','o-ind','o-cel','o-ora'].forEach(id=>{const el=document.getElementById(id);if(!el.value){el.classList.add('err');err=true;}else el.classList.remove('err');});
+        if(err){alert("MANCANO DATI!");return;}
+        const o={ cognome:document.getElementById('o-cog').value.toUpperCase(), indirizzo:document.getElementById('o-ind').value.toUpperCase(), orario:document.getElementById('o-ora').value, totale:aggTot(), stato:'preparazione' };
+        db.ref('ordini').push(o).then(()=>{alert("INVIATO!");location.reload();});
     }
-
-    function setD(v, b) { dC = v; document.querySelectorAll('.b-dom').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); aggTot(); }
-    function setP(v, b) { tP = v; document.querySelectorAll('.b-paga').forEach(x => x.classList.remove('sel-p')); b.classList.add('sel-p'); document.getElementById('row-res').style.display = v === 'CONTANTI' ? 'flex' : 'none'; aggTot(); }
-    function setR(v, b) { tR = v; document.querySelectorAll('.b-res').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); }
-
-    function aggTot() {
-        let t = 0; document.querySelectorAll('.p-prezzo').forEach(i => t += parseFloat(i.value || 0));
-        t += dC; document.getElementById('tot-vis').innerText = "€ " + t.toFixed(2); return t;
-    }
-
-    function invOrd() {
-        let err = false; ['o-cog', 'o-ind', 'o-cel', 'o-ora'].forEach(id => { const el = document.getElementById(id); if(!el.value) { el.classList.add('err'); err = true; } else el.classList.remove('err'); });
-        if(err) { alert("DATI MANCANTI!"); return; }
-        const o = {
-            cognome: document.getElementById('o-cog').value.toUpperCase(), indirizzo: document.getElementById('o-ind').value.toUpperCase(), cell: document.getElementById('o-cel').value, orario: document.getElementById('o-ora').value,
-            pizze: getPS(), 
-            pollo: polC > 0 ? (fP(polC) + " POLLO (" + polV.join(",") + ")") : "",
-            coscia: cosC > 0 ? (cosC + " COSCIA (" + cosV.join(",") + ")") : "",
-            rost: document.getElementById('o-rost').value + " €" + (document.getElementById('p-euro-rost').value || 0),
-            sfinc: document.getElementById('o-sfinc').value + " €" + (document.getElementById('p-euro-sfinc').value || 0),
-            pagamento: tP, resto: tR, totale: aggTot(), stato: 'preparazione', ts: Date.now()
-        };
-        db.ref('ordini').push(o).then(() => { alert("INVIATO!"); location.reload(); });
-    }
-
-    function getPS() { let s = ""; document.querySelectorAll('.p-row').forEach(r => { const n = r.querySelector('.p-nome').value; const gf = r.querySelector('.btn-gf').getAttribute('data-gf') === 'true'; if(n) s += (gf ? "🚫GF " : "") + n + " | "; }); return s; }
-
-    function ascoltaO() {
-        db.ref('ordini').on('value', snap => { const data = snap.val(); if(user.ruolo !== 'rider') renderS(data); renderR(data); });
-    }
-
-    function renderS(ordini) {
-        const ids = { preparazione: 'l-preparazione', pronto: 'l-pronto', viaggio: 'l-viaggio', consegnato: 'l-consegnato' };
-        Object.values(ids).forEach(id => document.getElementById(id).innerHTML = '');
-        for(let id in ordini) {
-            const o = ordini[id]; const card = document.createElement('div'); card.className = 'card';
-            let bC = o.pagamento === 'POS' ? 'b-pos' : (o.pagamento === 'PAGATO' ? 'b-pag' : 'b-con');
-            let res = o.pagamento === 'CONTANTI' ? `<br>RESTO: ${o.resto}` : '';
-            card.innerHTML = `<span class="badge ${bC}">${o.pagamento}${res}</span><span style="color:var(--ora); font-weight:900">🕒 ${o.orario}</span><span class="c-cog">${o.cognome}</span><span class="c-ind">${o.indirizzo}</span>
-                <div style="font-size:0.85rem; background:var(--gri); padding:8px; border-radius:10px; margin-top:8px">
-                    ${o.pizze ? '🍕 '+o.pizze+'<br>':''} ${o.pollo ? '🍗 '+o.pollo+'<br>':''} ${o.coscia ? '🍗 '+o.coscia+'<br>':''} <b>TOTALE: €${o.totale.toFixed(2)}</b>
-                </div>`;
-            if(o.stato === 'preparazione') { const b = document.createElement('button'); b.className = 'btn-act'; b.style.background = 'var(--ver)'; b.innerText = "PRONTO ✅"; b.onclick = () => db.ref('ordini/'+id).update({stato: 'pronto'}); card.appendChild(b); }
-            else if(o.stato === 'pronto') {
-                const s = document.createElement('select'); s.className = 'form-input'; s.style.marginTop = '8px'; s.innerHTML = '<option>AFFIDA A RIDER...</option>';
-                db.ref('utenti').once('value', us => { us.forEach(u => { if(u.val().ruolo === 'rider') s.innerHTML += `<option value="${u.key}">${u.val().nome}</option>`; }); });
-                s.onchange = () => { if(s.value) db.ref('ordini/'+id).update({stato:'viaggio', rider_id: s.value, rider_nome: s.options[s.selectedIndex].text}); };
-                card.appendChild(s);
-            }
-            if(document.getElementById(ids[o.stato])) document.getElementById(ids[o.stato]).appendChild(card);
+    function ascoltaO(){ db.ref('ordini').on('value', snap=>{ const data=snap.val(); renderS(data); renderR(data); }); }
+    function renderS(ordini){
+        const ids={preparazione:'l-preparazione',pronto:'l-pronto',viaggio:'l-viaggio',consegnato:'l-consegnato'};
+        Object.values(ids).forEach(id=>document.getElementById(id).innerHTML='');
+        for(let id in ordini){ const o=ordini[id]; const c=document.createElement('div'); c.className='card'; c.innerHTML=`<span class="c-cog">${o.cognome}</span><br><b>${o.indirizzo}</b><br>Tot: €${o.totale.toFixed(2)}`;
+            if(o.stato==='preparazione'){ const b=document.createElement('button');b.className='btn-act';b.innerText="PRONTO";b.onclick=()=>db.ref('ordini/'+id).update({stato:'pronto'});c.appendChild(b);}
+            document.getElementById(ids[o.stato]).appendChild(c);
         }
     }
-
-    function renderR(ordini) {
-        const mie = document.getElementById('r-mie'); const sto = document.getElementById('r-sto');
-        mie.innerHTML = ''; sto.innerHTML = ''; let inc = 0;
-        for(let id in ordini) {
-            const o = ordini[id]; if(o.rider_id !== user.id) continue;
-            const c = document.createElement('div'); c.className = 'card'; c.innerHTML = `<b>${o.cognome}</b><br>${o.indirizzo}<br>💰 €${o.totale.toFixed(2)}`;
-            if(o.stato === 'viaggio') { const b = document.createElement('button'); b.className = 'btn-act'; b.style.background = 'var(--ora)'; b.innerText = "CONSEGNATO 🏁"; b.onclick = () => db.ref('ordini/'+id).update({stato: 'consegnato'}); c.appendChild(b); mie.appendChild(c); }
-            else if(o.stato === 'consegnato') { inc += o.totale; sto.appendChild(c); }
-        }
-        document.getElementById('r-inc').innerText = "€ " + inc.toFixed(2);
-    }
-
-    function genPad() {
-        const g = document.getElementById('keys-grid'); for(let i=1; i<=9; i++) { let b = document.createElement('button'); b.className = 'key'; b.innerText = i; b.onclick = () => pressK(i.toString()); g.appendChild(b); }
-        let b0 = document.createElement('button'); b0.className = 'key'; b0.innerText = '0'; b0.onclick = () => pressK('0'); g.appendChild(document.createElement('div')); g.appendChild(b0);
-        let bd = document.createElement('button'); bd.className = 'key'; bd.style.background="none"; bd.innerText = '⌫'; bd.onclick = delK; g.appendChild(bd);
-    }
-
-    setInterval(() => { const d = new Date(); document.getElementById('orologio').innerText = d.getHours() + ":" + (d.getMinutes()<10?'0':'') + d.getMinutes(); }, 1000);
+    function renderR(ordini){ let inc=0; for(let id in ordini){const o=ordini[id];if(o.rider_id===user.id&&o.stato==='consegnato')inc+=o.totale;} document.getElementById('r-inc').innerText="€ "+inc.toFixed(2); }
+    function genPad(){ const g=document.getElementById('keys-grid'); for(let i=1;i<=9;i++){ let b=document.createElement('button');b.className='key';b.innerText=i;b.onclick=()=>pressK(i.toString());g.appendChild(b);}
+        let b0=document.createElement('button');b0.className='key';b0.innerText='0';b0.onclick=()=>pressK('0');g.appendChild(document.createElement('div'));g.appendChild(b0); }
+    setInterval(()=>{const d=new Date();document.getElementById('orologio').innerText=d.getHours()+":"+(d.getMinutes()<10?'0':'')+d.getMinutes();},1000);
 </script>
 </body>
 </html>
