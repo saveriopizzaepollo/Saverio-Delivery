@@ -2,825 +2,386 @@
 
 <html lang="it">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-<title>SAVERIO DELIVERY</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Saverio Delivery">
+<meta name="theme-color" content="#1A3A5C">
+<title>Saverio Delivery</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Barlow',sans-serif;background:#fff;color:#1A3A5C;font-weight:700;-webkit-text-size-adjust:100%}
-button{font-family:'Barlow',sans-serif;font-weight:800;cursor:pointer;-webkit-appearance:none;border:none}
-input,select,textarea{font-family:'Barlow',sans-serif;font-weight:700;-webkit-appearance:none}
-.page{padding:16px;max-width:680px;margin:0 auto;padding-bottom:60px}
-.card{background:#fff;border:2px solid #EBF3FA;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(43,95,142,.06)}
-.inp{width:100%;padding:11px 13px;border-radius:10px;border:2px solid #EBF3FA;font-size:15px;color:#1A3A5C;outline:none;background:#fff}
-.inp:focus{border-color:#2B5F8E}
-.lbl{font-size:11px;font-weight:900;color:#B0BEC5;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;display:block}
-.btn{border:none;border-radius:10px;padding:11px 18px;font-size:14px;display:inline-flex;align-items:center;gap:6px;font-family:'Barlow',sans-serif;font-weight:800}
-.bsm{padding:7px 12px;font-size:12px;border-radius:8px}
-.bfull{width:100%;justify-content:center;font-size:16px;padding:14px}
-.stit{font-size:11px;font-weight:900;color:#B0BEC5;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;margin-top:16px}
-.divl{height:1px;background:#EBF3FA;margin:12px 0}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800}
-.ovl{position:fixed;inset:0;background:rgba(26,58,92,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center}
-.mdl{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;font-weight:800;font-size:14px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.2);white-space:nowrap;color:#fff}
-.hdr{background:#fff;border-bottom:3px solid #2B5F8E;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(43,95,142,.1)}
-.nav{display:flex;gap:4px;background:#F4F6F8;padding:10px 12px;overflow-x:auto;border-bottom:2px solid #EBF3FA;-webkit-overflow-scrolling:touch}
-.nav::-webkit-scrollbar{display:none}
-.nb{padding:8px 14px;border-radius:10px;border:none;font-size:13px;white-space:nowrap;font-weight:800;font-family:'Barlow',sans-serif}
-.nb.act{background:#2B5F8E;color:#fff}
-.nb:not(.act){background:#fff;color:#1A3A5C}
-.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto}
-.pbtn{aspect-ratio:1;border-radius:14px;border:2px solid #EBF3FA;background:#fff;font-size:22px;font-weight:900;color:#1A3A5C;font-family:'Barlow',sans-serif}
-.pdots{display:flex;gap:12px;justify-content:center;margin:16px 0}
-.pdot{width:16px;height:16px;border-radius:50%;border:2px solid #2B5F8E;transition:background .15s}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.spin{display:inline-block;width:28px;height:28px;border:3px solid #EBF3FA;border-top-color:#2B5F8E;border-radius:50%;animation:sp .7s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
+:root {
+  --blu-scuro: #1A3A5C;
+  --blu: #2B5F8E;
+  --arancione: #E8600A;
+  --verde: #1B8A4A;
+  --rosso: #C0392B;
+  --giallo: #D4A017;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: #fff; font-family: 'Barlow', sans-serif; color: var(--blu-scuro); overflow: hidden; }
+
+#loading {
+position: fixed; inset: 0; background: var(–blu-scuro);
+display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999;
+}
+.logo { font-size: 2rem; font-weight: 900; color: white; letter-spacing: 0.2em; text-align: center; line-height: 1.2; }
+.logo-sub { color: rgba(255,255,255,0.4); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.25em; margin-top: 0.5rem; }
+.spinner { width: 44px; height: 44px; border: 5px solid rgba(255,255,255,0.15); border-top-color: var(–arancione); border-radius: 50%; animation: spin 0.8s linear infinite; margin-top: 2.5rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-msg { color: rgba(255,255,255,0.4); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.12em; margin-top: 1rem; }
+
+#login { position: fixed; inset: 0; background: var(–blu-scuro); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; z-index: 100; }
+#login.show { display: flex; }
+.login-logo { font-size: 1.9rem; font-weight: 900; color: white; letter-spacing: 0.2em; text-align: center; line-height: 1.2; margin-bottom: 0.5rem; }
+.login-tag { color: rgba(255,255,255,0.4); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.25em; margin-bottom: 3rem; }
+.login-btns { display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 320px; }
+.login-btn { display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1.3rem; border-radius: 18px; border: none; cursor: pointer; font-family: ‘Barlow’, sans-serif; font-size: 1.15rem; font-weight: 900; letter-spacing: 0.18em; color: white; transition: transform 0.12s, opacity 0.12s; }
+.login-btn:active { transform: scale(0.96); opacity: 0.85; }
+.btn-admin { background: linear-gradient(135deg, #1A3A5C, #0d2238); border: 2px solid rgba(255,255,255,0.2); }
+.btn-dispatch { background: linear-gradient(135deg, #2B5F8E, #1d4266); }
+.btn-riders { background: linear-gradient(135deg, #E8600A, #c44f08); }
+.ver { color: rgba(255,255,255,0.15); font-size: 0.6rem; font-weight: 700; margin-top: 2rem; }
+
+#rider-lista { position: fixed; inset: 0; background: var(–blu-scuro); display: none; flex-direction: column; align-items: center; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; }
+#rider-lista.show { display: flex; }
+.back-btn { align-self: flex-start; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-family: ‘Barlow’, sans-serif; font-weight: 900; font-size: 0.8rem; padding: 8px 18px; border-radius: 20px; cursor: pointer; letter-spacing: 0.08em; margin-bottom: 2rem; }
+.sc-title { font-size: 1.4rem; font-weight: 900; color: white; letter-spacing: 0.15em; margin-bottom: 0.3rem; }
+.sc-sub { color: rgba(255,255,255,0.4); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
+.rider-btn { width: 100%; max-width: 320px; display: flex; align-items: center; gap: 1rem; padding: 1rem 1.2rem; background: rgba(255,255,255,0.07); border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); margin-bottom: 0.75rem; cursor: pointer; color: white; font-family: ‘Barlow’, sans-serif; transition: background 0.1s; }
+.rider-btn:active { background: rgba(255,255,255,0.15); }
+.r-av { width: 46px; height: 46px; border-radius: 50%; background: var(–arancione); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; flex-shrink: 0; }
+.r-av.new { background: rgba(255,255,255,0.12); }
+.r-nome { font-weight: 900; font-size: 1rem; }
+.r-sub { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.4); }
+
+#pin { position: fixed; inset: 0; background: var(–blu-scuro); display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; z-index: 100; }
+#pin.show { display: flex; }
+.pin-for { font-size: 0.8rem; font-weight: 900; color: rgba(255,255,255,0.4); letter-spacing: 0.15em; margin-bottom: 0.3rem; }
+.pin-name { font-size: 1.6rem; font-weight: 900; color: white; letter-spacing: 0.08em; margin-bottom: 2rem; text-align: center; }
+.pin-dots { display: flex; gap: 1rem; margin-bottom: 2.5rem; }
+.dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); background: transparent; transition: all 0.15s; }
+.dot.on { background: var(–arancione); border-color: var(–arancione); transform: scale(1.1); }
+.keypad { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.75rem; width: 100%; max-width: 270px; }
+.key { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 1.1rem; font-family: ‘Barlow’, sans-serif; font-size: 1.6rem; font-weight: 900; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.1s; }
+.key:active { background: rgba(255,255,255,0.22); }
+.key.ghost { background: transparent; border: none; pointer-events: none; }
+.key.del { font-size: 1.1rem; }
+.pin-err { color: #ff6b6b; font-weight: 900; font-size: 0.9rem; letter-spacing: 0.08em; margin-top: 1.2rem; display: none; }
+
+#primo-accesso { position: fixed; inset: 0; background: var(–blu-scuro); display: none; flex-direction: column; align-items: center; padding: 2rem 1.5rem; z-index: 100; overflow-y: auto; }
+#primo-accesso.show { display: flex; }
+.ff { width: 100%; max-width: 320px; margin-bottom: 1rem; }
+.ff label { display: block; color: rgba(255,255,255,0.45); font-weight: 900; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.4rem; }
+.ff input { width: 100%; padding: 0.9rem 1rem; background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 12px; color: white; font-family: ‘Barlow’, sans-serif; font-size: 1rem; font-weight: 700; outline: none; }
+.ff input:focus { border-color: var(–arancione); }
+.ff input::placeholder { color: rgba(255,255,255,0.22); }
+.submit-btn { width: 100%; max-width: 320px; padding: 1rem; background: var(–arancione); border: none; border-radius: 14px; color: white; font-family: ‘Barlow’, sans-serif; font-size: 1.05rem; font-weight: 900; letter-spacing: 0.12em; cursor: pointer; margin-top: 0.5rem; }
+.submit-btn:active { opacity: 0.85; }
+
+#app { display: none; height: 100vh; flex-direction: column; }
+#app.show { display: flex; }
+.header { background: var(–blu-scuro); color: white; height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; flex-shrink: 0; }
+.header-title { font-size: 1.1rem; font-weight: 900; letter-spacing: 0.2em; }
+.ruolo-badge { background: var(–arancione); color: white; font-size: 0.6rem; font-weight: 900; padding: 2px 10px; border-radius: 20px; letter-spacing: 0.08em; }
+.logout-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: white; font-family: ‘Barlow’, sans-serif; font-weight: 900; font-size: 0.65rem; padding: 5px 12px; border-radius: 20px; cursor: pointer; }
+.content { flex: 1; overflow-y: auto; padding: 1.2rem 1rem 90px; }
+.content::-webkit-scrollbar { display: none; }
+.welcome-card { background: var(–blu-scuro); border-radius: 20px; padding: 1.5rem; color: white; margin-bottom: 1rem; }
+.welcome-t { font-size: 1.3rem; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+.welcome-s { color: rgba(255,255,255,0.5); font-weight: 700; font-size: 0.85rem; }
+.ok-card { display: flex; align-items: center; gap: 0.75rem; background: #EAFAF1; border: 2px solid #82E0AA; border-radius: 14px; padding: 1rem; margin-bottom: 0.75rem; }
+.ok-text { font-weight: 900; font-size: 0.9rem; color: var(–verde); }
+.info-card { background: #F0F4F8; border-radius: 14px; padding: 1rem; margin-bottom: 0.75rem; border: 2px solid #D0DCE8; }
+.info-l { font-size: 0.6rem; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #888; margin-bottom: 0.3rem; }
+.info-v { font-size: 1rem; font-weight: 900; }
+.fase-card { background: #FEF9E7; border: 2px solid var(–giallo); border-radius: 14px; padding: 1rem; font-weight: 700; font-size: 0.85rem; color: #7D6608; line-height: 1.6; }
+.nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #D0DCE8; display: flex; padding-bottom: env(safe-area-inset-bottom); z-index: 50; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 8px 4px; border: none; background: none; cursor: pointer; font-family: ‘Barlow’, sans-serif; color: #aaa; gap: 2px; }
+.nav-item.active { color: var(–blu-scuro); }
+.nav-icon { font-size: 1.3rem; }
+.nav-label { font-size: 0.5rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+.toast { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); background: var(–blu-scuro); color: white; padding: 0.65rem 1.5rem; border-radius: 30px; font-weight: 900; font-size: 0.8rem; z-index: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; letter-spacing: 0.06em; }
+.toast.show { opacity: 1; }
 </style>
+
 </head>
 <body>
-<div id="app" style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px">
-  <div class="spin"></div>
-  <div style="font-weight:900;color:#1A3A5C;font-size:15px">Caricamento...</div>
+
+<div id="loading">
+  <div class="logo">🍕 SAVERIO<br>DELIVERY</div>
+  <div class="logo-sub">PIZZERIA · PALERMO</div>
+  <div class="spinner"></div>
+  <div class="loading-msg" id="loading-msg">CONNESSIONE IN CORSO...</div>
 </div>
+
+<div id="login">
+  <div class="login-logo">🍕 SAVERIO<br>DELIVERY</div>
+  <div class="login-tag">PIZZERIA SAVERIO · PALERMO</div>
+  <div class="login-btns">
+    <button class="login-btn btn-admin" onclick="avviaLogin('admin','ADMIN')">🔑 ADMIN</button>
+    <button class="login-btn btn-dispatch" onclick="avviaLogin('dispatch','DISPATCH')">📦 DISPATCH</button>
+    <button class="login-btn btn-riders" onclick="apriListaRider()">🛵 RIDERS</button>
+  </div>
+  <div class="ver">FASE 1 · SAVERIO DELIVERY</div>
+</div>
+
+<div id="rider-lista">
+  <button class="back-btn" onclick="tornaLogin()">← INDIETRO</button>
+  <div class="sc-title">CHI SEI?</div>
+  <div class="sc-sub">SCEGLI IL TUO NOME</div>
+  <div id="rider-items" style="width:100%;max-width:320px"></div>
+</div>
+
+<div id="pin">
+  <div class="pin-for">INSERISCI PIN PER</div>
+  <div class="pin-name" id="pin-nome"></div>
+  <div class="pin-dots">
+    <div class="dot" id="d0"></div><div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div><div class="dot" id="d3"></div>
+  </div>
+  <div class="keypad">
+    <button class="key" onclick="k('1')">1</button>
+    <button class="key" onclick="k('2')">2</button>
+    <button class="key" onclick="k('3')">3</button>
+    <button class="key" onclick="k('4')">4</button>
+    <button class="key" onclick="k('5')">5</button>
+    <button class="key" onclick="k('6')">6</button>
+    <button class="key" onclick="k('7')">7</button>
+    <button class="key" onclick="k('8')">8</button>
+    <button class="key" onclick="k('9')">9</button>
+    <button class="key ghost"></button>
+    <button class="key" onclick="k('0')">0</button>
+    <button class="key del" onclick="kDel()">⌫</button>
+  </div>
+  <div class="pin-err" id="pin-err">❌ PIN ERRATO — RIPROVA</div>
+  <button class="back-btn" style="margin-top:1.5rem" onclick="tornaLogin()">← INDIETRO</button>
+</div>
+
+<div id="primo-accesso">
+  <button class="back-btn" onclick="apriListaRider()">← INDIETRO</button>
+  <div class="sc-title">PRIMO ACCESSO</div>
+  <div class="sc-sub">INSERISCI I TUOI DATI</div>
+  <div class="ff"><label>NOME</label><input type="text" id="pa-nome" placeholder="Es. Mario"></div>
+  <div class="ff"><label>COGNOME</label><input type="text" id="pa-cognome" placeholder="Es. Rossi"></div>
+  <div class="ff"><label>CELLULARE</label><input type="tel" id="pa-tel" placeholder="Es. 3331234567"></div>
+  <button class="submit-btn" onclick="registraRider()">REGISTRATI →</button>
+</div>
+
+<div id="app">
+  <div class="header">
+    <div class="header-title">🛵 SAVERIO DELIVERY</div>
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <span class="ruolo-badge" id="badge-ruolo">—</span>
+      <button class="logout-btn" onclick="logout()">ESCI</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="welcome-card">
+      <div class="welcome-t" id="w-nome">BENVENUTO!</div>
+      <div class="welcome-s" id="w-ruolo">—</div>
+    </div>
+    <div class="ok-card">
+      <span style="font-size:1.5rem">✅</span>
+      <span class="ok-text">FIREBASE CONNESSO E FUNZIONANTE</span>
+    </div>
+    <div class="info-card"><div class="info-l">PROGETTO FIREBASE</div><div class="info-v">saverio-delivery</div></div>
+    <div class="info-card"><div class="info-l">RUOLO</div><div class="info-v" id="info-ruolo">—</div></div>
+    <div class="info-card"><div class="info-l">UTENTE</div><div class="info-v" id="info-utente">—</div></div>
+    <div class="fase-card">
+      ⚙️ <strong>FASE 1 COMPLETATA</strong><br><br>
+      ✅ Login Admin / Dispatch / Rider<br>
+      ✅ Firebase connesso<br>
+      ✅ PIN verificato su database<br>
+      ✅ Sessione persistente<br>
+      ✅ Reset mezzanotte<br><br>
+      👉 Testa il login su iPhone e iPad.<br>
+      Poi passiamo alla Fase 2: Ordini e Dispatch.
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-label">HOME</span></button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-// ═══════════════════════════════════════════════════════════════════
-// COLORI
-// ═══════════════════════════════════════════════════════════════════
-var BL='#2B5F8E',BD='#1A3A5C',LL='#EBF3FA',OR='#E8600A',OL='#FFF0E6';
-var GR='#1B8A4A',GL='#E6F6ED',RE='#C0392B',RL='#FDEDEC';
-var YE='#D4A017',YL='#FEF9E7',GY='#F4F6F8',GM='#B0BEC5';
-var STATI={
-  nuovo:{label:'Nuovo',emoji:'🆕',bg:LL,text:BL,border:BL},
-  cucina:{label:'In Cucina',emoji:'👨‍🍳',bg:YL,text:YE,border:YE},
-  pronto:{label:'Pronto',emoji:'✅',bg:GL,text:GR,border:GR},
-  consegna:{label:'In Consegna',emoji:'🛵',bg:OL,text:OR,border:OR},
-  pagato:{label:'Pagato',emoji:'💰',bg:GL,text:GR,border:GR},
-  nonpagato:{label:'Non Pagato',emoji:'❌',bg:RL,text:RE,border:RE}
+var firebaseConfig = {
+  apiKey: "AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",
+  authDomain: "saverio-delivery.firebaseapp.com",
+  databaseURL: "https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "saverio-delivery",
+  storageBucket: "saverio-delivery.firebasestorage.app",
+  messagingSenderId: "913928598350",
+  appId: "1:913928598350:web:98489624879baabe27241f"
 };
 
-// ═══════════════════════════════════════════════════════════════════
-// FIREBASE
-// ═══════════════════════════════════════════════════════════════════
-firebase.initializeApp({
-apiKey:“AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw”,
-authDomain:“saverio-delivery.firebaseapp.com”,
-databaseURL:“https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app”,
-projectId:“saverio-delivery”,
-storageBucket:“saverio-delivery.firebasestorage.app”,
-messagingSenderId:“913928598350”,
-appId:“1:913928598350:web:98489624879baabe27241f”
-});
-var db=firebase.database();
-function fset(p,v){return db.ref(p).set(v)}
-function fupd(p,v){return db.ref(p).update(v)}
-function frem(p){return db.ref(p).remove()}
-function fget(p){return db.ref(p).get()}
+var db = null;
+var pinBuf = '';
+var pinId = null;
+var pinNome = null;
 
-// ═══════════════════════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════════════════════
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
-function nowISO(){return new Date().toISOString()}
-function fmt(iso){return iso?new Date(iso).toLocaleTimeString(‘it-IT’,{hour:‘2-digit’,minute:‘2-digit’}):’’}
-function oggiStr(){return new Date().toDateString()}
-function oggiKey(){var d=new Date();return d.getFullYear()+’-’+(d.getMonth()+1)+’-’+d.getDate()}
-function esc(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’)}
-function el(id){return document.getElementById(id)}
-function on(id,ev,fn){var e=el(id);if(e)e.addEventListener(ev,fn)}
-function each(sel,fn){document.querySelectorAll(sel).forEach(fn)}
+window.onload = function() {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    var connesso = false;
+    var t1 = setTimeout(function() { document.getElementById('loading-msg').textContent = 'CONNESSIONE LENTA...'; }, 2000);
+    var t2 = setTimeout(function() { if (!connesso) mostraLogin(); }, 5000);
+    db.ref('.info/connected').on('value', function(snap) {
+      if (snap.val() === true && !connesso) {
+        connesso = true;
+        clearTimeout(t1); clearTimeout(t2);
+        initDati();
+        if (!ripristinaSessione()) mostraLogin();
+      }
+    });
+  } catch(e) { mostraLogin(); }
+  resetMezzanotte();
+};
 
-// ═══════════════════════════════════════════════════════════════════
-// STATO
-// ═══════════════════════════════════════════════════════════════════
-var DB={utenti:{},ordini:{},clienti:{},zone:{},presenti:{}};
-var READY=false;
-var USER=null,SC=‘dashboard’,MODAL=null;
-var TOAST=null,TTIMER=null;
-var LFASE=‘ruoli’,LSEL=null,LPIN=’’,LERR=false;
-var FILTRO=‘tutti’,DSEL={};
-var FORM=null,RCLI=’’,RCLIP=’’;
-
-function initForm(){
-return{clienteId:’’,nomeM:’’,telM:’’,indirM:’’,zonaId:’’,note:’’,fonte:‘telefono’,
-prodotti:[{id:uid(),nome:’’,qty:1,prezzo:’’}]};
+function initDati() {
+  db.ref('utenti/admin').once('value', function(s) {
+    if (!s.exists()) db.ref('utenti/admin').set({ nome:'Saverio', cognome:'', telefono:'', ruolo:'admin', pin:'1234', softpos:false, attivo:true });
+  });
+  db.ref('utenti/dispatch').once('value', function(s) {
+    if (!s.exists()) db.ref('utenti/dispatch').set({ nome:'Dispatch', cognome:'', telefono:'', ruolo:'dispatch', pin:'0000', softpos:false, attivo:true });
+  });
 }
 
-function ordOggi(){
-return Object.values(DB.ordini).filter(function(o){
-return new Date(o.data).toDateString()===oggiStr();
-});
-}
-function getPresenti(){return DB.presenti[oggiKey()]||{}}
-function getRiders(){return Object.values(DB.utenti).filter(function(u){return u.ruolo===‘rider’&&u.attivo!==false})}
-function getRidersPresenti(){var pr=getPresenti();return getRiders().filter(function(r){return pr[r.id]})}
-
-// ═══════════════════════════════════════════════════════════════════
-// FIREBASE LISTENERS
-// ═══════════════════════════════════════════════════════════════════
-function startListeners(){
-// Timeout di sicurezza: se dopo 5 secondi non arriva nulla, mostra login con dati vuoti
-var timeout=setTimeout(function(){
-if(!READY){READY=true;R();}
-},5000);
-
-// Utenti: appena arrivano, mostra il login
-db.ref(‘utenti’).on(‘value’,function(s){
-DB.utenti=s.val()||{};
-if(!READY){
-READY=true;
-clearTimeout(timeout);
-// Se non ci sono utenti, crea i default
-if(Object.keys(DB.utenti).length===0){
-fset(‘utenti’,{
-admin:{id:‘admin’,nome:‘Saverio’,cognome:’’,ruolo:‘admin’,pin:‘1234’,softpos:false,attivo:true},
-dispatch:{id:‘dispatch’,nome:‘Dispatch’,cognome:’’,ruolo:‘dispatch’,pin:‘0000’,softpos:false,attivo:true}
-});
-}
-}
-R();
-});
-
-db.ref(‘ordini’).on(‘value’,function(s){DB.ordini=s.val()||{};if(READY)R()});
-db.ref(‘clienti’).on(‘value’,function(s){DB.clienti=s.val()||{};if(READY)R()});
-db.ref(‘zone’).on(‘value’,function(s){
-DB.zone=s.val()||{};
-if(READY&&Object.keys(DB.zone).length===0){
-fset(‘zone’,{
-z1:{id:‘z1’,nome:‘Centro / Zona Rossa’,costo:1,orariLiberi:true,orari:’’},
-z2:{id:‘z2’,nome:‘Altarello / Zisa / Bonagia’,costo:2,orariLiberi:false,orari:‘18:30-19:00, 21:15-21:45’},
-z3:{id:‘z3’,nome:‘Ficarazzi / Villabate / Cannita’,costo:3,orariLiberi:false,orari:‘18:30-19:00, 21:15-21:45’}
-});
-}
-if(READY)R();
-});
-db.ref(‘presenti’).on(‘value’,function(s){DB.presenti=s.val()||{};if(READY)R()});
+function resetMezzanotte() {
+  var oggi = new Date(); var chiave = oggi.getFullYear()+'-'+(oggi.getMonth()+1)+'-'+oggi.getDate();
+  var ultimo = localStorage.getItem('rdata');
+  if (ultimo && ultimo !== chiave) sessionStorage.clear();
+  localStorage.setItem('rdata', chiave);
+  var mn = new Date(); mn.setHours(24,0,10,0);
+  setTimeout(function() { sessionStorage.clear(); location.reload(); }, mn - oggi);
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════════════════════════
-function toast(msg,tipo){
-if(TTIMER)clearTimeout(TTIMER);
-TOAST={msg:msg,tipo:tipo||‘ok’};
-TTIMER=setTimeout(function(){TOAST=null;R()},2800);
-R();
+function nascondi() {
+  var ids = ['loading','login','rider-lista','pin','primo-accesso','app'];
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (id === 'loading') { el.style.display = 'none'; return; }
+    el.classList.remove('show');
+  });
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// RENDER PRINCIPALE
-// ═══════════════════════════════════════════════════════════════════
-function R(){
-var app=el(‘app’);
-if(!app)return;
-if(!READY){
-app.innerHTML=’<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px"><div class="spin"></div><div style="font-weight:900;color:'+BD+';font-size:15px">Caricamento…</div></div>’;
-return;
-}
-if(!USER){app.innerHTML=rLogin();bLogin();return;}
-app.innerHTML=rShell();bShell();
+function mostraLogin() { nascondi(); document.getElementById('login').classList.add('show'); }
+
+function avviaLogin(uid, nome) {
+  pinId = uid; pinNome = nome;
+  nascondi(); document.getElementById('pin').classList.add('show');
+  document.getElementById('pin-nome').textContent = nome;
+  document.getElementById('pin-err').style.display = 'none';
+  pinBuf = ''; aggiornaDots();
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// LOGIN
-// ═══════════════════════════════════════════════════════════════════
-function rLogin(){
-var utenti=Object.values(DB.utenti);
-var rds=utenti.filter(function(u){return u.ruolo===‘rider’&&u.attivo!==false});
-var body=’’;
-
-if(LFASE===‘ruoli’){
-var adm=utenti.filter(function(u){return u.ruolo===‘admin’});
-var dis=utenti.filter(function(u){return u.ruolo===‘dispatch’});
-body=
-adm.map(function(u){
-return ‘<button class="lrb" data-id="'+esc(u.id)+'" style="width:100%;margin-bottom:12px;padding:20px;border-radius:16px;background:'+BD+';display:flex;align-items:center;gap:16px">’+
-‘<span style="font-size:30px">🔑</span><span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">ADMIN</span></button>’;
-}).join(’’)+
-dis.map(function(u){
-return ‘<button class="lrb" data-id="'+esc(u.id)+'" style="width:100%;margin-bottom:12px;padding:20px;border-radius:16px;background:'+BL+';display:flex;align-items:center;gap:16px">’+
-‘<span style="font-size:30px">📦</span><span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">DISPATCH</span></button>’;
-}).join(’’)+
-(rds.length>0?
-‘<button id="b-riders" style="width:100%;padding:20px;border-radius:16px;background:'+OR+';display:flex;align-items:center;gap:16px">’+
-‘<span style="font-size:30px">🛵</span><span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">RIDERS</span></button>’:’’);
-
-} else if(LFASE===‘listaRider’){
-body=’<p style="font-size:13px;font-weight:800;color:'+GM+';text-align:center;margin-bottom:20px;letter-spacing:1px">QUAL È IL TUO NOME?</p>’+
-rds.map(function(u){
-return ‘<button class="lrb" data-id="'+esc(u.id)+'" style="width:100%;margin-bottom:10px;padding:16px 20px;border-radius:14px;border:2px solid '+OR+';background:#fff;display:flex;align-items:center;gap:14px">’+
-‘<div style="width:44px;height:44px;border-radius:12px;background:'+OR+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🛵</div>’+
-‘<span style="font-size:18px;font-weight:900;color:'+BD+'">’+esc(u.nome)+’ ‘+esc(u.cognome||’’)+’</span></button>’;
-}).join(’’)+
-‘<button id="b-back" class="btn bfull" style="background:'+GY+';color:'+BD+';margin-top:8px">← Indietro</button>’;
-
-} else if(LFASE===‘pin’){
-var dots=[0,1,2,3].map(function(i){
-return ‘<div class="pdot" style="background:'+(LPIN.length>i?BL:LL)+'"></div>’;
-}).join(’’);
-body=’<p style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:4px;text-align:center">Ciao, ‘+esc(LSEL.nome)+’!</p>’+
-‘<p style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:8px;text-align:center">Inserisci il tuo PIN</p>’+
-‘<div class="pdots">’+dots+’</div>’+
-(LERR?’<p style="color:'+RE+';font-weight:800;font-size:13px;margin-bottom:8px;text-align:center">PIN errato, riprova</p>’:’’)+
-‘<div class="pgrid">’+
-[‘1’,‘2’,‘3’,‘4’,‘5’,‘6’,‘7’,‘8’,‘9’,’’,‘0’,‘⌫’].map(function(d){
-return ‘<button class="pbtn" data-d="'+d+'" style="'+
-(d==='⌫'?'background:'+RL+';color:'+RE+';border-color:'+RL:'')+
-(d===''?';visibility:hidden':'')+'">’+d+’</button>’;
-}).join(’’)+’</div>’+
-‘<button id="b-back" class="btn bfull" style="background:'+GY+';color:'+BD+';margin-top:16px">← Indietro</button>’;
+function apriListaRider() {
+  nascondi(); document.getElementById('rider-lista').classList.add('show');
+  if (!db) return;
+  db.ref('utenti').once('value', function(snap) {
+    var cont = document.getElementById('rider-items'); cont.innerHTML = '';
+    if (snap.exists()) {
+      snap.forEach(function(c) {
+        var u = c.val();
+        if (u.ruolo !== 'rider' || u.attivo === false) return;
+        var d = document.createElement('div'); d.className = 'rider-btn';
+        d.innerHTML = '<div class="r-av">'+((u.nome||'?').charAt(0).toUpperCase())+'</div><div><div class="r-nome">'+(u.nome||'')+' '+(u.cognome||'')+'</div><div class="r-sub">RIDER</div></div>';
+        d.onclick = (function(id,u){ return function(){ pinId=id; pinNome=((u.nome||'')+' '+(u.cognome||'')).trim(); avviaLoginPin(); }; })(c.key,u);
+        cont.appendChild(d);
+      });
+    }
+    var bn = document.createElement('div'); bn.className = 'rider-btn'; bn.style.borderColor = 'rgba(232,96,10,0.35)';
+    bn.innerHTML = '<div class="r-av new">+</div><div><div class="r-nome">SONO NUOVO</div><div class="r-sub">PRIMO ACCESSO</div></div>';
+    bn.onclick = function() { nascondi(); document.getElementById('primo-accesso').classList.add('show'); };
+    cont.appendChild(bn);
+  });
 }
 
-return ‘<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:#fff">’+
-(TOAST?’<div class="toast" style="background:'+(TOAST.tipo==='err'?RE:GR)+'">’+esc(TOAST.msg)+’</div>’:’’)+
-‘<div style="text-align:center;margin-bottom:36px">’+
-‘<div style="font-size:28px;font-weight:900;color:'+BD+';letter-spacing:3px">SAVERIO DELIVERY</div></div>’+
-‘<div style="width:100%;max-width:360px">’+body+’</div></div>’;
+function avviaLoginPin() {
+  nascondi(); document.getElementById('pin').classList.add('show');
+  document.getElementById('pin-nome').textContent = (pinNome||'').toUpperCase();
+  document.getElementById('pin-err').style.display = 'none';
+  pinBuf = ''; aggiornaDots();
 }
 
-function bLogin(){
-each(’.lrb’,function(b){
-b.addEventListener(‘click’,function(){
-var u=DB.utenti[this.dataset.id];
-if(!u)return;
-LSEL=u;LFASE=‘pin’;LPIN=’’;LERR=false;R();
-});
-});
-on(‘b-riders’,‘click’,function(){LFASE=‘listaRider’;R()});
-on(‘b-back’,‘click’,function(){
-LFASE=LSEL&&LSEL.ruolo===‘rider’?‘listaRider’:‘ruoli’;
-LPIN=’’;LERR=false;R();
-});
-each(’.pbtn’,function(b){
-b.addEventListener(‘click’,function(){
-var d=this.dataset.d;
-if(!d||d===’’)return;
-if(d===‘⌫’){LPIN=LPIN.slice(0,-1);LERR=false;R();return}
-LPIN+=d;
-if(LPIN.length===4){
-if(LSEL.pin===LPIN){
-USER=LSEL;
-SC=LSEL.ruolo===‘rider’?‘miei’:LSEL.ruolo===‘dispatch’?‘dispatch’:‘dashboard’;
-LFASE=‘ruoli’;LPIN=’’;LERR=false;R();
-} else {
-LERR=true;
-setTimeout(function(){LPIN=’’;LERR=false;R()},700);
-R();
-}
-} else R();
-});
-});
+function registraRider() {
+  var nome = document.getElementById('pa-nome').value.trim();
+  var cognome = document.getElementById('pa-cognome').value.trim();
+  var tel = document.getElementById('pa-tel').value.trim();
+  if (!nome) { alert('Inserisci il nome'); return; }
+  var ref = db.ref('utenti').push();
+  ref.set({ nome:nome, cognome:cognome, telefono:tel, ruolo:'rider', pin:'0000', softpos:false, attivo:true });
+  pinId = ref.key; pinNome = (nome+' '+cognome).trim();
+  avviaLoginPin();
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// SHELL
-// ═══════════════════════════════════════════════════════════════════
-function rShell(){
-var isA=USER.ruolo===‘admin’,isD=USER.ruolo===‘dispatch’,isR=USER.ruolo===‘rider’;
-var nav=[];
-if(isA)nav.push({id:‘dashboard’,label:‘🏠 Dashboard’});
-if(isA||isD)nav.push({id:‘nuovo’,label:‘➕ Ordine’},{id:‘ordini’,label:‘📋 Ordini’},{id:‘dispatch’,label:‘📦 Dispatch’});
-if(isR)nav.push({id:‘miei’,label:‘🛵 Le Mie’});
-if(isA)nav.push({id:‘appello’,label:‘👥 Appello’},{id:‘clienti’,label:‘👤 Clienti’},{id:‘team’,label:‘⚙️ Team’},{id:‘report’,label:‘📊 Report’});
+function tornaLogin() { pinBuf=''; mostraLogin(); }
 
-var pg=’’;
-var pgs={dashboard:rDash,nuovo:rNuovo,ordini:rOrdini,dispatch:rDispatch,miei:rMiei,appello:rAppello,clienti:rClienti,team:rTeam,report:rReport};
-if(pgs[SC])pg=pgs[SC]();
-
-return (TOAST?’<div class="toast" style="background:'+(TOAST.tipo==='err'?RE:GR)+'">’+esc(TOAST.msg)+’</div>’:’’)+
-‘<header class="hdr">’+
-‘<div style="font-size:17px;font-weight:900;color:'+BD+';letter-spacing:2px">SAVERIO DELIVERY</div>’+
-‘<div style="display:flex;align-items:center;gap:8px">’+
-‘<span style="font-size:12px;font-weight:800;color:'+GM+'">’+esc(USER.nome)+’</span>’+
-‘<button id="b-out" class="btn bsm" style="background:'+RL+';color:'+RE+'">Esci</button></div></header>’+
-‘<nav class="nav">’+nav.map(function(n){return ‘<button class="nb'+(SC===n.id?' act':'')+'" data-sc="'+n.id+'">’+n.label+’</button>’}).join(’’)+’</nav>’+
-‘<div class="page" id="pg">’+pg+’</div>’+
-(MODAL?rModal():’’);
+function k(c) {
+  if (pinBuf.length >= 4) return;
+  pinBuf += c; aggiornaDots();
+  if (pinBuf.length === 4) setTimeout(verificaPin, 150);
+}
+function kDel() { pinBuf = pinBuf.slice(0,-1); aggiornaDots(); }
+function aggiornaDots() {
+  for (var i=0;i<4;i++) document.getElementById('d'+i).classList.toggle('on', i < pinBuf.length);
 }
 
-function bShell(){
-on(‘b-out’,‘click’,function(){USER=null;R()});
-each(’.nb’,function(b){b.addEventListener(‘click’,function(){SC=this.dataset.sc;R()})});
-on(‘ovl-bg’,‘click’,closeM);
-bPage();bModal();
+function verificaPin() {
+  if (!db || !pinId) return;
+  db.ref('utenti/'+pinId).once('value', function(snap) {
+    if (!snap.exists()) { errPin(); return; }
+    var u = snap.val();
+    if (u.pin === pinBuf) {
+      sessionStorage.setItem('s', JSON.stringify({id:pinId, ruolo:u.ruolo}));
+      avviaApp(pinId, u);
+    } else { errPin(); }
+  });
 }
 
-function goTo(s){SC=s;R()}
-function closeM(){MODAL=null;R()}
-function rePg(){
-var p=el(‘pg’);if(!p)return;
-var pgs={dashboard:rDash,nuovo:rNuovo,ordini:rOrdini,dispatch:rDispatch,miei:rMiei,appello:rAppello,clienti:rClienti,team:rTeam,report:rReport};
-if(pgs[SC]){p.innerHTML=pgs[SC]();bPage();}
+function errPin() {
+  document.getElementById('pin-err').style.display = 'block';
+  pinBuf = ''; aggiornaDots();
+  setTimeout(function(){ document.getElementById('pin-err').style.display='none'; }, 2500);
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// DASHBOARD
-// ═══════════════════════════════════════════════════════════════════
-function rDash(){
-var ord=ordOggi(),pr=getPresenti();
-var cnt={};Object.keys(STATI).forEach(function(s){cnt[s]=ord.filter(function(o){return o.stato===s}).length});
-var tot=ord.filter(function(o){return o.stato===‘pagato’}).reduce(function(s,o){return s+(o.totale||0)},0);
-var rp=getRidersPresenti();
-return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:4px">Dashboard</div>’+
-‘<div style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:16px">’+new Date().toLocaleDateString(‘it-IT’,{weekday:‘long’,day:‘numeric’,month:‘long’})+’</div>’+
-‘<div class="g3" style="margin-bottom:16px">’+
-Object.entries(cnt).map(function(e){var s=e[0],n=e[1];
-return ‘<div style="background:'+STATI[s].bg+';border:2px solid '+STATI[s].border+';border-radius:12px;padding:12px 8px;text-align:center">’+
-‘<div style="font-size:20px">’+STATI[s].emoji+’</div>’+
-‘<div style="font-size:26px;font-weight:900;color:'+STATI[s].text+'">’+n+’</div>’+
-‘<div style="font-size:9px;font-weight:800;color:'+STATI[s].text+';text-transform:uppercase">’+STATI[s].label+’</div></div>’;
-}).join(’’)+’</div>’+
-‘<div style="background:'+GL+';border:2px solid '+GR+';border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">’+
-‘<span style="font-weight:800;color:'+GR+'">💰 Totale Incassato</span>’+
-‘<span style="font-size:24px;font-weight:900;color:'+GR+'">€’+tot.toFixed(2)+’</span></div>’+
-(cnt.nonpagato>0?’<div style="background:'+RL+';border:2px solid '+RE+';border-radius:14px;padding:12px 16px;margin-bottom:16px;font-weight:900;color:'+RE+'">⚠️ ‘+cnt.nonpagato+’ consegne NON PAGATE</div>’:’’)+
-(cnt.pronto>0?’<div style="background:'+YL+';border:2px solid '+YE+';border-radius:14px;padding:12px 16px;margin-bottom:16px;font-weight:900;color:'+YE+'">📦 ‘+cnt.pronto+’ ordini pronti</div>’:’’)+
-‘<div class="stit">Riders presenti (’+rp.length+’)</div>’+
-rp.map(function(r){
-var sue=ord.filter(function(o){return o.fattorinoId===r.id&&o.stato===‘consegna’});
-return ‘<div class="card"><div style="display:flex;justify-content:space-between;align-items:center">’+
-‘<div style="font-weight:900">🛵 ‘+esc(r.nome)+’ ‘+esc(r.cognome||’’)+(r.softpos?’ <span style="font-size:11px;background:'+LL+';color:'+BL+';border-radius:6px;padding:2px 6px">SoftPOS</span>’:’’)+’</div>’+
-‘<div style="font-weight:900;color:'+OR+'">’+sue.length+’ in giro</div></div>’+
-sue.map(function(o){return ‘<div style="font-size:12px;color:'+GM+';margin-top:4px">• ‘+esc(o.nomeCliente)+’ — €’+(o.totale||0).toFixed(2)+’</div>’}).join(’’)+
-‘</div>’;
-}).join(’’)+
-‘<button class="btn bfull" style="background:'+BL+';color:#fff;margin-top:16px" data-sc="nuovo">➕ Nuovo Ordine</button>’;
+function ripristinaSessione() {
+  var s = sessionStorage.getItem('s');
+  if (!s || !db) return false;
+  try {
+    var p = JSON.parse(s);
+    db.ref('utenti/'+p.id).once('value', function(snap) {
+      if (!snap.exists()) { sessionStorage.clear(); mostraLogin(); return; }
+      avviaApp(p.id, snap.val());
+    });
+    return true;
+  } catch(e) { return false; }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// NUOVO ORDINE
-// ═══════════════════════════════════════════════════════════════════
-function rNuovo(){
-if(!FORM)FORM=initForm();
-var f=FORM,cl=f.clienteId?DB.clienti[f.clienteId]:null;
-var zone=Object.values(DB.zone),z=zone.find(function(x){return x.id===f.zonaId});
-var tp=f.prodotti.reduce(function(s,p){return s+(parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1)},0);
-var tc=z?z.costo:0,tt=tp+tc;
-var ora=new Date(),hm=ora.getHours()*60+ora.getMinutes(),avv=’’;
-if(z&&!z.orariLiberi){
-var ok=(z.orari||’’).split(’,’).some(function(r){
-var ab=r.trim().split(’-’).map(function(t){var p=t.split(’:’);return parseInt(p[0])*60+parseInt(p[1])});
-return hm>=ab[0]&&hm<=ab[1];
-});
-if(!ok)avv=’<div style="background:'+YL+';border:2px solid '+YE+';border-radius:10px;padding:10px 12px;margin-bottom:8px;font-weight:800;color:'+YE+';font-size:13px">⚠️ Zona blu — orari consigliati: ‘+esc(z.orari)+’</div>’;
-}
-return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:16px">➕ Nuovo Ordine</div>’+
-‘<div class="stit">Come ha ordinato?</div>’+
-‘<div style="display:flex;gap:8px;margin-bottom:16px">’+
-‘<button class="btn fb" data-f="telefono" style="flex:1;justify-content:center;background:'+(f.fonte==='telefono'?BL:GY)+';color:'+(f.fonte==='telefono'?'#fff':BD)+'">📞 Telefono</button>’+
-‘<button class="btn fb" data-f="whatsapp" style="flex:1;justify-content:center;background:'+(f.fonte==='whatsapp'?BL:GY)+';color:'+(f.fonte==='whatsapp'?'#fff':BD)+'">💬 WhatsApp</button></div>’+
-‘<div class="stit">Cliente</div>’+
-(cl?
-‘<div class="card" style="border:2px solid '+BL+'"><div style="display:flex;justify-content:space-between">’+
-‘<div><div style="font-weight:900;font-size:16px">’+esc(cl.cognome)+’ ‘+esc(cl.nome)+’</div>’+
-‘<div style="font-size:13px;color:'+GM+'">📞 ‘+esc(cl.telefono||’—’)+’</div>’+
-‘<div style="font-size:13px;color:'+GM+'">📍 ‘+esc(cl.indirizzo||’—’)+’</div></div>’+
-‘<button class="btn bsm" id="b-rmcl" style="background:'+RL+';color:'+RE+'">✕</button></div></div>’:
-‘<input class="inp" id="f-rcl" placeholder="🔍 Cerca per cognome o telefono..." value="'+esc(RCLI)+'" style="margin-bottom:8px"/>’+
-‘<div id="res-cl"></div>’+
-‘<div style="margin-bottom:12px"><button class="btn bsm" id="b-ncl" style="background:'+GL+';color:'+GR+'">+ Nuovo Cliente</button></div>’+
-‘<div class="g2" style="margin-bottom:8px">’+
-‘<div><label class="lbl">Nome</label><input class="inp" id="f-nomM" value="'+esc(f.nomeM)+'" placeholder="Mario Rossi"/></div>’+
-‘<div><label class="lbl">Telefono</label><input class="inp" id="f-telM" value="'+esc(f.telM)+'" placeholder="091..."/></div>’+
-‘<div style="grid-column:1/-1"><label class="lbl">Indirizzo</label><input class="inp" id="f-indM" value="'+esc(f.indirM)+'" placeholder="Via..."/></div></div>’)+
-‘<div class="stit">Zona Consegna</div>’+
-‘<select class="inp" id="sel-zona" style="margin-bottom:8px">’+
-‘<option value="">– Seleziona zona –</option>’+
-zone.map(function(z){return ‘<option value=”’+z.id+’”’+(f.zonaId===z.id?’ selected’:’’)+’>’+esc(z.nome)+’ · €’+z.costo+’</option>’}).join(’’)+
-‘<option value=“fuori”’+(f.zonaId===‘fuori’?’ selected’:’’)+’>Fuori zona</option></select>’+avv+
-‘<div class="stit">Prodotti</div>’+
-f.prodotti.map(function(p,i){
-return ‘<div style="display:grid;grid-template-columns:44px 1fr 64px 60px 32px;gap:6px;margin-bottom:8px;align-items:center">’+
-‘<input class="inp pq" data-pid="'+p.id+'" type="number" min="1" value="'+esc(p.qty)+'" style="padding:8px;text-align:center"/>’+
-‘<input class="inp pn" data-pid="'+p.id+'" value="'+esc(p.nome)+'" placeholder="Prodotto '+(i+1)+'" style="padding:8px"/>’+
-‘<input class="inp pp" data-pid="'+p.id+'" type="number" step="0.5" value="'+esc(p.prezzo)+'" placeholder="€" style="padding:8px"/>’+
-‘<div style="font-size:11px;font-weight:800;color:'+GM+';text-align:center">€’+((parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1)).toFixed(2)+’</div>’+
-(f.prodotti.length>1?’<button class="btn bsm pr" data-pid="'+p.id+'" style="background:'+RL+';color:'+RE+';padding:4px 6px">✕</button>’:’<div></div>’)+’</div>’;
-}).join(’’)+
-‘<button class="btn bsm" id="b-addp" style="background:'+LL+';color:'+BL+';margin-bottom:12px">+ Prodotto</button>’+
-‘<div class="stit">Note</div>’+
-‘<textarea class="inp" id="f-note" style="height:70px;resize:vertical;margin-bottom:16px" placeholder="Citofono, piano...">’+esc(f.note)+’</textarea>’+
-‘<div style="background:'+LL+';border-radius:12px;padding:14px 16px;margin-bottom:16px">’+
-‘<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:'+GM+'">Prodotti</span><span>€’+tp.toFixed(2)+’</span></div>’+
-(z?’<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:'+GM+'">Consegna</span><span>€’+tc.toFixed(2)+’</span></div>’:’’)+
-‘<div class="divl"></div>’+
-‘<div style="display:flex;justify-content:space-between"><span style="font-size:16px;font-weight:900">TOTALE</span><span style="font-size:22px;font-weight:900;color:'+BL+'">€’+tt.toFixed(2)+’</span></div></div>’+
-‘<button class="btn bfull" id="b-conf" style="background:'+BL+';color:#fff">✅ Conferma Ordine</button>’;
+function avviaApp(id, u) {
+  nascondi(); document.getElementById('app').classList.add('show');
+  var nome = ((u.nome||'')+' '+(u.cognome||'')).trim() || u.ruolo;
+  document.getElementById('badge-ruolo').textContent = u.ruolo.toUpperCase();
+  document.getElementById('w-nome').textContent = 'CIAO, '+(u.nome||u.ruolo).toUpperCase()+'!';
+  document.getElementById('w-ruolo').textContent = 'Accesso come '+u.ruolo;
+  document.getElementById('info-ruolo').textContent = u.ruolo.toUpperCase();
+  document.getElementById('info-utente').textContent = nome;
+  toast('✅ ACCESSO EFFETTUATO');
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// ORDINI
-// ═══════════════════════════════════════════════════════════════════
-function rOrdini(){
-var ord=ordOggi(),fil=FILTRO===‘tutti’?ord:ord.filter(function(o){return o.stato===FILTRO});
-var isAD=USER.ruolo===‘admin’||USER.ruolo===‘dispatch’;
-return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:12px">📋 Ordini</div>’+
-‘<div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px;-webkit-overflow-scrolling:touch">’+
-‘<button class="btn bsm fb2" data-f="tutti" style="background:'+(FILTRO==='tutti'?BL:GY)+';color:'+(FILTRO==='tutti'?'#fff':BD)+';white-space:nowrap">Tutti (’+ord.length+’)</button>’+
-Object.entries(STATI).map(function(e){var s=e[0],v=e[1];
-return ‘<button class="btn bsm fb2" data-f="'+s+'" style="background:'+(FILTRO===s?v.border:GY)+';color:'+(FILTRO===s?'#fff':BD)+';white-space:nowrap">’+v.emoji+’ ‘+v.label+’ (’+ord.filter(function(o){return o.stato===s}).length+’)</button>’;
-}).join(’’)+’</div>’+
-(fil.length===0?’<div style="text-align:center;color:'+GM+';padding:32px">Nessun ordine</div>’:’’)+
-fil.map(function(o){
-var rider=o.fattorinoId?DB.utenti[o.fattorinoId]:null;
-return ‘<div class="card" style="border-left:5px solid '+(STATI[o.stato]?STATI[o.stato].border:GM)+'">’+
-‘<div style="display:flex;justify-content:space-between;align-items:flex-start">’+
-‘<div style="flex:1;min-width:0">’+
-‘<div style="font-weight:900;font-size:16px">’+esc(o.nomeCliente)+’</div>’+
-‘<div style="font-size:12px;color:'+GM+'">📍 ‘+esc(o.indirizzo||’—’)+’</div>’+
-(o.zona?’<div style="font-size:12px;color:'+GM+'">📦 ‘+esc(o.zona)+’</div>’:’’)+
-(rider?’<div style="font-size:12px;color:'+OR+';font-weight:800">🛵 ‘+esc(rider.nome)+’</div>’:’’)+
-(o.note?’<div style="font-size:12px;color:'+OR+'">📝 ‘+esc(o.note)+’</div>’:’’)+
-‘</div><div style="text-align:right;margin-left:8px">’+
-‘<div style="font-size:18px;font-weight:900;color:'+BL+'">€’+(o.totale||0).toFixed(2)+’</div>’+
-‘<span class="badge" style="background:'+STATI[o.stato].bg+';color:'+STATI[o.stato].text+';border:1.5px solid '+STATI[o.stato].border+'">’+STATI[o.stato].emoji+’ ‘+STATI[o.stato].label+’</span>’+
-‘<div style="font-size:11px;color:'+GM+';margin-top:4px">’+fmt(o.data)+’</div></div></div>’+
-(isAD?’<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">’+
-(o.stato===‘nuovo’?’<button class="btn bsm sb" data-id="'+o.id+'" data-s="cucina" style="background:'+YL+';color:'+YE+'">👨‍🍳 In Cucina</button>’:’’)+
-(o.stato===‘cucina’?’<button class="btn bsm sb" data-id="'+o.id+'" data-s="pronto" style="background:'+GL+';color:'+GR+'">✅ Pronto</button>’:’’)+
-(o.stato===‘consegna’?
-‘<button class="btn bsm sb" data-id="'+o.id+'" data-s="pagato" style="background:'+GL+';color:'+GR+'">💰 Pagato</button>’+
-‘<button class="btn bsm sb" data-id="'+o.id+'" data-s="nonpagato" style="background:'+RL+';color:'+RE+'">❌ Non pagato</button>’+
-‘<button class="btn bsm rbn" data-id="'+o.id+'" style="background:'+LL+';color:'+BL+'">🔄 Riassegna</button>’:’’)+
-‘</div>’:’’)+
-‘</div>’;
-}).join(’’);
-}
+function logout() { sessionStorage.clear(); location.reload(); }
 
-// ═══════════════════════════════════════════════════════════════════
-// DISPATCH
-// ═══════════════════════════════════════════════════════════════════
-function rDispatch(){
-var ord=ordOggi(),pronti=ord.filter(function(o){return o.stato===‘pronto’});
-var rp=getRidersPresenti(),riass=ord.filter(function(o){return o.riassegnaRichiesta&&o.stato===‘consegna’});
-var nSel=Object.keys(DSEL).length;
-return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:4px">📦 Dispatch</div>’+
-‘<div style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:16px">Gestisci le uscite</div>’+
-(riass.length>0?
-‘<div style="background:'+YL+';border:2px solid '+YE+';border-radius:14px;padding:12px 14px;margin-bottom:16px">’+
-‘<div style="font-weight:900;color:'+YE+';margin-bottom:8px">🔄 Riassegnazioni richieste (’+riass.length+’)</div>’+
-riass.map(function(o){
-return ‘<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">’+
-‘<div><div style="font-weight:900;font-size:13px">’+esc(o.nomeCliente)+’</div>’+
-‘<div style="font-size:12px;color:'+GM+'">da: ‘+esc((DB.utenti[o.fattorinoId]||{}).nome||’—’)+’</div></div>’+
-‘<button class="btn bsm rbn" data-id="'+o.id+'" style="background:'+OR+';color:#fff">Riassegna</button></div>’;
-}).join(’’)+’</div>’:’’)+
-‘<div class="stit">Ordini pronti — tocca per selezionare (’+pronti.length+’)</div>’+
-(pronti.length===0?’<div style="color:'+GM+';font-weight:700;font-size:13px;margin-bottom:16px">Nessun ordine pronto</div>’:’’)+
-pronti.map(function(o){
-var sel=DSEL[o.id];
-return ‘<div class="card dcard" data-id="'+o.id+'" style="border:2px solid '+(sel?GR:LL)+';background:'+(sel?GL:'#fff')+';cursor:pointer">’+
-‘<div style="display:flex;justify-content:space-between;align-items:center">’+
-‘<div style="flex:1">’+
-‘<div style="font-weight:900;font-size:16px">’+(sel?‘✅ ‘:’’)+esc(o.nomeCliente)+’</div>’+
-‘<div style="font-size:12px;color:'+GM+'">📍 ‘+esc(o.indirizzo||’—’)+’</div>’+
-‘<div style="font-size:12px;color:'+GM+'">📦 ‘+esc(o.zona||’—’)+’</div>’+
-(o.note?’<div style="font-size:12px;color:'+OR+'">📝 ‘+esc(o.note)+’</div>’:’’)+
-‘</div><div style="font-size:20px;font-weight:900;color:'+BL+';margin-left:8px">€’+(o.totale||0).toFixed(2)+’</div></div></div>’;
-}).join(’’)+
-(nSel>0?
-‘<div style="background:'+LL+';border-radius:12px;padding:12px 14px;margin:12px 0">’+
-‘<div style="font-weight:900;color:'+BL+'">📋 Selezionati: ‘+nSel+’ ordini</div>’+
-‘<div style="font-size:13px;color:'+GM+'">Scegli il rider</div></div>’+
-‘<div class="stit">Assegna a rider</div>’+
-(rp.length===0?’<div style="color:'+GM+';font-size:13px">Nessun rider presente — vai su Appello</div>’:’’)+
-rp.map(function(r){
-var ig=ord.filter(function(o){return o.fattorinoId===r.id&&o.stato===‘consegna’}).length;
-return ‘<button class="btn card arb" data-rid="'+r.id+'" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:8px;border:2px solid '+OR+'">’+
-‘<div style="width:44px;height:44px;border-radius:12px;background:'+OR+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🛵</div>’+
-‘<div><div style="font-weight:900">’+esc(r.nome)+’ ‘+esc(r.cognome||’’)+(r.softpos?’ 💳’:’’)+’</div>’+
-‘<div style="font-size:12px;color:'+GM+'">’+ig+’ consegne in corso</div></div></button>’;
-}).join(’’):’’)+
-‘<div class="stit">Riders in giro</div>’+
-rp.map(function(r){
-var sue=ord.filter(function(o){return o.fattorinoId===r.id&&o.stato===‘consegna’});
-return ‘<div class="card"><div style="display:flex;justify-content:space-between">’+
-‘<div style="font-weight:900">🛵 ‘+esc(r.nome)+’</div>’+
-‘<div style="color:'+OR+';font-weight:900">’+sue.length+’ in giro</div></div>’+
-sue.map(function(o){return ‘<div style="font-size:12px;color:'+GM+';margin-top:4px">• ‘+esc(o.nomeCliente)+’ — ‘+esc(o.indirizzo||’—’)+’ — €’+(o.totale||0).toFixed(2)+’</div>’}).join(’’)+’</div>’;
-}).join(’’);
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
 }
-
-// ═══════════════════════════════════════════════════════════════════
-// MIE CONSEGNE
-// ═══════════════════════════════════════════════════════════════════
-function rMiei(){
-var u=USER;
-var mie=ordOggi().filter(function(o){return o.fattorinoId===u.id&&[‘consegna’,‘pagato’,‘nonpagato’].indexOf(o.stato)>=0});
-var ic=mie.filter(function(o){return o.stato===‘consegna’});
-var con=mie.filter(function(o){return o.stato===‘pagato’||o.stato===‘nonpagato’});
-var tot=mie.filter(function(o){return o.stato===‘pagato’}).reduce(function(s,o){return s+(o.totale||0)},0);
-return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:4px">🛵 Le Mie Consegne</div>’+
-‘<div style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:16px">Ciao ‘+esc(u.nome)+’! ‘+(u.softpos?‘💳 SoftPOS attivo’:’’)+’</div>’+
-‘<div style="background:'+GL+';border:2px solid '+GR+';border-radius:14px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">’+
-‘<span style="font-weight:800;color:'+GR+'">💰 Il mio totale</span>’+
-‘<span style="font-size:22px;font-weight:900;color:'+GR+'">€’+tot.toFixed(2)+’</span></div>’+
-(ic.length>0?’<div class="stit">In consegna ora (’+ic.length+’)</div>’+
-ic.map(function(o){
-return ‘<div class="card" style="border:2px solid '+OR+'">’+
-‘<div style="font-weight:900;font-size:16px">’+esc(o.nomeCliente)+’</div>’+
-‘<div style="font-size:13px;color:'+GM+'">📍 ‘+esc(o.indirizzo||’—’)+’</div>’+
-(o.note?’<div style="font-size:12px;color:'+OR+';margin-top:4px">📝 ‘+esc(o.note)+’</div>’:’’)+
-‘<div style="font-size:20px;font-weight:900;color:'+BL+';margin:8px 0">€’+(o.totale||0).toFixed(2)+’</div>’+
-‘<div style="display:flex;gap:8px;flex-wrap:wrap">’+
-‘<button class="btn ib" data-id="'+o.id+'" style="flex:1;justify-content:center;background:'+GR+';color:#fff">💰 Incassato</button>’+
-‘<button class="btn npb" data-id="'+o.id+'" style="flex:1;justify-content:center;background:'+RL+';color:'+RE+'">❌ Non pagato</button></div>’+
-‘<button class="btn bsm pb" data-id="'+o.id+'" style="background:'+LL+';color:'+BL+';width:100%;justify-content:center;margin-top:8px">🔄 Passa a un collega</button></div>’;
-}).join(’’):
-‘<div style="text-align:center;color:'+GM+';padding:32px;font-weight:700">Nessuna consegna assegnata</div>’)+
-(con.length>0?’<div class="stit">Concluse (’+con.length+’)</div>’+
-con.map(function(o){
-return ‘<div class="card" style="opacity:.8"><div style="display:flex;justify-content:space-between;align-items:center">’+
-‘<div><div style="font-weight:900">’+esc(o.nomeCliente)+’</div>’+(o.metodoPagamento?’<div style="font-size:12px;color:'+GM+'">💳 ‘+esc(o.metodoPagamento)+’</div>’:’’)+’</div>’+
-‘<div style="text-align:right"><div style="font-weight:900;color:'+(o.stato==='pagato'?GR:RE)+'">€’+(o.totale||0).toFixed(2)+’</div>’+
-‘<span class="badge" style="background:'+STATI[o.stato].bg+';color:'+STATI[o.stato].text+'">’+STATI[o.stato].emoji+’ ‘+STATI[o.stato].label+’</span></div></div></div>’;
-}).join(’’):’’)+’\n’;
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// APPELLO
-// ═══════════════════════════════════════════════════════════════════
-function rAppello(){
-var rds=getRiders(),pr=getPresenti();
-return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:4px">👥 Appello Serata</div>’+
-‘<div style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:16px">’+new Date().toLocaleDateString(‘it-IT’,{weekday:‘long’,day:‘numeric’,month:‘long’})+’</div>’+
-‘<div style="background:'+LL+';border-radius:12px;padding:12px 14px;margin-bottom:16px">✅ Presenti: <strong>’+Object.keys(pr).length+’</strong> su ‘+rds.length+’ riders</div>’+
-rds.map(function(r){
-var pres=!!pr[r.id];
-return ‘<div class="card" style="border:2px solid '+(pres?GR:LL)+';background:'+(pres?GL:'#fff')+'">’+
-‘<div style="display:flex;justify-content:space-between;align-items:center">’+
-‘<div style="display:flex;align-items:center;gap:12px">’+
-‘<div style="width:44px;height:44px;border-radius:12px;background:'+(pres?GR:GM)+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🛵</div>’+
-‘<div><div style="font-weight:900">’+esc(r.nome)+’ ‘+esc(r.cognome||’’)+’</div>’+
-‘<div style="font-size:12px;color:'+GM+'">’+esc(r.telefono||’—’)+(r.softpos?’ · 💳’:’’)+’</div></div></div>’+
-‘<button class="btn bsm tpb" data-rid="'+r.id+'" data-pr="'+(pres?'1':'0')+'" style="background:'+(pres?RL:GL)+';color:'+(pres?RE:GR)+'">’+(pres?‘❌ Assente’:‘✅ Presente’)+’</button></div></div>’;
-}).join(’’)+
-‘<button class="btn bfull" id="b-addr" style="background:'+BL+';color:#fff;margin-top:8px">➕ Aggiungi nuovo rider</button>’;
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// CLIENTI
-// ═══════════════════════════════════════════════════════════════════
-function rClienti(){
-var tutti=Object.values(DB.clienti);
-var flt=tutti.filter(function(c){return (c.cognome+’ ‘+c.nome+’ ‘+c.telefono+’ ‘+c.indirizzo).toLowerCase().includes(RCLIP.toLowerCase())});
-return ‘<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">’+
-‘<div style="font-size:22px;font-weight:900;color:'+BD+'">👤 Clienti (’+tutti.length+’)</div>’+
-‘<button class="btn bsm" id="b-nc" style="background:'+BL+';color:#fff">+ Nuovo</button></div>’+
-‘<input class="inp" id="rcl-inp" placeholder="🔍 Cerca..." value="'+esc(RCLIP)+'" style="margin-bottom:12px"/>’+
-(flt.length===0?’<div style="text-align:center;color:'+GM+';padding:32px">Nessun cliente</div>’:’’)+
-flt.map(function(c){
-return ‘<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start">’+
-‘<div><div style="font-weight:900;font-size:15px">’+esc(c.cognome)+’ ‘+esc(c.nome)+’</div>’+
-‘<div style="font-size:13px;color:'+GM+'">📞 ‘+esc(c.telefono||’—’)+’</div>’+
-‘<div style="font-size:13px;color:'+GM+'">📍 ‘+esc(c.indirizzo||’—’)+’</div></div>’+
-‘<div style="display:flex;gap:6px">’+
-‘<button class="btn bsm ecl" data-id="'+c.id+'" style="background:'+LL+';color:'+BL+'">✏️</button>’+
-‘<button class="btn bsm dcl" data-id="'+c.id+'" style="background:'+RL+';color:'+RE+'">🗑️</button></div></div></div>’;
-}).join(’’);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// TEAM
-// ═══════════════════════════════════════════════════════════════════
-function rTeam(){
-return ‘<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">’+
-‘<div style="font-size:22px;font-weight:900;color:'+BD+'">⚙️ Team</div>’+
-‘<button class="btn bsm" id="b-nm" style="background:'+BL+';color:#fff">+ Aggiungi</button></div>’+
-Object.values(DB.utenti).map(function(u){
-return ‘<div class="card"><div style="display:flex;justify-content:space-between;align-items:center">’+
-‘<div style="display:flex;gap:12px;align-items:center">’+
-‘<div style="width:44px;height:44px;border-radius:12px;background:'+(u.ruolo==='admin'?BD:u.ruolo==='dispatch'?BL:OR)+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">’+
-(u.ruolo===‘admin’?‘🔑’:u.ruolo===‘dispatch’?‘📦’:‘🛵’)+’</div>’+
-‘<div><div style="font-weight:900">’+esc(u.nome)+’ ‘+esc(u.cognome||’’)+’</div>’+
-‘<div style="font-size:11px;color:'+GM+';text-transform:uppercase">’+u.ruolo+(u.softpos?’ · 💳’:’’)+(u.attivo===false?’ · <span style="color:'+RE+'">DISATTIVO</span>’:’’)+’</div>’+
-(u.telefono?’<div style="font-size:12px;color:'+GM+'">📞 ‘+esc(u.telefono)+’</div>’:’’)+’</div></div>’+
-‘<div style="display:flex;gap:6px">’+
-‘<button class="btn bsm emb" data-id="'+u.id+'" style="background:'+LL+';color:'+BL+'">✏️</button>’+
-(u.ruolo!==‘admin’?’<button class="btn bsm tmb" data-id="'+u.id+'" data-att="'+(u.attivo!==false?'1':'0')+'" style="background:'+(u.attivo===false?GL:RL)+';color:'+(u.attivo===false?GR:RE)+'">’+(u.attivo===false?‘▶️’:‘⏸️’)+’</button>’:’’)+’</div></div></div>’;
-}).join(’’);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// REPORT
-// ═══════════════════════════════════════════════════════════════════
-function rReport(){
-var ord=ordOggi(),rds=Object.values(DB.utenti).filter(function(u){return u.ruolo===‘rider’});
-var tot=ord.filter(function(o){return o.stato===‘pagato’}).reduce(function(s,o){return s+(o.totale||0)},0);
-var np=ord.filter(function(o){return o.stato===‘nonpagato’});
-return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:16px">📊 Report Serata</div>’+
-‘<div style="background:'+GL+';border:2px solid '+GR+';border-radius:14px;padding:16px;margin-bottom:16px">’+
-‘<div style="font-weight:800;color:'+GR+';margin-bottom:4px">💰 Totale Incassato</div>’+
-‘<div style="font-size:32px;font-weight:900;color:'+GR+'">€’+tot.toFixed(2)+’</div>’+
-‘<div style="font-size:13px;color:'+GR+'">’+ord.filter(function(o){return o.stato===‘pagato’}).length+’ ordini pagati</div></div>’+
-(np.length>0?’<div style="background:'+RL+';border:2px solid '+RE+';border-radius:14px;padding:14px;margin-bottom:16px">’+
-‘<div style="font-weight:900;color:'+RE+';margin-bottom:8px">❌ Non Pagati (’+np.length+’)</div>’+
-np.map(function(o){return ‘<div style="display:flex;justify-content:space-between;padding:6px 0"><span>’+esc(o.nomeCliente)+’</span><strong style="color:'+RE+'">€’+(o.totale||0).toFixed(2)+’</strong></div>’}).join(’’)+’</div>’:’’)+
-‘<div class="stit">Per rider</div>’+
-rds.map(function(r){
-var suoi=ord.filter(function(o){return o.fattorinoId===r.id});
-var pag=suoi.filter(function(o){return o.stato===‘pagato’});
-var npp=suoi.filter(function(o){return o.stato===‘nonpagato’});
-var cont=pag.filter(function(o){return o.metodoPagamento===‘Contanti’}).reduce(function(s,o){return s+(o.totale||0)},0);
-var cart=pag.filter(function(o){return o.metodoPagamento===‘Carta’}).reduce(function(s,o){return s+(o.totale||0)},0);
-var totR=pag.reduce(function(s,o){return s+(o.totale||0)},0);
-return ‘<div class="card" style="border:2px solid '+BL+'">’+
-‘<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">’+
-‘<div style="font-weight:900;font-size:16px">🛵 ‘+esc(r.nome)+’ ‘+esc(r.cognome||’’)+’</div>’+
-‘<div style="font-size:22px;font-weight:900;color:'+BL+'">€’+totR.toFixed(2)+’</div></div>’+
-‘<div class="divl"></div>’+
-‘<div class="g2" style="font-size:13px">’+
-‘<div>✅ Pagate: <strong>’+pag.length+’</strong></div>’+
-‘<div>❌ Non pagate: <strong style="color:'+RE+'">’+npp.length+’</strong></div>’+
-‘<div>📦 Totali: <strong>’+suoi.length+’</strong></div>’+
-(cont>0?’<div>💵 Contanti: <strong>€’+cont.toFixed(2)+’</strong></div>’:’’)+
-(cart>0?’<div>💳 Carta: <strong>€’+cart.toFixed(2)+’</strong></div>’:’’)+’</div>’+
-(npp.length>0?’<div style="margin-top:8px;padding:8px;background:'+RL+';border-radius:8px">’+npp.map(function(o){return ‘<div style="font-size:12px;color:'+RE+'">• ‘+esc(o.nomeCliente)+’ — €’+(o.totale||0).toFixed(2)+’</div>’}).join(’’)+’</div>’:’’)+
-‘</div>’;
-}).join(’’);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// MODAL
-// ═══════════════════════════════════════════════════════════════════
-function rModal(){
-var m=MODAL,body=’’;
-if(m.tipo===‘pagamento’){
-body=’<div style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:4px">💰 Come ha pagato?</div>’+
-‘<div style="font-weight:700;color:'+GM+';margin-bottom:16px">’+esc(m.data.nomeCliente)+’ — €’+(m.data.totale||0).toFixed(2)+’</div>’+
-‘<button class="btn bfull" id="m-cont" style="background:'+GR+';color:#fff;margin-bottom:10px">💵 Contanti</button>’+
-(USER.softpos?’<button class="btn bfull" id="m-carta" style="background:'+BL+';color:#fff;margin-bottom:10px">💳 Carta (SoftPOS)</button>’:’’)+
-‘<button class="btn bfull" id="m-cls" style="background:'+GY+';color:'+BD+'">Annulla</button>’;
-} else if(m.tipo===‘riassegna’){
-var rp=getRidersPresenti().filter(function(r){return r.id!==m.data.fattorinoId});
-body=’<div style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:16px">🔄 Riassegna Consegna</div>’+
-rp.map(function(r){
-return ‘<button class="btn card rab" data-rid="'+r.id+'" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:8px;border:2px solid '+OR+'">’+
-‘<div style="width:40px;height:40px;border-radius:10px;background:'+OR+';display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🛵</div>’+
-‘<div style="font-weight:900">’+esc(r.nome)+’ ‘+esc(r.cognome||’’)+(r.softpos?’ 💳’:’’)+’</div></button>’;
-}).join(’’)+
-(rp.length===0?’<div style="color:'+GM+';font-weight:700;margin-bottom:16px">Nessun altro rider presente</div>’:’’)+
-‘<button class="btn bfull" id="m-cls" style="background:'+GY+';color:'+BD+'">Annulla</button>’;
-} else if(m.tipo===‘nuovoCliente’||m.tipo===‘editCliente’){
-var c=m.data||{};
-body=’<div style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:16px">’+(m.tipo===‘editCliente’?‘Modifica’:‘Nuovo’)+’ Cliente</div>’+
-‘<div style="margin-bottom:10px"><label class="lbl">Cognome *</label><input class="inp" id="mc-cog" value="'+esc(c.cognome||'')+'"/></div>’+
-‘<div style="margin-bottom:10px"><label class="lbl">Nome</label><input class="inp" id="mc-nom" value="'+esc(c.nome||'')+'"/></div>’+
-‘<div style="margin-bottom:10px"><label class="lbl">Telefono</label><input class="inp" id="mc-tel" value="'+esc(c.telefono||'')+'"/></div>’+
-‘<div style="margin-bottom:16px"><label class="lbl">Indirizzo</label><input class="inp" id="mc-ind" value="'+esc(c.indirizzo||'')+'"/></div>’+
-‘<div style="display:flex;gap:10px">’+
-‘<button class="btn" id="m-savcl" style="flex:1;justify-content:center;background:'+BL+';color:#fff">Salva</button>’+
-‘<button class="btn" id="m-cls" style="flex:1;justify-content:center;background:'+GY+';color:'+BD+'">Annulla</button></div>’;
-} else if(m.tipo===‘nuovoMembro’||m.tipo===‘editMembro’){
-var u=m.data||{};
-body=’<div style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:16px">’+(m.tipo===‘editMembro’?‘Modifica’:‘Nuovo’)+’ membro</div>’+
-‘<div style="margin-bottom:10px"><label class="lbl">Nome *</label><input class="inp" id="mm-nom" value="'+esc(u.nome||'')+'"/></div>’+
-‘<div style="margin-bottom:10px"><label class="lbl">Cognome</label><input class="inp" id="mm-cog" value="'+esc(u.cognome||'')+'"/></div>’+
-‘<div style="margin-bottom:10px"><label class="lbl">Telefono</label><input class="inp" id="mm-tel" value="'+esc(u.telefono||'')+'"/></div>’+
-‘<div style="margin-bottom:10px"><label class="lbl">Ruolo</label>’+
-‘<select class="inp" id="mm-ruo">’+
-‘<option value=“rider” ‘+((u.ruolo||‘rider’)===‘rider’?‘selected’:’’)+’>🛵 Rider</option>’+
-‘<option value=“dispatch” ‘+(u.ruolo===‘dispatch’?‘selected’:’’)+’>📦 Dispatch</option>’+
-‘<option value=“admin” ‘+(u.ruolo===‘admin’?‘selected’:’’)+’>🔑 Admin</option>’+
-‘</select></div>’+
-‘<div style="margin-bottom:10px"><label class="lbl">PIN (4 cifre) *</label><input class="inp" id="mm-pin" type="number" value="'+esc(u.pin||'')+'" placeholder="0000"/></div>’+
-‘<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">’+
-‘<input type=“checkbox” id=“mm-sp” ‘+(u.softpos?‘checked’:’’)+’/><label for="mm-sp" style="font-weight:800;cursor:pointer">💳 Accetta SoftPOS</label></div>’+
-‘<div style="display:flex;gap:10px">’+
-‘<button class="btn" id="m-savmb" style="flex:1;justify-content:center;background:'+BL+';color:#fff">Salva</button>’+
-‘<button class="btn" id="m-cls" style="flex:1;justify-content:center;background:'+GY+';color:'+BD+'">Annulla</button></div>’;
-}
-return ‘<div class="ovl" id="ovl-bg"><div class="mdl" onclick="event.stopPropagation()">’+body+’</div></div>’;
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// BIND PAGE
-// ═══════════════════════════════════════════════════════════════════
-function bPage(){
-each(’[data-sc]’,function(b){b.addEventListener(‘click’,function(){SC=this.dataset.sc;R()})});
-
-if(SC===‘nuovo’){
-if(!FORM)FORM=initForm();
-var f=FORM;
-each(’.fb’,function(b){b.addEventListener(‘click’,function(){f.fonte=this.dataset.f;rePg()})});
-on(‘b-rmcl’,‘click’,function(){f.clienteId=’’;RCLI=’’;rePg()});
-on(‘f-rcl’,‘input’,function(){
-RCLI=this.value;
-var q=this.value.toLowerCase(),div=el(‘res-cl’);
-if(div&&q.length>0){
-var res=Object.values(DB.clienti).filter(function(c){return (c.cognome+’ ‘+c.nome+’ ‘+c.telefono).toLowerCase().includes(q)}).slice(0,6);
-div.innerHTML=’<div style="border:2px solid '+LL+';border-radius:10px;margin-bottom:8px;max-height:180px;overflow-y:auto">’+
-res.map(function(c){return ‘<div class="sccl" data-id="'+c.id+'" style="padding:10px 12px;border-bottom:1px solid '+LL+';cursor:pointer"><div style="font-weight:900">’+esc(c.cognome)+’ ‘+esc(c.nome)+’</div><div style="font-size:12px;color:'+GM+'">’+esc(c.telefono||’’)+’ · ‘+esc(c.indirizzo||’’)+’</div></div>’}).join(’’)+
-(res.length===0?’<div style="padding:12px;color:'+GM+'">Nessun cliente trovato</div>’:’’)+’</div>’;
-each(’.sccl’,function(e){e.addEventListener(‘click’,function(){f.clienteId=this.dataset.id;RCLI=’’;rePg()})});
-} else if(div)div.innerHTML=’’;
-});
-on(‘f-nomM’,‘input’,function(){f.nomeM=this.value});
-on(‘f-telM’,‘input’,function(){f.telM=this.value});
-on(‘f-indM’,‘input’,function(){f.indirM=this.value});
-on(‘f-note’,‘input’,function(){f.note=this.value});
-on(‘sel-zona’,‘change’,function(){f.zonaId=this.value;rePg()});
-each(’.pn’,function(i){i.addEventListener(‘input’,function(){var p=f.prodotti.find(function(x){return x.id===i.dataset.pid});if(p)p.nome=this.value})});
-each(’.pq’,function(i){i.addEventListener(‘input’,function(){var p=f.prodotti.find(function(x){return x.id===i.dataset.pid});if(p){p.qty=this.value;rePg()}})});
-each(’.pp’,function(i){i.addEventListener(‘input’,function(){var p=f.prodotti.find(function(x){return x.id===i.dataset.pid});if(p){p.prezzo=this.value;rePg()}})});
-each(’.pr’,function(b){b.addEventListener(‘click’,function(){f.prodotti=f.prodotti.filter(function(p){return p.id!==b.dataset.pid});rePg()})});
-on(‘b-addp’,‘click’,function(){f.prodotti.push({id:uid(),nome:’’,qty:1,prezzo:’’});rePg()});
-on(‘b-ncl’,‘click’,function(){MODAL={tipo:‘nuovoCliente’,data:null};R()});
-on(‘b-conf’,‘click’,function(){
-var cl=f.clienteId?DB.clienti[f.clienteId]:null;
-if(!cl&&!f.nomeM)return toast(‘Scegli o inserisci un cliente’,‘err’);
-if(f.prodotti.some(function(p){return !p.nome}))return toast(‘Inserisci nome ad ogni prodotto’,‘err’);
-var zona=Object.values(DB.zone).find(function(z){return z.id===f.zonaId});
-var tp=f.prodotti.reduce(function(s,p){return s+(parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1)},0);
-var ordine={id:uid(),data:nowISO(),stato:‘nuovo’,clienteId:f.clienteId||’’,
-nomeCliente:cl?(cl.cognome+’ ‘+cl.nome).trim():f.nomeM,
-telefono:cl?cl.telefono||’’:f.telM,indirizzo:cl?cl.indirizzo||’’:f.indirM,
-zona:zona?zona.nome:’’,zonaId:f.zonaId||’’,costoConsegna:zona?zona.costo:0,
-note:f.note,fonte:f.fonte,prodotti:f.prodotti,totale:tp+(zona?zona.costo:0),
-fattorinoId:null,pagato:false,metodoPagamento:null};
-fset(‘ordini/’+ordine.id,ordine).then(function(){toast(‘Ordine creato ✓’);FORM=initForm();RCLI=’’;SC=‘ordini’;R()});
-});
-}
-
-if(SC===‘ordini’){
-each(’.fb2’,function(b){b.addEventListener(‘click’,function(){FILTRO=this.dataset.f;rePg()})});
-each(’.sb’,function(b){b.addEventListener(‘click’,function(){fupd(‘ordini/’+this.dataset.id,{stato:this.dataset.s}).then(function(){toast(‘Stato aggiornato ✓’)})})});
-each(’.rbn’,function(b){b.addEventListener(‘click’,function(){var o=ordOggi().find(function(x){return x.id===b.dataset.id});MODAL={tipo:‘riassegna’,data:o};R()})});
-}
-
-if(SC===‘dispatch’){
-each(’.dcard’,function(c){c.addEventListener(‘click’,function(){var id=this.dataset.id;if(DSEL[id])delete DSEL[id];else DSEL[id]=true;rePg()})});
-each(’.arb’,function(b){b.addEventListener(‘click’,function(){
-var rid=this.dataset.rid,ids=Object.keys(DSEL);
-if(ids.length===0)return toast(‘Seleziona almeno un ordine’,‘err’);
-Promise.all(ids.map(function(id){return fupd(‘ordini/’+id,{fattorinoId:rid,stato:‘consegna’,oraUscita:nowISO(),riassegnaRichiesta:false})}))
-.then(function(){DSEL={};toast(ids.length+’ consegne assegnate ✓’);rePg()});
-})});
-each(’.rbn’,function(b){b.addEventListener(‘click’,function(){var o=ordOggi().find(function(x){return x.id===b.dataset.id});MODAL={tipo:‘riassegna’,data:o};R()})});
-}
-
-if(SC===‘miei’){
-each(’.ib’,function(b){b.addEventListener(‘click’,function(){var o=ordOggi().find(function(x){return x.id===b.dataset.id});MODAL={tipo:‘pagamento’,data:o};R()})});
-each(’.npb’,function(b){b.addEventListener(‘click’,function(){fupd(‘ordini/’+this.dataset.id,{stato:‘nonpagato’,oraRientro:nowISO()}).then(function(){toast(‘Segnato ✓’)})})});
-each(’.pb’,function(b){b.addEventListener(‘click’,function(){fupd(‘ordini/’+this.dataset.id,{riassegnaRichiesta:true}).then(function(){toast(‘Richiesta inviata ✓’)})})});
-}
-
-if(SC===‘appello’){
-each(’.tpb’,function(b){b.addEventListener(‘click’,function(){
-var rid=this.dataset.rid,pr=this.dataset.pr===‘1’,key=oggiKey();
-if(pr)frem(‘presenti/’+key+’/’+rid);else fset(‘presenti/’+key+’/’+rid,true);
-})});
-on(‘b-addr’,‘click’,function(){MODAL={tipo:‘nuovoMembro’,data:{ruolo:‘rider’}};R()});
-}
-
-if(SC===‘clienti’){
-on(‘b-nc’,‘click’,function(){MODAL={tipo:‘nuovoCliente’,data:null};R()});
-on(‘rcl-inp’,‘input’,function(){RCLIP=this.value;rePg()});
-each(’.ecl’,function(b){b.addEventListener(‘click’,function(){MODAL={tipo:‘editCliente’,data:Object.assign({},DB.clienti[this.dataset.id])};R()})});
-each(’.dcl’,function(b){b.addEventListener(‘click’,function(){frem(‘clienti/’+this.dataset.id).then(function(){toast(‘Cliente eliminato’)})})});
-}
-
-if(SC===‘team’){
-on(‘b-nm’,‘click’,function(){MODAL={tipo:‘nuovoMembro’,data:null};R()});
-each(’.emb’,function(b){b.addEventListener(‘click’,function(){MODAL={tipo:‘editMembro’,data:Object.assign({},DB.utenti[this.dataset.id])};R()})});
-each(’.tmb’,function(b){b.addEventListener(‘click’,function(){var att=this.dataset.att===‘1’;fupd(‘utenti/’+this.dataset.id,{attivo:!att}).then(function(){toast(att?‘Disattivato’:‘Riattivato’)})})});
-}
-}
-
-function bModal(){
-var m=MODAL;if(!m)return;
-on(‘m-cls’,‘click’,closeM);
-on(‘ovl-bg’,‘click’,closeM);
-on(‘m-cont’,‘click’,function(){fupd(‘ordini/’+m.data.id,{stato:‘pagato’,metodoPagamento:‘Contanti’,oraRientro:nowISO()}).then(function(){toast(‘Incasso registrato ✓’);closeM()})});
-on(‘m-carta’,‘click’,function(){fupd(‘ordini/’+m.data.id,{stato:‘pagato’,metodoPagamento:‘Carta’,oraRientro:nowISO()}).then(function(){toast(‘Incasso registrato ✓’);closeM()})});
-each(’.rab’,function(b){b.addEventListener(‘click’,function(){fupd(‘ordini/’+m.data.id,{fattorinoId:this.dataset.rid,riassegnaRichiesta:false,oraUscita:nowISO()}).then(function(){toast(‘Riassegnato ✓’);DSEL={};closeM()})})});
-on(‘m-savcl’,‘click’,function(){
-var cog=(el(‘mc-cog’)||{}).value||’’;
-if(!cog.trim())return toast(‘Inserisci il cognome’,‘err’);
-var data={cognome:cog.trim(),nome:(el(‘mc-nom’)||{}).value||’’,telefono:(el(‘mc-tel’)||{}).value||’’,indirizzo:(el(‘mc-ind’)||{}).value||’’};
-if(m.tipo===‘editCliente’){fupd(‘clienti/’+m.data.id,data).then(function(){toast(‘Aggiornato ✓’);closeM()})}
-else{var id=uid();fset(‘clienti/’+id,Object.assign({id:id},data)).then(function(){if(FORM&&SC===‘nuovo’)FORM.clienteId=id;toast(‘Salvato ✓’);closeM()})}
-});
-on(‘m-savmb’,‘click’,function(){
-var nom=((el(‘mm-nom’)||{}).value||’’).trim();
-var pin=String((el(‘mm-pin’)||{}).value||’’);
-if(!nom)return toast(‘Inserisci il nome’,‘err’);
-if(pin.length!==4)return toast(‘PIN deve essere 4 cifre’,‘err’);
-var data={nome:nom,cognome:(el(‘mm-cog’)||{}).value||’’,telefono:(el(‘mm-tel’)||{}).value||’’,ruolo:(el(‘mm-ruo’)||{}).value||‘rider’,pin:pin,softpos:!!(el(‘mm-sp’)||{}).checked,attivo:true};
-if(m.tipo===‘editMembro’){fupd(‘utenti/’+m.data.id,data).then(function(){toast(‘Aggiornato ✓’);closeM()})}
-else{var id=uid();fset(‘utenti/’+id,Object.assign({id:id},data)).then(function(){toast(‘Aggiunto ✓’);closeM()})}
-});
-}
-
-// ═══════════════════════════════════════════════════════════════════
-// START
-// ═══════════════════════════════════════════════════════════════════
-startListeners();
 </script>
 
 </body>
