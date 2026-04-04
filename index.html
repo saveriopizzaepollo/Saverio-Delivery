@@ -2,1090 +2,825 @@
 
 <html lang="it">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <title>SAVERIO DELIVERY</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800;900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: 'Barlow', sans-serif; background: #fff; color: #1A3A5C; font-weight: 700; }
-  :root {
-    --blue: #2B5F8E; --blue-dark: #1A3A5C; --blue-light: #EBF3FA;
-    --orange: #E8600A; --orange-light: #FFF0E6;
-    --green: #1B8A4A; --green-light: #E6F6ED;
-    --red: #C0392B; --red-light: #FDEDEC;
-    --yellow: #D4A017; --yellow-light: #FEF9E7;
-    --gray: #F4F6F8; --gray-mid: #B0BEC5;
-  }
-  button { font-family: 'Barlow', sans-serif; font-weight: 800; cursor: pointer; }
-  input, select, textarea { font-family: 'Barlow', sans-serif; font-weight: 700; }
-  .page { padding: 16px; max-width: 680px; margin: 0 auto; padding-bottom: 40px; }
-  .card { background: #fff; border: 2px solid var(--blue-light); border-radius: 14px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(43,95,142,0.06); }
-  .input { width: 100%; padding: 11px 13px; border-radius: 10px; border: 2px solid var(--blue-light); font-size: 15px; color: var(--blue-dark); outline: none; background: #fff; }
-  .input:focus { border-color: var(--blue); }
-  .label { font-size: 11px; font-weight: 900; color: var(--gray-mid); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; display: block; }
-  .btn { border: none; border-radius: 10px; padding: 11px 18px; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
-  .btn-blue { background: var(--blue); color: #fff; }
-  .btn-blue-dark { background: var(--blue-dark); color: #fff; }
-  .btn-orange { background: var(--orange); color: #fff; }
-  .btn-green { background: var(--green); color: #fff; }
-  .btn-red { background: var(--red-light); color: var(--red); }
-  .btn-gray { background: var(--gray); color: var(--blue-dark); }
-  .btn-sm { padding: 7px 12px; font-size: 12px; border-radius: 8px; border: none; }
-  .btn-full { width: 100%; justify-content: center; font-size: 16px; padding: 14px; }
-  .section-title { font-size: 11px; font-weight: 900; color: var(--gray-mid); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; margin-top: 16px; }
-  .divider { height: 1px; background: var(--blue-light); margin: 12px 0; }
-  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 800; }
-  .overlay { position: fixed; inset: 0; background: rgba(26,58,92,0.45); z-index: 200; display: flex; align-items: flex-end; justify-content: center; }
-  .modal { background: #fff; border-radius: 20px 20px 0 0; padding: 20px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; }
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 12px; font-weight: 800; font-size: 14px; z-index: 9999; box-shadow: 0 4px 20px rgba(0,0,0,0.2); white-space: nowrap; color: #fff; }
-  .header { background: #fff; border-bottom: 3px solid var(--blue); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(43,95,142,0.10); }
-  .nav { display: flex; gap: 4px; background: var(--gray); padding: 10px 12px; overflow-x: auto; border-bottom: 2px solid var(--blue-light); }
-  .nav::-webkit-scrollbar { display: none; }
-  .nav-btn { padding: 8px 14px; border-radius: 10px; border: none; font-size: 13px; white-space: nowrap; transition: all 0.15s; }
-  .nav-btn.active { background: var(--blue); color: #fff; box-shadow: 0 2px 8px rgba(43,95,142,0.25); }
-  .nav-btn:not(.active) { background: #fff; color: var(--blue-dark); }
-  .pin-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; max-width: 260px; margin: 0 auto; }
-  .pin-btn { aspect-ratio: 1; border-radius: 14px; border: 2px solid var(--blue-light); background: #fff; font-size: 22px; font-weight: 900; color: var(--blue-dark); }
-  .pin-dots { display: flex; gap: 12px; justify-content: center; margin: 16px 0; }
-  .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--blue); transition: background 0.15s; }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-  .row { display: flex; gap: 10px; align-items: center; }
-  .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid var(--blue-light); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  #app { min-height: 100vh; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Barlow',sans-serif;background:#fff;color:#1A3A5C;font-weight:700;-webkit-text-size-adjust:100%}
+button{font-family:'Barlow',sans-serif;font-weight:800;cursor:pointer;-webkit-appearance:none;border:none}
+input,select,textarea{font-family:'Barlow',sans-serif;font-weight:700;-webkit-appearance:none}
+.page{padding:16px;max-width:680px;margin:0 auto;padding-bottom:60px}
+.card{background:#fff;border:2px solid #EBF3FA;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(43,95,142,.06)}
+.inp{width:100%;padding:11px 13px;border-radius:10px;border:2px solid #EBF3FA;font-size:15px;color:#1A3A5C;outline:none;background:#fff}
+.inp:focus{border-color:#2B5F8E}
+.lbl{font-size:11px;font-weight:900;color:#B0BEC5;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;display:block}
+.btn{border:none;border-radius:10px;padding:11px 18px;font-size:14px;display:inline-flex;align-items:center;gap:6px;font-family:'Barlow',sans-serif;font-weight:800}
+.bsm{padding:7px 12px;font-size:12px;border-radius:8px}
+.bfull{width:100%;justify-content:center;font-size:16px;padding:14px}
+.stit{font-size:11px;font-weight:900;color:#B0BEC5;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;margin-top:16px}
+.divl{height:1px;background:#EBF3FA;margin:12px 0}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800}
+.ovl{position:fixed;inset:0;background:rgba(26,58,92,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.mdl{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;font-weight:800;font-size:14px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.2);white-space:nowrap;color:#fff}
+.hdr{background:#fff;border-bottom:3px solid #2B5F8E;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(43,95,142,.1)}
+.nav{display:flex;gap:4px;background:#F4F6F8;padding:10px 12px;overflow-x:auto;border-bottom:2px solid #EBF3FA;-webkit-overflow-scrolling:touch}
+.nav::-webkit-scrollbar{display:none}
+.nb{padding:8px 14px;border-radius:10px;border:none;font-size:13px;white-space:nowrap;font-weight:800;font-family:'Barlow',sans-serif}
+.nb.act{background:#2B5F8E;color:#fff}
+.nb:not(.act){background:#fff;color:#1A3A5C}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto}
+.pbtn{aspect-ratio:1;border-radius:14px;border:2px solid #EBF3FA;background:#fff;font-size:22px;font-weight:900;color:#1A3A5C;font-family:'Barlow',sans-serif}
+.pdots{display:flex;gap:12px;justify-content:center;margin:16px 0}
+.pdot{width:16px;height:16px;border-radius:50%;border:2px solid #2B5F8E;transition:background .15s}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.spin{display:inline-block;width:28px;height:28px;border:3px solid #EBF3FA;border-top-color:#2B5F8E;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div id="app"><div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;"><div class="spinner"></div><div style="font-weight:900;color:var(--blue-dark);">Connessione a Firebase...</div></div></div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, push, update, remove, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw",
-  authDomain: "saverio-delivery.firebaseapp.com",
-  databaseURL: "https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "saverio-delivery",
-  storageBucket: "saverio-delivery.firebasestorage.app",
-  messagingSenderId: "913928598350",
-  appId: "1:913928598350:web:98489624879baabe27241f"
+<div id="app" style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px">
+  <div class="spin"></div>
+  <div style="font-weight:900;color:#1A3A5C;font-size:15px">Caricamento...</div>
+</div>
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// COLORI
+// ═══════════════════════════════════════════════════════════════════
+var BL='#2B5F8E',BD='#1A3A5C',LL='#EBF3FA',OR='#E8600A',OL='#FFF0E6';
+var GR='#1B8A4A',GL='#E6F6ED',RE='#C0392B',RL='#FDEDEC';
+var YE='#D4A017',YL='#FEF9E7',GY='#F4F6F8',GM='#B0BEC5';
+var STATI={
+  nuovo:{label:'Nuovo',emoji:'🆕',bg:LL,text:BL,border:BL},
+  cucina:{label:'In Cucina',emoji:'👨‍🍳',bg:YL,text:YE,border:YE},
+  pronto:{label:'Pronto',emoji:'✅',bg:GL,text:GR,border:GR},
+  consegna:{label:'In Consegna',emoji:'🛵',bg:OL,text:OR,border:OR},
+  pagato:{label:'Pagato',emoji:'💰',bg:GL,text:GR,border:GR},
+  nonpagato:{label:'Non Pagato',emoji:'❌',bg:RL,text:RE,border:RE}
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getDatabase(firebaseApp);
-
-// ─── PALETTE ────────────────────────────────────────────────────────────────
-const C = { blue:"#2B5F8E", blueDark:"#1A3A5C", blueLight:"#EBF3FA", orange:"#E8600A", orangeLight:"#FFF0E6", green:"#1B8A4A", greenLight:"#E6F6ED", red:"#C0392B", redLight:"#FDEDEC", yellow:"#D4A017", yellowLight:"#FEF9E7", white:"#FFFFFF", gray:"#F4F6F8", grayMid:"#B0BEC5" };
-const STATI = {
-  nuovo:     { label:"Nuovo",       emoji:"🆕", bg:C.blueLight,   text:C.blue,    border:C.blue },
-  cucina:    { label:"In Cucina",   emoji:"👨‍🍳", bg:C.yellowLight, text:C.yellow,  border:C.yellow },
-  pronto:    { label:"Pronto",      emoji:"✅", bg:C.greenLight,  text:C.green,   border:C.green },
-  consegna:  { label:"In Consegna", emoji:"🛵", bg:C.orangeLight, text:C.orange,  border:C.orange },
-  pagato:    { label:"Pagato",      emoji:"💰", bg:C.greenLight,  text:C.green,   border:C.green },
-  nonpagato: { label:"Non Pagato",  emoji:"❌", bg:C.redLight,    text:C.red,     border:C.red },
-};
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,5);
-const nowISO = () => new Date().toISOString();
-const fmtTime = iso => iso ? new Date(iso).toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}) : "";
-const oggi = () => new Date().toDateString();
-
-// ─── STATE ───────────────────────────────────────────────────────────────────
-let STATE = {
-  utenti: {}, ordini: {}, clienti: {}, zone: {}, presenti: {},
-  utenteLoggato: null, schermata: "dashboard", toast: null, toastTimer: null,
-  modal: null, // { tipo, data }
-};
-
-// ─── FIREBASE LISTENERS ──────────────────────────────────────────────────────
-function initListeners() {
-  onValue(ref(db,"utenti"), snap => { STATE.utenti = snap.val() || {}; render(); });
-  onValue(ref(db,"ordini"), snap => { STATE.ordini = snap.val() || {}; render(); });
-  onValue(ref(db,"clienti"), snap => { STATE.clienti = snap.val() || {}; render(); });
-  onValue(ref(db,"zone"), snap => {
-    STATE.zone = snap.val() || {};
-    if (Object.keys(STATE.zone).length === 0) initZoneDefault();
-    render();
-  });
-  onValue(ref(db,"presenti"), snap => { STATE.presenti = snap.val() || {}; render(); });
-}
-
-async function initZoneDefault() {
-  const zone = {
-    z1: { id:"z1", nome:"Centro / Zona Rossa", colore:C.orange, costo:1, orariLiberi:true, orari:"" },
-    z2: { id:"z2", nome:"Altarello / Zisa / Bonagia", colore:C.blue, costo:2, orariLiberi:false, orari:"18:30-19:00, 21:15-21:45" },
-    z3: { id:"z3", nome:"Ficarazzi / Villabate / Cannita", colore:C.blue, costo:3, orariLiberi:false, orari:"18:30-19:00, 21:15-21:45" },
-  };
-  await set(ref(db,"zone"), zone);
-  // Admin default
-  const snap = await get(ref(db,"utenti"));
-  if (!snap.val()) {
-    await set(ref(db,"utenti"), {
-      admin: { id:"admin", nome:"Saverio", cognome:"", ruolo:"admin", pin:"1234", softpos:false, attivo:true },
-      dispatch: { id:"dispatch", nome:"Dispatch", cognome:"", ruolo:"dispatch", pin:"0000", softpos:false, attivo:true },
-    });
-  }
-}
-
-// ─── TOAST ───────────────────────────────────────────────────────────────────
-function toast(msg, tipo="ok") {
-  if (STATE.toastTimer) clearTimeout(STATE.toastTimer);
-  STATE.toast = { msg, tipo };
-  STATE.toastTimer = setTimeout(() => { STATE.toast = null; render(); }, 2800);
-  render();
-}
-
-// ─── RENDER ──────────────────────────────────────────────────────────────────
-function render() {
-  const app = document.getElementById("app");
-  if (!STATE.utenteLoggato) { app.innerHTML = renderLogin(); bindLogin(); return; }
-  app.innerHTML = renderApp();
-  bindApp();
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// LOGIN
-// ═══════════════════════════════════════════════════════════════════════════
-let loginFase = "ruoli"; // ruoli | listaRider | pin
-let loginSelezionato = null;
-let loginPin = "";
-let loginErrore = false;
-
-function renderLogin() {
-  const utenti = Object.values(STATE.utenti);
-  const riders = utenti.filter(u => u.ruolo === "rider" && u.attivo !== false);
-
-  let content = "";
-  if (loginFase === "ruoli") {
-    const admins = utenti.filter(u => u.ruolo === "admin");
-    const dispatchers = utenti.filter(u => u.ruolo === "dispatch");
-    content = `
-      <div style="font-size:13px;font-weight:800;color:${C.grayMid};text-align:center;margin-bottom:20px;letter-spacing:1px">SELEZIONA IL TUO RUOLO</div>
-      ${admins.map(u => `<button class="login-role-btn" data-id="${u.id}" style="width:100%;margin-bottom:12px;padding:20px;border-radius:16px;border:3px solid ${C.blueDark};background:${C.blueDark};display:flex;align-items:center;gap:16px;">
-        <span style="font-size:30px">🔑</span>
-        <span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">ADMIN</span>
-      </button>`).join("")}
-      ${dispatchers.map(u => `<button class="login-role-btn" data-id="${u.id}" style="width:100%;margin-bottom:12px;padding:20px;border-radius:16px;border:3px solid ${C.blue};background:${C.blue};display:flex;align-items:center;gap:16px;">
-        <span style="font-size:30px">📦</span>
-        <span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">DISPATCH</span>
-      </button>`).join("")}
-      ${riders.length > 0 ? `<button id="btn-riders" style="width:100%;margin-bottom:12px;padding:20px;border-radius:16px;border:3px solid ${C.orange};background:${C.orange};display:flex;align-items:center;gap:16px;">
-        <span style="font-size:30px">🛵</span>
-        <span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">RIDERS</span>
-      </button>` : ""}
-    `;
-  } else if (loginFase === "listaRider") {
-    content = `
-      <div style="font-size:13px;font-weight:800;color:${C.grayMid};text-align:center;margin-bottom:20px;letter-spacing:1px">QUAL È IL TUO NOME?</div>
-      ${riders.map(u => `<button class="login-role-btn" data-id="${u.id}" style="width:100%;margin-bottom:10px;padding:16px 20px;border-radius:14px;border:2px solid ${C.orange};background:#fff;display:flex;align-items:center;gap:14px;">
-        <div style="width:44px;height:44px;border-radius:12px;background:${C.orange};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🛵</div>
-        <span style="font-size:18px;font-weight:900;color:${C.blueDark}">${u.nome} ${u.cognome||""}</span>
-      </button>`).join("")}
-      <button id="btn-back-ruoli" class="btn btn-gray" style="width:100%;justify-content:center;margin-top:8px;padding:12px">← Indietro</button>
-    `;
-  } else if (loginFase === "pin") {
-    const dots = [0,1,2,3].map(i => `<div class="pin-dot" style="background:${loginPin.length > i ? C.blue : C.blueLight}"></div>`).join("");
-    content = `
-      <div style="font-size:18px;font-weight:900;color:${C.blueDark};margin-bottom:4px;text-align:center">Ciao, ${loginSelezionato?.nome}!</div>
-      <div style="font-size:13px;font-weight:700;color:${C.grayMid};margin-bottom:8px;text-align:center">Inserisci il tuo PIN</div>
-      <div class="pin-dots">${dots}</div>
-      ${loginErrore ? `<div style="color:${C.red};font-weight:800;font-size:13px;margin-bottom:8px;text-align:center">PIN errato, riprova</div>` : ""}
-      <div class="pin-grid">
-        ${["1","2","3","4","5","6","7","8","9","","0","del"].map(d => `
-          <button class="pin-btn${d===""?" pin-invisible":""}" data-digit="${d}" style="${d==="del"?`background:${C.redLight};color:${C.red}`:""}">${d==="del"?"⌫":d}</button>
-        `).join("")}
-      </div>
-      <button id="btn-back-pin" class="btn btn-gray" style="width:100%;justify-content:center;margin-top:16px;padding:12px">← Indietro</button>
-    `;
-  }
-
-  return `
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:#fff">
-      ${STATE.toast ? `<div class="toast" style="background:${STATE.toast.tipo==="err"?C.red:C.green}">${STATE.toast.msg}</div>` : ""}
-      <div style="text-align:center;margin-bottom:36px">
-        <div style="font-size:28px;font-weight:900;color:${C.blueDark};letter-spacing:3px">SAVERIO DELIVERY</div>
-      </div>
-      <div style="width:100%;max-width:360px">${content}</div>
-    </div>
-  `;
-}
-
-function bindLogin() {
-  document.querySelectorAll(".login-role-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const u = STATE.utenti[btn.dataset.id];
-      if (!u) return;
-      loginSelezionato = u;
-      loginFase = "pin";
-      loginPin = "";
-      loginErrore = false;
-      render();
-    });
-  });
-  document.getElementById("btn-riders")?.addEventListener("click", () => { loginFase = "listaRider"; render(); });
-  document.getElementById("btn-back-ruoli")?.addEventListener("click", () => { loginFase = "ruoli"; render(); });
-  document.getElementById("btn-back-pin")?.addEventListener("click", () => {
-    loginFase = loginSelezionato?.ruolo === "rider" ? "listaRider" : "ruoli";
-    loginPin = ""; loginErrore = false; render();
-  });
-  document.querySelectorAll(".pin-btn:not(.pin-invisible)").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const d = btn.dataset.digit;
-      if (d === "del") { loginPin = loginPin.slice(0,-1); loginErrore = false; render(); return; }
-      loginPin += d;
-      if (loginPin.length === 4) {
-        if (loginSelezionato.pin === loginPin) {
-          STATE.utenteLoggato = loginSelezionato;
-          STATE.schermata = loginSelezionato.ruolo === "rider" ? "miei" : loginSelezionato.ruolo === "dispatch" ? "dispatch" : "dashboard";
-          loginFase = "ruoli"; loginPin = ""; loginErrore = false;
-          render();
-        } else {
-          loginErrore = true;
-          setTimeout(() => { loginPin = ""; loginErrore = false; render(); }, 700);
-          render();
-        }
-      } else { render(); }
-    });
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// APP SHELL
-// ═══════════════════════════════════════════════════════════════════════════
-function renderApp() {
-  const u = STATE.utenteLoggato;
-  const isAdmin = u.ruolo === "admin";
-  const isDispatch = u.ruolo === "dispatch";
-  const isRider = u.ruolo === "rider";
-
-  const navItems = [
-    ...(isAdmin ? [{ id:"dashboard", label:"🏠 Dashboard" }] : []),
-    ...(isAdmin || isDispatch ? [{ id:"nuovo", label:"➕ Ordine" }] : []),
-    ...(isAdmin || isDispatch ? [{ id:"ordini", label:"📋 Ordini" }] : []),
-    ...(isAdmin || isDispatch ? [{ id:"dispatch", label:"📦 Dispatch" }] : []),
-    ...(isRider ? [{ id:"miei", label:"🛵 Le Mie" }] : []),
-    ...(isAdmin ? [{ id:"appello", label:"👥 Appello" }] : []),
-    ...(isAdmin ? [{ id:"clienti", label:"👤 Clienti" }] : []),
-    ...(isAdmin ? [{ id:"team", label:"⚙️ Team" }] : []),
-    ...(isAdmin ? [{ id:"report", label:"📊 Report" }] : []),
-  ];
-
-  let pageHtml = "";
-  if (STATE.schermata === "dashboard") pageHtml = renderDashboard();
-  else if (STATE.schermata === "nuovo") pageHtml = renderNuovoOrdine();
-  else if (STATE.schermata === "ordini") pageHtml = renderOrdini();
-  else if (STATE.schermata === "dispatch") pageHtml = renderDispatch();
-  else if (STATE.schermata === "miei") pageHtml = renderMieConsegne();
-  else if (STATE.schermata === "appello") pageHtml = renderAppello();
-  else if (STATE.schermata === "clienti") pageHtml = renderClienti();
-  else if (STATE.schermata === "team") pageHtml = renderTeam();
-  else if (STATE.schermata === "report") pageHtml = renderReport();
-
-  return `
-    ${STATE.toast ? `<div class="toast" style="background:${STATE.toast.tipo==="err"?C.red:C.green}">${STATE.toast.msg}</div>` : ""}
-    <header class="header">
-      <div style="font-size:18px;font-weight:900;color:${C.blueDark};letter-spacing:2px">SAVERIO DELIVERY</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:12px;font-weight:800;color:${C.grayMid}">${u.nome}</span>
-        <button id="btn-logout" class="btn btn-sm btn-red">Esci</button>
-      </div>
-    </header>
-    <nav class="nav">
-      ${navItems.map(n => `<button class="nav-btn${STATE.schermata===n.id?" active":""}" data-screen="${n.id}">${n.label}</button>`).join("")}
-    </nav>
-    <div class="page">${pageHtml}</div>
-    ${STATE.modal ? renderModal() : ""}
-  `;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// DASHBOARD
-// ═══════════════════════════════════════════════════════════════════════════
-function renderDashboard() {
-  const ordiniOggi = getOrdiniOggi();
-  const cnt = {};
-  Object.keys(STATI).forEach(s => cnt[s] = ordiniOggi.filter(o => o.stato === s).length);
-  const totale = ordiniOggi.filter(o => o.stato === "pagato").reduce((s,o) => s+(o.totale||0), 0);
-  const riders = Object.values(STATE.utenti).filter(u => u.ruolo === "rider");
-  const presenti = STATE.presenti[oggiKey()] || {};
-
-  return `
-    <div style="font-size:22px;font-weight:900;color:${C.blueDark};margin-bottom:4px">Dashboard</div>
-    <div style="font-size:13px;font-weight:700;color:${C.grayMid};margin-bottom:16px">${new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
-    <div class="grid3" style="margin-bottom:16px">
-      ${Object.entries(cnt).map(([stato,n]) => `
-        <div style="background:${STATI[stato].bg};border:2px solid ${STATI[stato].border};border-radius:12px;padding:12px 8px;text-align:center">
-          <div style="font-size:20px">${STATI[stato].emoji}</div>
-          <div style="font-size:26px;font-weight:900;color:${STATI[stato].text}">${n}</div>
-          <div style="font-size:9px;font-weight:800;color:${STATI[stato].text};text-transform:uppercase">${STATI[stato].label}</div>
-        </div>
-      `).join("")}
-    </div>
-    <div style="background:${C.greenLight};border:2px solid ${C.green};border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-weight:800;color:${C.green}">💰 Totale Incassato</span>
-      <span style="font-size:24px;font-weight:900;color:${C.green}">€${totale.toFixed(2)}</span>
-    </div>
-    ${cnt.nonpagato > 0 ? `<div style="background:${C.redLight};border:2px solid ${C.red};border-radius:14px;padding:12px 16px;margin-bottom:16px;font-weight:900;color:${C.red}">⚠️ ${cnt.nonpagato} consegne NON PAGATE</div>` : ""}
-    ${cnt.pronto > 0 ? `<div style="background:${C.yellowLight};border:2px solid ${C.yellow};border-radius:14px;padding:12px 16px;margin-bottom:16px;font-weight:900;color:${C.yellow}">📦 ${cnt.pronto} ordini pronti da assegnare</div>` : ""}
-    <div class="section-title">Riders presenti stasera</div>
-    ${riders.filter(r => presenti[r.id]).map(r => {
-      const sue = ordiniOggi.filter(o => o.fattorinoId === r.id && o.stato === "consegna");
-      return `<div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:900">🛵 ${r.nome} ${r.cognome||""} ${r.softpos?`<span style="font-size:11px;background:${C.blueLight};color:${C.blue};border-radius:6px;padding:2px 6px">SoftPOS</span>`:""}</div>
-          <div style="font-weight:900;color:${C.orange}">${sue.length} in giro</div>
-        </div>
-        ${sue.map(o => `<div style="font-size:12px;color:${C.grayMid};margin-top:4px">• ${o.nomeCliente} — €${(o.totale||0).toFixed(2)}</div>`).join("")}
-      </div>`;
-    }).join("")}
-    ${riders.filter(r => presenti[r.id]).length === 0 ? `<div style="color:${C.grayMid};font-weight:700;font-size:13px">Nessun rider segnato presente — vai su Appello</div>` : ""}
-    <button class="btn btn-blue btn-full" style="margin-top:16px" data-screen="nuovo">➕ Nuovo Ordine</button>
-  `;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// NUOVO ORDINE
-// ═══════════════════════════════════════════════════════════════════════════
-let formOrdine = null;
-function initFormOrdine() {
-  return { clienteId:"", nomeM:"", telM:"", indirizzoM:"", zonaId:"", note:"", fonte:"telefono", prodotti:[{id:uid(),nome:"",qty:1,prezzo:""}] };
-}
-
-function renderNuovoOrdine() {
-  if (!formOrdine) formOrdine = initFormOrdine();
-  const f = formOrdine;
-  const cliente = f.clienteId ? STATE.clienti[f.clienteId] : null;
-  const zone = Object.values(STATE.zone);
-  const zonaScelta = zone.find(z => z.id === f.zonaId);
-  const totProd = f.prodotti.reduce((s,p) => s+(parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1), 0);
-  const totConsegna = zonaScelta?.costo || 0;
-  const totTot = totProd + totConsegna;
-
-  // avviso zona blu
-  const ora = new Date();
-  const hm = ora.getHours()*60+ora.getMinutes();
-  let avvisoZona = "";
-  if (zonaScelta && !zonaScelta.orariLiberi) {
-    const inOrario = (zonaScelta.orari||"").split(",").some(r => {
-      const [da,a] = r.trim().split("-").map(t => { const [h,m]=t.split(":"); return parseInt(h)*60+parseInt(m); });
-      return hm>=da && hm<=a;
-    });
-    if (!inOrario) avvisoZona = `<div style="background:${C.yellowLight};border:2px solid ${C.yellow};border-radius:10px;padding:10px 12px;margin-bottom:8px;font-weight:800;color:${C.yellow};font-size:13px">⚠️ Zona blu — orari consigliati: ${zonaScelta.orari}</div>`;
-  }
-
-  return `
-    <div style="font-size:22px;font-weight:900;color:${C.blueDark};margin-bottom:16px">➕ Nuovo Ordine</div>
-    <div class="section-title">Come ha ordinato?</div>
-    <div class="row" style="margin-bottom:16px">
-      <button class="btn${f.fonte==="telefono"?" btn-blue":" btn-gray"} fonte-btn" data-fonte="telefono" style="flex:1;justify-content:center">📞 Telefono</button>
-      <button class="btn${f.fonte==="whatsapp"?" btn-blue":" btn-gray"} fonte-btn" data-fonte="whatsapp" style="flex:1;justify-content:center">💬 WhatsApp</button>
-    </div>
-
-    <div class="section-title">Cliente</div>
-    ${cliente ? `
-      <div class="card" style="border:2px solid ${C.blue}">
-        <div style="display:flex;justify-content:space-between">
-          <div>
-            <div style="font-weight:900;font-size:16px">${cliente.cognome} ${cliente.nome}</div>
-            <div style="font-size:13px;color:${C.grayMid}">📞 ${cliente.telefono||"—"}</div>
-            <div style="font-size:13px;color:${C.grayMid}">📍 ${cliente.indirizzo||"—"}</div>
-          </div>
-          <button class="btn btn-sm btn-red" id="btn-rimuovi-cliente">✕</button>
-        </div>
-      </div>
-    ` : `
-      <input class="input" id="ricerca-cliente" placeholder="🔍 Cerca per cognome o telefono..." style="margin-bottom:8px" value="${window._ricercaCliente||""}" />
-      <div id="risultati-clienti"></div>
-      <div class="row" style="margin-bottom:12px">
-        <button class="btn btn-sm" style="background:${C.greenLight};color:${C.green};flex:1" id="btn-nuovo-cliente">+ Nuovo Cliente</button>
-      </div>
-      <div class="grid2" style="margin-bottom:8px">
-        <div><label class="label">Nome</label><input class="input" id="f-nomeM" value="${f.nomeM}" placeholder="Mario Rossi" /></div>
-        <div><label class="label">Telefono</label><input class="input" id="f-telM" value="${f.telM}" placeholder="091..." /></div>
-        <div style="grid-column:1/-1"><label class="label">Indirizzo</label><input class="input" id="f-indirizzoM" value="${f.indirizzoM}" placeholder="Via..." /></div>
-      </div>
-    `}
-
-    <div class="section-title">Zona Consegna</div>
-    <select class="input" id="sel-zona" style="margin-bottom:8px">
-      <option value="">-- Seleziona zona --</option>
-      ${zone.map(z => `<option value="${z.id}" ${f.zonaId===z.id?"selected":""}>${z.nome} · €${z.costo}</option>`).join("")}
-      <option value="fuori" ${f.zonaId==="fuori"?"selected":""}>Fuori zona (manuale)</option>
-    </select>
-    ${avvisoZona}
-
-    <div class="section-title">Prodotti</div>
-    ${f.prodotti.map((p,i) => `
-      <div style="display:grid;grid-template-columns:44px 1fr 64px 68px 32px;gap:6px;margin-bottom:8px;align-items:center">
-        <input class="input prod-qty" data-id="${p.id}" type="number" min="1" value="${p.qty}" style="padding:8px;text-align:center" />
-        <input class="input prod-nome" data-id="${p.id}" value="${p.nome}" placeholder="Prodotto ${i+1}" style="padding:8px" />
-        <input class="input prod-prezzo" data-id="${p.id}" type="number" step="0.5" value="${p.prezzo}" placeholder="€" style="padding:8px" />
-        <div style="font-size:11px;font-weight:800;color:${C.grayMid};text-align:center">€${((parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1)).toFixed(2)}</div>
-        ${f.prodotti.length>1 ? `<button class="btn btn-sm btn-red prod-remove" data-id="${p.id}" style="padding:4px 6px">✕</button>` : "<div></div>"}
-      </div>
-    `).join("")}
-    <button class="btn btn-sm" style="background:${C.blueLight};color:${C.blue};margin-bottom:12px" id="btn-add-prod">+ Prodotto</button>
-
-    <div class="section-title">Note</div>
-    <textarea class="input" id="f-note" style="height:70px;resize:vertical;margin-bottom:16px" placeholder="Citofono, piano, note...">${f.note}</textarea>
-
-```
-<div style="background:${C.blueLight};border-radius:12px;padding:14px 16px;margin-bottom:16px">
-  <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-    <span style="color:${C.grayMid}">Prodotti</span><span>€${totProd.toFixed(2)}</span>
-  </div>
-  ${zonaScelta ? `<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:${C.grayMid}">Consegna</span><span>€${totConsegna.toFixed(2)}</span></div>` : ""}
-  <div class="divider"></div>
-  <div style="display:flex;justify-content:space-between">
-    <span style="font-size:16px;font-weight:900">TOTALE</span>
-    <span style="font-size:22px;font-weight:900;color:${C.blue}">€${totTot.toFixed(2)}</span>
-  </div>
-</div>
-<button class="btn btn-blue btn-full" id="btn-conferma-ordine">✅ Conferma Ordine</button>
-```
-
-`;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// GESTIONE ORDINI
-// ═══════════════════════════════════════════════════════════════════════════
-let filtroOrdini = “tutti”;
-function renderOrdini() {
-const ordini = getOrdiniOggi();
-const filtrati = filtroOrdini === “tutti” ? ordini : ordini.filter(o => o.stato === filtroOrdini);
-const isAdmin = STATE.utenteLoggato.ruolo === “admin”;
-const isDispatch = STATE.utenteLoggato.ruolo === “dispatch”;
-
-return `<div style="font-size:22px;font-weight:900;color:${C.blueDark};margin-bottom:12px">📋 Ordini</div> <div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px"> <button class="btn btn-sm filtro-btn ${filtroOrdini==="tutti"?"btn-blue":"btn-gray"}" data-filtro="tutti">Tutti (${ordini.length})</button> ${Object.entries(STATI).map(([s,v]) =>`<button class=“btn btn-sm filtro-btn ${filtroOrdini===s?””:“btn-gray”}” data-filtro=”${s}” style=”${filtroOrdini===s?`background:${v.border};color:#fff`:””}”>${v.emoji} ${v.label} (${ordini.filter(o=>o.stato===s).length})</button>`).join("")} </div> ${filtrati.length === 0 ? `<div style="text-align:center;color:${C.grayMid};padding:32px">Nessun ordine</div>`: ""} ${filtrati.map(o => { const rider = o.fattorinoId ? STATE.utenti[o.fattorinoId] : null; return`
-<div class="card" style="border-left:5px solid ${STATI[o.stato]?.border||C.grayMid}">
-<div style="display:flex;justify-content:space-between;align-items:flex-start">
-<div>
-<div style="font-weight:900;font-size:16px">${o.nomeCliente}</div>
-<div style="font-size:12px;color:${C.grayMid}">📍 ${o.indirizzo||”—”}</div>
-${o.zona ? `<div style="font-size:12px;color:${C.grayMid}">📦 ${o.zona}</div>` : “”}
-${rider ? `<div style="font-size:12px;color:${C.orange};font-weight:800">🛵 ${rider.nome}</div>` : “”}
-</div>
-<div style="text-align:right">
-<div style="font-size:18px;font-weight:900;color:${C.blue}">€${(o.totale||0).toFixed(2)}</div>
-<span class="badge" style="background:${STATI[o.stato]?.bg};color:${STATI[o.stato]?.text};border:1.5px solid ${STATI[o.stato]?.border}">${STATI[o.stato]?.emoji} ${STATI[o.stato]?.label}</span>
-<div style="font-size:11px;color:${C.grayMid};margin-top:4px">${fmtTime(o.data)}</div>
-</div>
-</div>
-${(isAdmin||isDispatch) ? `<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"> ${o.stato==="nuovo" ?`<button class="btn btn-sm ordine-stato" data-id="${o.id}" data-stato="cucina" style="background:${C.yellowLight};color:${C.yellow}">👨‍🍳 In Cucina</button>`: ""} ${o.stato==="cucina" ?`<button class="btn btn-sm ordine-stato" data-id="${o.id}" data-stato="pronto" style="background:${C.greenLight};color:${C.green}">✅ Pronto</button>`: ""} ${o.stato==="consegna" ?`
-<button class="btn btn-sm ordine-stato" data-id="${o.id}" data-stato="pagato" style="background:${C.greenLight};color:${C.green}">💰 Pagato</button>
-<button class="btn btn-sm ordine-stato" data-id="${o.id}" data-stato="nonpagato" style="background:${C.redLight};color:${C.red}">❌ Non pagato</button>
-<button class="btn btn-sm btn-blue riassegna-btn" data-id="${o.id}">🔄 Riassegna</button>
-`: ""} </div>` : “”}
-</div>
-`; }).join("")} `;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// DISPATCH
-// ═══════════════════════════════════════════════════════════════════════════
-let dispatchSelezionati = {}; // ordineId → true
-function renderDispatch() {
-const ordini = getOrdiniOggi();
-const pronti = ordini.filter(o => o.stato === “pronto”);
-const presenti = STATE.presenti[oggiKey()] || {};
-const riders = Object.values(STATE.utenti).filter(u => u.ruolo === “rider” && presenti[u.id]);
-const riassegne = ordini.filter(o => o.riassegnaRichiesta && o.stato === “consegna”);
-
-return `
-<div style="font-size:22px;font-weight:900;color:${C.blueDark};margin-bottom:4px">📦 Dispatch</div>
-<div style="font-size:13px;font-weight:700;color:${C.grayMid};margin-bottom:16px">Gestisci le uscite</div>
-
-```
-${riassegne.length > 0 ? `
-  <div style="background:${C.yellowLight};border:2px solid ${C.yellow};border-radius:14px;padding:12px 14px;margin-bottom:16px">
-    <div style="font-weight:900;color:${C.yellow};margin-bottom:8px">🔄 Riassegnazioni richieste (${riassegne.length})</div>
-    ${riassegne.map(o => {
-      const riderAttuale = STATE.utenti[o.fattorinoId];
-      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid ${C.yellowLight}">
-        <div>
-          <div style="font-weight:900;font-size:13px">${o.nomeCliente}</div>
-          <div style="font-size:12px;color:${C.grayMid}">da: ${riderAttuale?.nome||"—"}</div>
-        </div>
-        <button class="btn btn-sm btn-orange riassegna-btn" data-id="${o.id}">Riassegna</button>
-      </div>`;
-    }).join("")}
-  </div>
-` : ""}
-
-<div class="section-title">Ordini pronti (${pronti.length})</div>
-${pronti.length === 0 ? `<div style="color:${C.grayMid};font-weight:700;font-size:13px;margin-bottom:16px">Nessun ordine pronto</div>` : ""}
-${pronti.map(o => {
-  const sel = dispatchSelezionati[o.id];
-  return `
-    <div class="card dispatch-card" data-id="${o.id}" style="border:2px solid ${sel?C.green:C.blueLight};background:${sel?C.greenLight:"#fff"};cursor:pointer">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-weight:900;font-size:16px">${sel?'✅ ':''} ${o.nomeCliente}</div>
-          <div style="font-size:12px;color:${C.grayMid}">📍 ${o.indirizzo||"—"}</div>
-          <div style="font-size:12px;color:${C.grayMid}">📦 ${o.zona||"—"}</div>
-          ${o.note ? `<div style="font-size:12px;color:${C.orange}">📝 ${o.note}</div>` : ""}
-        </div>
-        <div style="font-size:20px;font-weight:900;color:${C.blue}">€${(o.totale||0).toFixed(2)}</div>
-      </div>
-    </div>
-  `;
-}).join("")}
-
-${Object.keys(dispatchSelezionati).length > 0 ? `
-  <div style="background:${C.blueLight};border-radius:12px;padding:12px 14px;margin:12px 0">
-    <div style="font-weight:900;color:${C.blue};margin-bottom:4px">📋 Selezionati: ${Object.keys(dispatchSelezionati).length}</div>
-    <div style="font-size:13px;color:${C.grayMid}">Scegli il rider a cui assegnarli</div>
-  </div>
-  <div class="section-title">Assegna a rider</div>
-  ${riders.length === 0 ? `<div style="color:${C.grayMid};font-size:13px">Nessun rider presente stasera — vai su Appello</div>` : ""}
-  ${riders.map(r => {
-    const inGiro = getOrdiniOggi().filter(o => o.fattorinoId === r.id && o.stato === "consegna").length;
-    return `<button class="btn card assegna-rider-btn" data-rid="${r.id}" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:8px;border:2px solid ${C.orange}">
-      <div style="width:44px;height:44px;border-radius:12px;background:${C.orange};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🛵</div>
-      <div>
-        <div style="font-weight:900">${r.nome} ${r.cognome||""} ${r.softpos?'💳':''}</div>
-        <div style="font-size:12px;color:${C.grayMid}">${inGiro} consegne in corso</div>
-      </div>
-    </button>`;
-  }).join("")}
-` : ""}
-
-<div class="section-title">Riders in giro</div>
-${riders.map(r => {
-  const sue = getOrdiniOggi().filter(o => o.fattorinoId === r.id && o.stato === "consegna");
-  return `<div class="card">
-    <div style="display:flex;justify-content:space-between">
-      <div style="font-weight:900">🛵 ${r.nome} ${r.cognome||""}</div>
-      <div style="color:${C.orange};font-weight:900">${sue.length} in giro</div>
-    </div>
-    ${sue.map(o => `<div style="font-size:12px;color:${C.grayMid};margin-top:4px">• ${o.nomeCliente} — ${o.indirizzo||"—"} — €${(o.totale||0).toFixed(2)}</div>`).join("")}
-  </div>`;
-}).join("")}
-```
-
-`;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// MIE CONSEGNE
-// ═══════════════════════════════════════════════════════════════════════════
-function renderMieConsegne() {
-const u = STATE.utenteLoggato;
-const mie = getOrdiniOggi().filter(o => o.fattorinoId === u.id && [“consegna”,“pagato”,“nonpagato”].includes(o.stato));
-const inCorso = mie.filter(o => o.stato === “consegna”);
-const concluse = mie.filter(o => [“pagato”,“nonpagato”].includes(o.stato));
-const totale = mie.filter(o => o.stato === “pagato”).reduce((s,o) => s+(o.totale||0), 0);
-
-return `
-<div style="font-size:22px;font-weight:900;color:${C.blueDark};margin-bottom:4px">🛵 Le Mie Consegne</div>
-<div style="font-size:13px;font-weight:700;color:${C.grayMid};margin-bottom:16px">Ciao ${u.nome}! ${u.softpos?“💳 SoftPOS attivo”:””}</div>
-
-```
-<div style="background:${C.greenLight};border:2px solid ${C.green};border-radius:14px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
-  <span style="font-weight:800;color:${C.green}">💰 Il mio totale</span>
-  <span style="font-size:22px;font-weight:900;color:${C.green}">€${totale.toFixed(2)}</span>
-</div>
-
-${inCorso.length > 0 ? `
-  <div class="section-title">In consegna ora (${inCorso.length})</div>
-  ${inCorso.map(o => `
-    <div class="card" style="border:2px solid ${C.orange}">
-      <div style="font-weight:900;font-size:16px">${o.nomeCliente}</div>
-      <div style="font-size:13px;color:${C.grayMid}">📍 ${o.indirizzo||"—"}</div>
-      ${o.note ? `<div style="font-size:12px;color:${C.orange};margin-top:4px">📝 ${o.note}</div>` : ""}
-      <div style="font-size:20px;font-weight:900;color:${C.blue};margin:8px 0">€${(o.totale||0).toFixed(2)}</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-green incassa-btn" data-id="${o.id}" style="flex:1;justify-content:center">💰 Incassato</button>
-        <button class="btn btn-red nonpagato-btn" data-id="${o.id}" style="flex:1;justify-content:center">❌ Non pagato</button>
-      </div>
-      <button class="btn btn-sm richiedi-riassegna-btn" data-id="${o.id}" style="background:${C.blueLight};color:${C.blue};width:100%;margin-top:8px;justify-content:center">🔄 Passa a un collega</button>
-    </div>
-  `).join("")}
-` : `<div style="text-align:center;color:${C.grayMid};padding:32px;font-weight:700">Nessuna consegna assegnata</div>`}
-
-${concluse.length > 0 ? `
-  <div class="section-title">Concluse (${concluse.length})</div>
-  ${concluse.map(o => `
-    <div class="card" style="opacity:0.8">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div style="font-weight:900">${o.nomeCliente}</div>
-          ${o.metodoPagamento ? `<div style="font-size:12px;color:${C.grayMid}">💳 ${o.metodoPagamento}</div>` : ""}
-        </div>
-        <div style="text-align:right">
-          <div style="font-weight:900;color:${o.stato==="pagato"?C.green:C.red}">€${(o.totale||0).toFixed(2)}</div>
-          <span class="badge" style="background:${STATI[o.stato].bg};color:${STATI[o.stato].text}">${STATI[o.stato].emoji} ${STATI[o.stato].label}</span>
-        </div>
-      </div>
-    </div>
-  `).join("")}
-` : ""}
-```
-
-`;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// APPELLO
-// ═══════════════════════════════════════════════════════════════════════════
-function renderAppello() {
-const riders = Object.values(STATE.utenti).filter(u => u.ruolo === “rider” && u.attivo !== false);
-const presenti = STATE.presenti[oggiKey()] || {};
-
-return `
-<div style="font-size:22px;font-weight:900;color:${C.blueDark};margin-bottom:4px">👥 Appello Serata</div>
-<div style="font-size:13px;font-weight:700;color:${C.grayMid};margin-bottom:16px">${new Date().toLocaleDateString(“it-IT”,{weekday:“long”,day:“numeric”,month:“long”})}</div>
-
-```
-<div style="background:${C.blueLight};border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px;font-weight:700;color:${C.blueDark}">
-  ✅ Presenti: <strong>${Object.keys(presenti).length}</strong> su ${riders.length} riders
-</div>
-
-${riders.map(r => {
-  const presente = !!presenti[r.id];
-  return `
-    <div class="card" style="border:2px solid ${presente?C.green:C.blueLight};background:${presente?C.greenLight:"#fff"}">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:44px;height:44px;border-radius:12px;background:${presente?C.green:C.grayMid};display:flex;align-items:center;justify-content:center;font-size:20px">🛵</div>
-          <div>
-            <div style="font-weight:900">${r.nome} ${r.cognome||""}</div>
-            <div style="font-size:12px;color:${C.grayMid}">${r.telefono||"—"} ${r.softpos?"· 💳 SoftPOS":""}</div>
-          </div>
-        </div>
-        <button class="btn ${presente?"btn-red":"btn-green"} toggle-presente-btn" data-rid="${r.id}" data-presente="${presente}">
-          ${presente?"❌ Assente":"✅ Presente"}
-        </button>
-      </div>
-    </div>
-  `;
-}).join("")}
-
-<button class="btn btn-blue" style="margin-top:8px;width:100%;justify-content:center;padding:14px" id="btn-aggiungi-rider-appello">➕ Aggiungi nuovo rider</button>
-```
-
-`;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// CLIENTI
-// ═══════════════════════════════════════════════════════════════════════════
-let ricercaClienti = “”;
-function renderClienti() {
-const tutti = Object.values(STATE.clienti);
-const filtrati = tutti.filter(c => `${c.cognome} ${c.nome} ${c.telefono} ${c.indirizzo}`.toLowerCase().includes(ricercaClienti.toLowerCase()));
-
-return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"> <div style="font-size:22px;font-weight:900;color:${C.blueDark}">👤 Clienti (${tutti.length})</div> <button class="btn btn-blue" id="btn-nuovo-cliente-page">+ Nuovo</button> </div> <input class="input" id="ricerca-clienti-input" placeholder="🔍 Cerca..." value="${ricercaClienti}" style="margin-bottom:12px" /> ${filtrati.length === 0 ?`<div style="text-align:center;color:${C.grayMid};padding:32px">Nessun cliente</div>`: ""} ${filtrati.map(c =>`
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:flex-start">
-<div>
-<div style="font-weight:900;font-size:15px">${c.cognome} ${c.nome}</div>
-<div style="font-size:13px;color:${C.grayMid}">📞 ${c.telefono||”—”}</div>
-<div style="font-size:13px;color:${C.grayMid}">📍 ${c.indirizzo||”—”}</div>
-</div>
-<div style="display:flex;gap:6px">
-<button class="btn btn-sm" style="background:${C.blueLight};color:${C.blue}" data-id="${c.id}" onclick="window._editCliente('${c.id}')">✏️</button>
-<button class="btn btn-sm btn-red" data-id="${c.id}" onclick="window._deleteCliente('${c.id}')">🗑️</button>
-</div>
-</div>
-</div>
-`).join("")} `;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// TEAM
-// ═══════════════════════════════════════════════════════════════════════════
-function renderTeam() {
-const utenti = Object.values(STATE.utenti);
-return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"> <div style="font-size:22px;font-weight:900;color:${C.blueDark}">⚙️ Team</div> <button class="btn btn-blue" id="btn-nuovo-membro">+ Aggiungi</button> </div> ${utenti.map(u =>`
-<div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<div style="display:flex;gap:12px;align-items:center">
-<div style=“width:44px;height:44px;border-radius:12px;background:${u.ruolo===“admin”?C.blueDark:u.ruolo===“dispatch”?C.blue:C.orange};display:flex;align-items:center;justify-content:center;font-size:20px”>
-${u.ruolo===“admin”?“🔑”:u.ruolo===“dispatch”?“📦”:“🛵”}
-</div>
-<div>
-<div style="font-weight:900">${u.nome} ${u.cognome||””}</div>
-<div style="font-size:11px;color:${C.grayMid};text-transform:uppercase">${u.ruolo} ${u.softpos?”· 💳”:””}  ${u.attivo===false?’· <span style="color:'+C.red+'">DISATTIVO</span>’:””}</div>
-${u.telefono ? `<div style="font-size:12px;color:${C.grayMid}">📞 ${u.telefono}</div>` : “”}
-</div>
-</div>
-<div style="display:flex;gap:6px">
-<button class="btn btn-sm" style="background:${C.blueLight};color:${C.blue}" onclick="window._editMembro('${u.id}')">✏️</button>
-${u.ruolo !== “admin” ? `<button class="btn btn-sm ${u.attivo===false?"btn-green":"btn-red"}" onclick="window._toggleMembro('${u.id}',${u.attivo!==false})">${u.attivo===false?"▶️":"⏸️"}</button>` : “”}
-</div>
-</div>
-</div>
-`).join("")} `;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// REPORT
-// ═══════════════════════════════════════════════════════════════════════════
-function renderReport() {
-const ordini = getOrdiniOggi();
-const riders = Object.values(STATE.utenti).filter(u => u.ruolo === “rider”);
-const totale = ordini.filter(o => o.stato === “pagato”).reduce((s,o) => s+(o.totale||0), 0);
-const nonPagati = ordini.filter(o => o.stato === “nonpagato”);
-
-return `<div style="font-size:22px;font-weight:900;color:${C.blueDark};margin-bottom:16px">📊 Report Serata</div> <div style="background:${C.greenLight};border:2px solid ${C.green};border-radius:14px;padding:16px;margin-bottom:16px"> <div style="font-weight:800;color:${C.green};margin-bottom:4px">💰 Totale Incassato</div> <div style="font-size:32px;font-weight:900;color:${C.green}">€${totale.toFixed(2)}</div> <div style="font-size:13px;color:${C.green}">${ordini.filter(o=>o.stato==="pagato").length} ordini pagati</div> </div> ${nonPagati.length > 0 ?`
-<div style="background:${C.redLight};border:2px solid ${C.red};border-radius:14px;padding:14px;margin-bottom:16px">
-<div style="font-weight:900;color:${C.red};margin-bottom:8px">❌ Non Pagati (${nonPagati.length})</div>
-${nonPagati.map(o => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(192,57,43,0.1)"><span>${o.nomeCliente}</span><strong style="color:${C.red}">€${(o.totale||0).toFixed(2)}</strong></div>`).join(””)}
-</div>
-`: ""} <div class="section-title">Per rider</div> ${riders.map(r => { const suoi = ordini.filter(o => o.fattorinoId === r.id); const pagati = suoi.filter(o => o.stato === "pagato"); const nonPag = suoi.filter(o => o.stato === "nonpagato"); const contanti = pagati.filter(o => o.metodoPagamento==="Contanti").reduce((s,o)=>s+(o.totale||0),0); const carta = pagati.filter(o => o.metodoPagamento==="Carta").reduce((s,o)=>s+(o.totale||0),0); const totR = pagati.reduce((s,o)=>s+(o.totale||0),0); return`
-<div class="card" style="border:2px solid ${C.blue}">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-<div style="font-weight:900;font-size:16px">🛵 ${r.nome} ${r.cognome||””}</div>
-<div style="font-size:22px;font-weight:900;color:${C.blue}">€${totR.toFixed(2)}</div>
-</div>
-<div class="divider"></div>
-<div class="grid2" style="font-size:13px">
-<div>✅ Pagate: <strong>${pagati.length}</strong></div>
-<div>❌ Non pagate: <strong style="color:${C.red}">${nonPag.length}</strong></div>
-<div>📦 Totali: <strong>${suoi.length}</strong></div>
-${contanti>0?`<div>💵 Contanti: <strong>€${contanti.toFixed(2)}</strong></div>`:””}
-${carta>0?`<div>💳 Carta: <strong>€${carta.toFixed(2)}</strong></div>`:””}
-</div>
-${nonPag.length>0?`<div style="margin-top:8px;padding:8px;background:${C.redLight};border-radius:8px">${nonPag.map(o=>`<div style="font-size:12px;color:${C.red}">• ${o.nomeCliente} — €${(o.totale||0).toFixed(2)}</div>`).join("")}</div>`:””}
-</div>
-`; }).join("")} `;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// MODALI
-// ═══════════════════════════════════════════════════════════════════════════
-function renderModal() {
-const m = STATE.modal;
-let content = “”;
-
-if (m.tipo === “pagamento”) {
-const o = m.data;
-const u = STATE.utenteLoggato;
-content = `<div style="font-size:18px;font-weight:900;color:${C.blueDark};margin-bottom:4px">💰 Come ha pagato?</div> <div style="font-weight:700;color:${C.grayMid};margin-bottom:16px">${o.nomeCliente} — €${(o.totale||0).toFixed(2)}</div> <button class="btn btn-green btn-full" style="margin-bottom:10px" id="modal-contanti">💵 Contanti</button> ${u.softpos ?`<button class="btn btn-blue btn-full" style="margin-bottom:10px" id="modal-carta">💳 Carta (SoftPOS)</button>`: ""} <button class="btn btn-gray btn-full" id="modal-chiudi">Annulla</button>`;
-} else if (m.tipo === “riassegna”) {
-const presenti = STATE.presenti[oggiKey()] || {};
-const riders = Object.values(STATE.utenti).filter(u => u.ruolo === “rider” && presenti[u.id] && u.id !== m.data.fattorinoId);
-content = `<div style="font-size:18px;font-weight:900;color:${C.blueDark};margin-bottom:16px">🔄 Riassegna Consegna</div> ${riders.map(r =>`
-<button class="btn card riassegna-a-btn" data-rid="${r.id}" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:8px;border:2px solid ${C.orange}">
-<div style="width:40px;height:40px;border-radius:10px;background:${C.orange};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🛵</div>
-<div style="font-weight:900">${r.nome} ${r.cognome||””} ${r.softpos?“💳”:””}</div>
-</button>
-`).join("")} ${riders.length===0?`<div style="color:${C.grayMid};font-weight:700;margin-bottom:16px">Nessun altro rider presente</div>`:""} <button class="btn btn-gray btn-full" id="modal-chiudi">Annulla</button> `;
-} else if (m.tipo === “nuovoCliente” || m.tipo === “editCliente”) {
-const c = m.data || {};
-content = `<div style="font-size:18px;font-weight:900;color:${C.blueDark};margin-bottom:16px">${m.tipo==="editCliente"?"Modifica Cliente":"Nuovo Cliente"}</div> <div style="margin-bottom:10px"><label class="label">Cognome *</label><input class="input" id="mc-cognome" value="${c.cognome||""}" /></div> <div style="margin-bottom:10px"><label class="label">Nome</label><input class="input" id="mc-nome" value="${c.nome||""}" /></div> <div style="margin-bottom:10px"><label class="label">Telefono</label><input class="input" id="mc-telefono" value="${c.telefono||""}" /></div> <div style="margin-bottom:16px"><label class="label">Indirizzo</label><input class="input" id="mc-indirizzo" value="${c.indirizzo||""}" /></div> <div style="display:flex;gap:10px"> <button class="btn btn-blue" style="flex:1;justify-content:center" id="modal-salva-cliente">Salva</button> <button class="btn btn-gray" style="flex:1;justify-content:center" id="modal-chiudi">Annulla</button> </div>`;
-} else if (m.tipo === “nuovoMembro” || m.tipo === “editMembro”) {
-const u = m.data || {};
-content = `<div style="font-size:18px;font-weight:900;color:${C.blueDark};margin-bottom:16px">${m.tipo==="editMembro"?"Modifica":"Nuovo membro"}</div> <div style="margin-bottom:10px"><label class="label">Nome *</label><input class="input" id="mm-nome" value="${u.nome||""}" /></div> <div style="margin-bottom:10px"><label class="label">Cognome</label><input class="input" id="mm-cognome" value="${u.cognome||""}" /></div> <div style="margin-bottom:10px"><label class="label">Telefono</label><input class="input" id="mm-telefono" value="${u.telefono||""}" /></div> <div style="margin-bottom:10px"> <label class="label">Ruolo</label> <select class="input" id="mm-ruolo"> <option value="rider" ${(u.ruolo||"rider")==="rider"?"selected":""}>🛵 Rider</option> <option value="dispatch" ${u.ruolo==="dispatch"?"selected":""}>📦 Dispatch</option> <option value="admin" ${u.ruolo==="admin"?"selected":""}>🔑 Admin</option> </select> </div> <div style="margin-bottom:10px"><label class="label">PIN (4 cifre) *</label><input class="input" id="mm-pin" type="number" value="${u.pin||""}" placeholder="0000" /></div> <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"> <input type="checkbox" id="mm-softpos" ${u.softpos?"checked":""} /> <label for="mm-softpos" style="font-weight:800;cursor:pointer">💳 Accetta SoftPOS</label> </div> <div style="display:flex;gap:10px"> <button class="btn btn-blue" style="flex:1;justify-content:center" id="modal-salva-membro">Salva</button> <button class="btn btn-gray" style="flex:1;justify-content:center" id="modal-chiudi">Annulla</button> </div>`;
-}
-
-return `<div class="overlay" id="overlay"><div class="modal" onclick="event.stopPropagation()">${content}</div></div>`;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// BIND EVENTS
-// ═══════════════════════════════════════════════════════════════════════════
-function bindApp() {
-// Nav
-document.querySelectorAll(”.nav-btn,[data-screen]”).forEach(btn => {
-btn.addEventListener(“click”, () => { STATE.schermata = btn.dataset.screen; render(); });
+// ═══════════════════════════════════════════════════════════════════
+// FIREBASE
+// ═══════════════════════════════════════════════════════════════════
+firebase.initializeApp({
+apiKey:“AIzaSyAo035WkqlCOjkS8FeZSIQ-ZNIG5olL_Nw”,
+authDomain:“saverio-delivery.firebaseapp.com”,
+databaseURL:“https://saverio-delivery-default-rtdb.europe-west1.firebasedatabase.app”,
+projectId:“saverio-delivery”,
+storageBucket:“saverio-delivery.firebasestorage.app”,
+messagingSenderId:“913928598350”,
+appId:“1:913928598350:web:98489624879baabe27241f”
 });
-document.getElementById(“btn-logout”)?.addEventListener(“click”, () => { STATE.utenteLoggato = null; render(); });
+var db=firebase.database();
+function fset(p,v){return db.ref(p).set(v)}
+function fupd(p,v){return db.ref(p).update(v)}
+function frem(p){return db.ref(p).remove()}
+function fget(p){return db.ref(p).get()}
 
-// Modal chiudi
-document.getElementById(“modal-chiudi”)?.addEventListener(“click”, () => { STATE.modal = null; render(); });
-document.getElementById(“overlay”)?.addEventListener(“click”, () => { STATE.modal = null; render(); });
-
-bindDashboard();
-bindNuovoOrdine();
-bindOrdini();
-bindDispatch();
-bindMieConsegne();
-bindAppello();
-bindClienti();
-bindTeam();
-bindModal();
-}
-
-function bindDashboard() {}
-
-function bindNuovoOrdine() {
-if (STATE.schermata !== “nuovo”) return;
-const f = formOrdine;
-if (!f) return;
-
-document.querySelectorAll(”.fonte-btn”).forEach(b => b.addEventListener(“click”, () => { f.fonte = b.dataset.fonte; renderPartial(); }));
-
-const ricerca = document.getElementById(“ricerca-cliente”);
-if (ricerca) {
-ricerca.addEventListener(“input”, e => {
-window._ricercaCliente = e.target.value;
-const q = e.target.value.toLowerCase();
-const res = Object.values(STATE.clienti).filter(c => `${c.cognome} ${c.nome} ${c.telefono}`.toLowerCase().includes(q)).slice(0,6);
-const div = document.getElementById(“risultati-clienti”);
-if (div && q.length > 0) {
-div.innerHTML = `<div style="border:2px solid ${C.blueLight};border-radius:10px;margin-bottom:8px;max-height:180px;overflow-y:auto"> ${res.map(c => `<div class="scegli-cliente" data-id="${c.id}" style="padding:10px 12px;border-bottom:1px solid ${C.blueLight};cursor:pointer">
-<div style="font-weight:900">${c.cognome} ${c.nome}</div>
-<div style="font-size:12px;color:${C.grayMid}">${c.telefono||””} · ${c.indirizzo||””}</div>
-</div>`).join("")} ${res.length===0?`<div style="padding:12px;color:${C.grayMid}">Nessun cliente trovato</div>`:""} </div>`;
-div.querySelectorAll(”.scegli-cliente”).forEach(el => el.addEventListener(“click”, () => {
-f.clienteId = el.dataset.id;
-window._ricercaCliente = “”;
-renderPartial();
-}));
-} else if (div) div.innerHTML = “”;
-});
-}
-
-document.getElementById(“btn-rimuovi-cliente”)?.addEventListener(“click”, () => { f.clienteId = “”; renderPartial(); });
-document.getElementById(“f-nomeM”)?.addEventListener(“input”, e => f.nomeM = e.target.value);
-document.getElementById(“f-telM”)?.addEventListener(“input”, e => f.telM = e.target.value);
-document.getElementById(“f-indirizzoM”)?.addEventListener(“input”, e => f.indirizzoM = e.target.value);
-document.getElementById(“f-note”)?.addEventListener(“input”, e => f.note = e.target.value);
-
-document.getElementById(“sel-zona”)?.addEventListener(“change”, e => { f.zonaId = e.target.value; renderPartial(); });
-
-document.querySelectorAll(”.prod-nome”).forEach(i => i.addEventListener(“input”, e => { const p = f.prodotti.find(x=>x.id===i.dataset.id); if(p) p.nome=e.target.value; }));
-document.querySelectorAll(”.prod-qty”).forEach(i => i.addEventListener(“input”, e => { const p = f.prodotti.find(x=>x.id===i.dataset.id); if(p) { p.qty=e.target.value; renderPartial(); }}));
-document.querySelectorAll(”.prod-prezzo”).forEach(i => i.addEventListener(“input”, e => { const p = f.prodotti.find(x=>x.id===i.dataset.id); if(p) { p.prezzo=e.target.value; renderPartial(); }}));
-document.querySelectorAll(”.prod-remove”).forEach(b => b.addEventListener(“click”, () => { f.prodotti = f.prodotti.filter(p => p.id !== b.dataset.id); renderPartial(); }));
-document.getElementById(“btn-add-prod”)?.addEventListener(“click”, () => { f.prodotti.push({id:uid(),nome:””,qty:1,prezzo:””}); renderPartial(); });
-
-document.getElementById(“btn-nuovo-cliente”)?.addEventListener(“click”, () => { STATE.modal = {tipo:“nuovoCliente”,data:null}; render(); });
-
-document.getElementById(“btn-conferma-ordine”)?.addEventListener(“click”, async () => {
-const cliente = f.clienteId ? STATE.clienti[f.clienteId] : null;
-if (!cliente && !f.nomeM) return toast(“Scegli o inserisci un cliente”, “err”);
-if (f.prodotti.some(p => !p.nome)) return toast(“Inserisci nome ad ogni prodotto”, “err”);
-const zona = Object.values(STATE.zone).find(z => z.id === f.zonaId);
-const totProd = f.prodotti.reduce((s,p)=>s+(parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1),0);
-const ordine = {
-id: uid(), data: nowISO(), stato: “nuovo”,
-clienteId: f.clienteId||””,
-nomeCliente: cliente ? `${cliente.cognome} ${cliente.nome}`.trim() : f.nomeM,
-telefono: cliente ? cliente.telefono||”” : f.telM,
-indirizzo: cliente ? cliente.indirizzo||”” : f.indirizzoM,
-zona: zona?.nome||””,
-zonaId: f.zonaId||””,
-costoConsegna: zona?.costo||0,
-note: f.note, fonte: f.fonte,
-prodotti: f.prodotti,
-totale: totProd+(zona?.costo||0),
-fattorinoId: null, pagato: false, metodoPagamento: null,
-};
-await set(ref(db,`ordini/${ordine.id}`), ordine);
-toast(“Ordine creato ✓”);
-formOrdine = initFormOrdine();
-window._ricercaCliente = “”;
-STATE.schermata = “ordini”;
-render();
-});
-}
-
-function renderPartial() {
-const page = document.querySelector(”.page”);
-if (!page) return;
-if (STATE.schermata === “nuovo”) { page.innerHTML = renderNuovoOrdine(); bindNuovoOrdine(); }
-else if (STATE.schermata === “dispatch”) { page.innerHTML = renderDispatch(); bindDispatch(); }
-}
-
-function bindOrdini() {
-if (STATE.schermata !== “ordini”) return;
-document.querySelectorAll(”.filtro-btn”).forEach(b => b.addEventListener(“click”, () => { filtroOrdini = b.dataset.filtro; renderPartialOrdini(); }));
-document.querySelectorAll(”.ordine-stato”).forEach(b => b.addEventListener(“click”, async () => {
-await update(ref(db,`ordini/${b.dataset.id}`), {stato: b.dataset.stato});
-toast(`Stato: ${STATI[b.dataset.stato].label}`);
-}));
-document.querySelectorAll(”.riassegna-btn”).forEach(b => b.addEventListener(“click”, () => {
-const o = getOrdiniOggi().find(x => x.id === b.dataset.id);
-STATE.modal = {tipo:“riassegna”, data:o};
-render();
-}));
-}
-
-function renderPartialOrdini() {
-const page = document.querySelector(”.page”);
-if (page && STATE.schermata === “ordini”) { page.innerHTML = renderOrdini(); bindOrdini(); }
-}
-
-function bindDispatch() {
-if (STATE.schermata !== “dispatch”) return;
-document.querySelectorAll(”.dispatch-card”).forEach(card => {
-card.addEventListener(“click”, () => {
-const id = card.dataset.id;
-if (dispatchSelezionati[id]) delete dispatchSelezionati[id];
-else dispatchSelezionati[id] = true;
-renderPartial();
-});
-});
-document.querySelectorAll(”.assegna-rider-btn”).forEach(b => b.addEventListener(“click”, async () => {
-const rid = b.dataset.rid;
-const ids = Object.keys(dispatchSelezionati);
-if (ids.length === 0) return toast(“Seleziona almeno un ordine”, “err”);
-for (const id of ids) {
-await update(ref(db,`ordini/${id}`), {fattorinoId:rid, stato:“consegna”, oraUscita:nowISO(), riassegnaRichiesta:false});
-}
-dispatchSelezionati = {};
-toast(`${ids.length} consegne assegnate ✓`);
-renderPartial();
-}));
-document.querySelectorAll(”.riassegna-btn”).forEach(b => b.addEventListener(“click”, () => {
-const o = getOrdiniOggi().find(x => x.id === b.dataset.id);
-STATE.modal = {tipo:“riassegna”, data:o};
-render();
-}));
-}
-
-function bindMieConsegne() {
-if (STATE.schermata !== “miei”) return;
-document.querySelectorAll(”.incassa-btn”).forEach(b => b.addEventListener(“click”, () => {
-const o = getOrdiniOggi().find(x => x.id === b.dataset.id);
-STATE.modal = {tipo:“pagamento”, data:o};
-render();
-}));
-document.querySelectorAll(”.nonpagato-btn”).forEach(b => b.addEventListener(“click”, async () => {
-await update(ref(db,`ordini/${b.dataset.id}`), {stato:“nonpagato”, oraRientro:nowISO()});
-toast(“Segnato come non pagato”);
-}));
-document.querySelectorAll(”.richiedi-riassegna-btn”).forEach(b => b.addEventListener(“click”, async () => {
-await update(ref(db,`ordini/${b.dataset.id}`), {riassegnaRichiesta:true});
-toast(“Richiesta inviata alla dispatch ✓”);
-}));
-}
-
-function bindAppello() {
-if (STATE.schermata !== “appello”) return;
-document.querySelectorAll(”.toggle-presente-btn”).forEach(b => b.addEventListener(“click”, async () => {
-const rid = b.dataset.rid;
-const presente = b.dataset.presente === “true”;
-const key = oggiKey();
-if (presente) await remove(ref(db,`presenti/${key}/${rid}`));
-else await set(ref(db,`presenti/${key}/${rid}`), true);
-}));
-document.getElementById(“btn-aggiungi-rider-appello”)?.addEventListener(“click”, () => {
-STATE.modal = {tipo:“nuovoMembro”, data:{ruolo:“rider”}};
-render();
-});
-}
-
-function bindClienti() {
-if (STATE.schermata !== “clienti”) return;
-document.getElementById(“btn-nuovo-cliente-page”)?.addEventListener(“click”, () => {
-STATE.modal = {tipo:“nuovoCliente”, data:null};
-render();
-});
-document.getElementById(“ricerca-clienti-input”)?.addEventListener(“input”, e => {
-ricercaClienti = e.target.value;
-const page = document.querySelector(”.page”);
-if (page) { page.innerHTML = renderClienti(); bindClienti(); }
-});
-window._editCliente = (id) => { STATE.modal = {tipo:“editCliente”, data:{…STATE.clienti[id]}}; render(); };
-window._deleteCliente = async (id) => { await remove(ref(db,`clienti/${id}`)); toast(“Cliente eliminato”); };
-}
-
-function bindTeam() {
-if (STATE.schermata !== “team”) return;
-document.getElementById(“btn-nuovo-membro”)?.addEventListener(“click”, () => {
-STATE.modal = {tipo:“nuovoMembro”, data:null};
-render();
-});
-window._editMembro = (id) => { STATE.modal = {tipo:“editMembro”, data:{…STATE.utenti[id]}}; render(); };
-window._toggleMembro = async (id, attivo) => {
-await update(ref(db,`utenti/${id}`), {attivo: !attivo});
-toast(attivo ? “Rider disattivato” : “Rider riattivato”);
-};
-}
-
-function bindModal() {
-const m = STATE.modal;
-if (!m) return;
-
-// Pagamento
-document.getElementById(“modal-contanti”)?.addEventListener(“click”, async () => {
-await update(ref(db,`ordini/${m.data.id}`), {stato:“pagato”, metodoPagamento:“Contanti”, oraRientro:nowISO()});
-toast(“Incasso registrato ✓”);
-STATE.modal = null; render();
-});
-document.getElementById(“modal-carta”)?.addEventListener(“click”, async () => {
-await update(ref(db,`ordini/${m.data.id}`), {stato:“pagato”, metodoPagamento:“Carta”, oraRientro:nowISO()});
-toast(“Incasso registrato ✓”);
-STATE.modal = null; render();
-});
-
-// Riassegna
-document.querySelectorAll(”.riassegna-a-btn”).forEach(b => b.addEventListener(“click”, async () => {
-await update(ref(db,`ordini/${m.data.id}`), {fattorinoId:b.dataset.rid, riassegnaRichiesta:false, oraUscita:nowISO()});
-toast(“Riassegnato ✓”);
-STATE.modal = null;
-dispatchSelezionati = {};
-render();
-}));
-
-// Salva cliente
-document.getElementById(“modal-salva-cliente”)?.addEventListener(“click”, async () => {
-const cognome = document.getElementById(“mc-cognome”)?.value?.trim();
-if (!cognome) return toast(“Inserisci il cognome”, “err”);
-const data = {
-cognome, nome: document.getElementById(“mc-nome”)?.value||””,
-telefono: document.getElementById(“mc-telefono”)?.value||””,
-indirizzo: document.getElementById(“mc-indirizzo”)?.value||””,
-};
-if (m.tipo === “editCliente”) {
-await update(ref(db,`clienti/${m.data.id}`), data);
-toast(“Cliente aggiornato ✓”);
-} else {
-const id = uid();
-await set(ref(db,`clienti/${id}`), {…data, id});
-if (STATE.schermata === “nuovo” && formOrdine) {
-formOrdine.clienteId = id;
-window._ricercaCliente = “”;
-}
-toast(“Cliente salvato ✓”);
-}
-STATE.modal = null; render();
-});
-
-// Salva membro
-document.getElementById(“modal-salva-membro”)?.addEventListener(“click”, async () => {
-const nome = document.getElementById(“mm-nome”)?.value?.trim();
-const pin = document.getElementById(“mm-pin”)?.value?.trim();
-if (!nome) return toast(“Inserisci il nome”, “err”);
-if (!pin || pin.length !== 4) return toast(“PIN deve essere di 4 cifre”, “err”);
-const data = {
-nome, cognome: document.getElementById(“mm-cognome”)?.value||””,
-telefono: document.getElementById(“mm-telefono”)?.value||””,
-ruolo: document.getElementById(“mm-ruolo”)?.value||“rider”,
-pin, softpos: document.getElementById(“mm-softpos”)?.checked||false, attivo: true,
-};
-if (m.tipo === “editMembro”) {
-await update(ref(db,`utenti/${m.data.id}`), data);
-toast(“Aggiornato ✓”);
-} else {
-const id = uid();
-await set(ref(db,`utenti/${id}`), {…data, id});
-toast(“Aggiunto ✓”);
-}
-STATE.modal = null; render();
-});
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 // UTILS
-// ═══════════════════════════════════════════════════════════════════════════
-function getOrdiniOggi() {
-return Object.values(STATE.ordini).filter(o => new Date(o.data).toDateString() === oggi());
-}
-function oggiKey() {
-const d = new Date();
-return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+// ═══════════════════════════════════════════════════════════════════
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function nowISO(){return new Date().toISOString()}
+function fmt(iso){return iso?new Date(iso).toLocaleTimeString(‘it-IT’,{hour:‘2-digit’,minute:‘2-digit’}):’’}
+function oggiStr(){return new Date().toDateString()}
+function oggiKey(){var d=new Date();return d.getFullYear()+’-’+(d.getMonth()+1)+’-’+d.getDate()}
+function esc(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’)}
+function el(id){return document.getElementById(id)}
+function on(id,ev,fn){var e=el(id);if(e)e.addEventListener(ev,fn)}
+function each(sel,fn){document.querySelectorAll(sel).forEach(fn)}
+
+// ═══════════════════════════════════════════════════════════════════
+// STATO
+// ═══════════════════════════════════════════════════════════════════
+var DB={utenti:{},ordini:{},clienti:{},zone:{},presenti:{}};
+var READY=false;
+var USER=null,SC=‘dashboard’,MODAL=null;
+var TOAST=null,TTIMER=null;
+var LFASE=‘ruoli’,LSEL=null,LPIN=’’,LERR=false;
+var FILTRO=‘tutti’,DSEL={};
+var FORM=null,RCLI=’’,RCLIP=’’;
+
+function initForm(){
+return{clienteId:’’,nomeM:’’,telM:’’,indirM:’’,zonaId:’’,note:’’,fonte:‘telefono’,
+prodotti:[{id:uid(),nome:’’,qty:1,prezzo:’’}]};
 }
 
-// ─── START ───────────────────────────────────────────────────────────────────
-initListeners();
+function ordOggi(){
+return Object.values(DB.ordini).filter(function(o){
+return new Date(o.data).toDateString()===oggiStr();
+});
+}
+function getPresenti(){return DB.presenti[oggiKey()]||{}}
+function getRiders(){return Object.values(DB.utenti).filter(function(u){return u.ruolo===‘rider’&&u.attivo!==false})}
+function getRidersPresenti(){var pr=getPresenti();return getRiders().filter(function(r){return pr[r.id]})}
+
+// ═══════════════════════════════════════════════════════════════════
+// FIREBASE LISTENERS
+// ═══════════════════════════════════════════════════════════════════
+function startListeners(){
+// Timeout di sicurezza: se dopo 5 secondi non arriva nulla, mostra login con dati vuoti
+var timeout=setTimeout(function(){
+if(!READY){READY=true;R();}
+},5000);
+
+// Utenti: appena arrivano, mostra il login
+db.ref(‘utenti’).on(‘value’,function(s){
+DB.utenti=s.val()||{};
+if(!READY){
+READY=true;
+clearTimeout(timeout);
+// Se non ci sono utenti, crea i default
+if(Object.keys(DB.utenti).length===0){
+fset(‘utenti’,{
+admin:{id:‘admin’,nome:‘Saverio’,cognome:’’,ruolo:‘admin’,pin:‘1234’,softpos:false,attivo:true},
+dispatch:{id:‘dispatch’,nome:‘Dispatch’,cognome:’’,ruolo:‘dispatch’,pin:‘0000’,softpos:false,attivo:true}
+});
+}
+}
+R();
+});
+
+db.ref(‘ordini’).on(‘value’,function(s){DB.ordini=s.val()||{};if(READY)R()});
+db.ref(‘clienti’).on(‘value’,function(s){DB.clienti=s.val()||{};if(READY)R()});
+db.ref(‘zone’).on(‘value’,function(s){
+DB.zone=s.val()||{};
+if(READY&&Object.keys(DB.zone).length===0){
+fset(‘zone’,{
+z1:{id:‘z1’,nome:‘Centro / Zona Rossa’,costo:1,orariLiberi:true,orari:’’},
+z2:{id:‘z2’,nome:‘Altarello / Zisa / Bonagia’,costo:2,orariLiberi:false,orari:‘18:30-19:00, 21:15-21:45’},
+z3:{id:‘z3’,nome:‘Ficarazzi / Villabate / Cannita’,costo:3,orariLiberi:false,orari:‘18:30-19:00, 21:15-21:45’}
+});
+}
+if(READY)R();
+});
+db.ref(‘presenti’).on(‘value’,function(s){DB.presenti=s.val()||{};if(READY)R()});
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════════
+function toast(msg,tipo){
+if(TTIMER)clearTimeout(TTIMER);
+TOAST={msg:msg,tipo:tipo||‘ok’};
+TTIMER=setTimeout(function(){TOAST=null;R()},2800);
+R();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER PRINCIPALE
+// ═══════════════════════════════════════════════════════════════════
+function R(){
+var app=el(‘app’);
+if(!app)return;
+if(!READY){
+app.innerHTML=’<div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px"><div class="spin"></div><div style="font-weight:900;color:'+BD+';font-size:15px">Caricamento…</div></div>’;
+return;
+}
+if(!USER){app.innerHTML=rLogin();bLogin();return;}
+app.innerHTML=rShell();bShell();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════════════════════════════════
+function rLogin(){
+var utenti=Object.values(DB.utenti);
+var rds=utenti.filter(function(u){return u.ruolo===‘rider’&&u.attivo!==false});
+var body=’’;
+
+if(LFASE===‘ruoli’){
+var adm=utenti.filter(function(u){return u.ruolo===‘admin’});
+var dis=utenti.filter(function(u){return u.ruolo===‘dispatch’});
+body=
+adm.map(function(u){
+return ‘<button class="lrb" data-id="'+esc(u.id)+'" style="width:100%;margin-bottom:12px;padding:20px;border-radius:16px;background:'+BD+';display:flex;align-items:center;gap:16px">’+
+‘<span style="font-size:30px">🔑</span><span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">ADMIN</span></button>’;
+}).join(’’)+
+dis.map(function(u){
+return ‘<button class="lrb" data-id="'+esc(u.id)+'" style="width:100%;margin-bottom:12px;padding:20px;border-radius:16px;background:'+BL+';display:flex;align-items:center;gap:16px">’+
+‘<span style="font-size:30px">📦</span><span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">DISPATCH</span></button>’;
+}).join(’’)+
+(rds.length>0?
+‘<button id="b-riders" style="width:100%;padding:20px;border-radius:16px;background:'+OR+';display:flex;align-items:center;gap:16px">’+
+‘<span style="font-size:30px">🛵</span><span style="font-size:24px;font-weight:900;color:#fff;letter-spacing:2px">RIDERS</span></button>’:’’);
+
+} else if(LFASE===‘listaRider’){
+body=’<p style="font-size:13px;font-weight:800;color:'+GM+';text-align:center;margin-bottom:20px;letter-spacing:1px">QUAL È IL TUO NOME?</p>’+
+rds.map(function(u){
+return ‘<button class="lrb" data-id="'+esc(u.id)+'" style="width:100%;margin-bottom:10px;padding:16px 20px;border-radius:14px;border:2px solid '+OR+';background:#fff;display:flex;align-items:center;gap:14px">’+
+‘<div style="width:44px;height:44px;border-radius:12px;background:'+OR+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🛵</div>’+
+‘<span style="font-size:18px;font-weight:900;color:'+BD+'">’+esc(u.nome)+’ ‘+esc(u.cognome||’’)+’</span></button>’;
+}).join(’’)+
+‘<button id="b-back" class="btn bfull" style="background:'+GY+';color:'+BD+';margin-top:8px">← Indietro</button>’;
+
+} else if(LFASE===‘pin’){
+var dots=[0,1,2,3].map(function(i){
+return ‘<div class="pdot" style="background:'+(LPIN.length>i?BL:LL)+'"></div>’;
+}).join(’’);
+body=’<p style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:4px;text-align:center">Ciao, ‘+esc(LSEL.nome)+’!</p>’+
+‘<p style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:8px;text-align:center">Inserisci il tuo PIN</p>’+
+‘<div class="pdots">’+dots+’</div>’+
+(LERR?’<p style="color:'+RE+';font-weight:800;font-size:13px;margin-bottom:8px;text-align:center">PIN errato, riprova</p>’:’’)+
+‘<div class="pgrid">’+
+[‘1’,‘2’,‘3’,‘4’,‘5’,‘6’,‘7’,‘8’,‘9’,’’,‘0’,‘⌫’].map(function(d){
+return ‘<button class="pbtn" data-d="'+d+'" style="'+
+(d==='⌫'?'background:'+RL+';color:'+RE+';border-color:'+RL:'')+
+(d===''?';visibility:hidden':'')+'">’+d+’</button>’;
+}).join(’’)+’</div>’+
+‘<button id="b-back" class="btn bfull" style="background:'+GY+';color:'+BD+';margin-top:16px">← Indietro</button>’;
+}
+
+return ‘<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:#fff">’+
+(TOAST?’<div class="toast" style="background:'+(TOAST.tipo==='err'?RE:GR)+'">’+esc(TOAST.msg)+’</div>’:’’)+
+‘<div style="text-align:center;margin-bottom:36px">’+
+‘<div style="font-size:28px;font-weight:900;color:'+BD+';letter-spacing:3px">SAVERIO DELIVERY</div></div>’+
+‘<div style="width:100%;max-width:360px">’+body+’</div></div>’;
+}
+
+function bLogin(){
+each(’.lrb’,function(b){
+b.addEventListener(‘click’,function(){
+var u=DB.utenti[this.dataset.id];
+if(!u)return;
+LSEL=u;LFASE=‘pin’;LPIN=’’;LERR=false;R();
+});
+});
+on(‘b-riders’,‘click’,function(){LFASE=‘listaRider’;R()});
+on(‘b-back’,‘click’,function(){
+LFASE=LSEL&&LSEL.ruolo===‘rider’?‘listaRider’:‘ruoli’;
+LPIN=’’;LERR=false;R();
+});
+each(’.pbtn’,function(b){
+b.addEventListener(‘click’,function(){
+var d=this.dataset.d;
+if(!d||d===’’)return;
+if(d===‘⌫’){LPIN=LPIN.slice(0,-1);LERR=false;R();return}
+LPIN+=d;
+if(LPIN.length===4){
+if(LSEL.pin===LPIN){
+USER=LSEL;
+SC=LSEL.ruolo===‘rider’?‘miei’:LSEL.ruolo===‘dispatch’?‘dispatch’:‘dashboard’;
+LFASE=‘ruoli’;LPIN=’’;LERR=false;R();
+} else {
+LERR=true;
+setTimeout(function(){LPIN=’’;LERR=false;R()},700);
+R();
+}
+} else R();
+});
+});
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SHELL
+// ═══════════════════════════════════════════════════════════════════
+function rShell(){
+var isA=USER.ruolo===‘admin’,isD=USER.ruolo===‘dispatch’,isR=USER.ruolo===‘rider’;
+var nav=[];
+if(isA)nav.push({id:‘dashboard’,label:‘🏠 Dashboard’});
+if(isA||isD)nav.push({id:‘nuovo’,label:‘➕ Ordine’},{id:‘ordini’,label:‘📋 Ordini’},{id:‘dispatch’,label:‘📦 Dispatch’});
+if(isR)nav.push({id:‘miei’,label:‘🛵 Le Mie’});
+if(isA)nav.push({id:‘appello’,label:‘👥 Appello’},{id:‘clienti’,label:‘👤 Clienti’},{id:‘team’,label:‘⚙️ Team’},{id:‘report’,label:‘📊 Report’});
+
+var pg=’’;
+var pgs={dashboard:rDash,nuovo:rNuovo,ordini:rOrdini,dispatch:rDispatch,miei:rMiei,appello:rAppello,clienti:rClienti,team:rTeam,report:rReport};
+if(pgs[SC])pg=pgs[SC]();
+
+return (TOAST?’<div class="toast" style="background:'+(TOAST.tipo==='err'?RE:GR)+'">’+esc(TOAST.msg)+’</div>’:’’)+
+‘<header class="hdr">’+
+‘<div style="font-size:17px;font-weight:900;color:'+BD+';letter-spacing:2px">SAVERIO DELIVERY</div>’+
+‘<div style="display:flex;align-items:center;gap:8px">’+
+‘<span style="font-size:12px;font-weight:800;color:'+GM+'">’+esc(USER.nome)+’</span>’+
+‘<button id="b-out" class="btn bsm" style="background:'+RL+';color:'+RE+'">Esci</button></div></header>’+
+‘<nav class="nav">’+nav.map(function(n){return ‘<button class="nb'+(SC===n.id?' act':'')+'" data-sc="'+n.id+'">’+n.label+’</button>’}).join(’’)+’</nav>’+
+‘<div class="page" id="pg">’+pg+’</div>’+
+(MODAL?rModal():’’);
+}
+
+function bShell(){
+on(‘b-out’,‘click’,function(){USER=null;R()});
+each(’.nb’,function(b){b.addEventListener(‘click’,function(){SC=this.dataset.sc;R()})});
+on(‘ovl-bg’,‘click’,closeM);
+bPage();bModal();
+}
+
+function goTo(s){SC=s;R()}
+function closeM(){MODAL=null;R()}
+function rePg(){
+var p=el(‘pg’);if(!p)return;
+var pgs={dashboard:rDash,nuovo:rNuovo,ordini:rOrdini,dispatch:rDispatch,miei:rMiei,appello:rAppello,clienti:rClienti,team:rTeam,report:rReport};
+if(pgs[SC]){p.innerHTML=pgs[SC]();bPage();}
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════
+function rDash(){
+var ord=ordOggi(),pr=getPresenti();
+var cnt={};Object.keys(STATI).forEach(function(s){cnt[s]=ord.filter(function(o){return o.stato===s}).length});
+var tot=ord.filter(function(o){return o.stato===‘pagato’}).reduce(function(s,o){return s+(o.totale||0)},0);
+var rp=getRidersPresenti();
+return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:4px">Dashboard</div>’+
+‘<div style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:16px">’+new Date().toLocaleDateString(‘it-IT’,{weekday:‘long’,day:‘numeric’,month:‘long’})+’</div>’+
+‘<div class="g3" style="margin-bottom:16px">’+
+Object.entries(cnt).map(function(e){var s=e[0],n=e[1];
+return ‘<div style="background:'+STATI[s].bg+';border:2px solid '+STATI[s].border+';border-radius:12px;padding:12px 8px;text-align:center">’+
+‘<div style="font-size:20px">’+STATI[s].emoji+’</div>’+
+‘<div style="font-size:26px;font-weight:900;color:'+STATI[s].text+'">’+n+’</div>’+
+‘<div style="font-size:9px;font-weight:800;color:'+STATI[s].text+';text-transform:uppercase">’+STATI[s].label+’</div></div>’;
+}).join(’’)+’</div>’+
+‘<div style="background:'+GL+';border:2px solid '+GR+';border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">’+
+‘<span style="font-weight:800;color:'+GR+'">💰 Totale Incassato</span>’+
+‘<span style="font-size:24px;font-weight:900;color:'+GR+'">€’+tot.toFixed(2)+’</span></div>’+
+(cnt.nonpagato>0?’<div style="background:'+RL+';border:2px solid '+RE+';border-radius:14px;padding:12px 16px;margin-bottom:16px;font-weight:900;color:'+RE+'">⚠️ ‘+cnt.nonpagato+’ consegne NON PAGATE</div>’:’’)+
+(cnt.pronto>0?’<div style="background:'+YL+';border:2px solid '+YE+';border-radius:14px;padding:12px 16px;margin-bottom:16px;font-weight:900;color:'+YE+'">📦 ‘+cnt.pronto+’ ordini pronti</div>’:’’)+
+‘<div class="stit">Riders presenti (’+rp.length+’)</div>’+
+rp.map(function(r){
+var sue=ord.filter(function(o){return o.fattorinoId===r.id&&o.stato===‘consegna’});
+return ‘<div class="card"><div style="display:flex;justify-content:space-between;align-items:center">’+
+‘<div style="font-weight:900">🛵 ‘+esc(r.nome)+’ ‘+esc(r.cognome||’’)+(r.softpos?’ <span style="font-size:11px;background:'+LL+';color:'+BL+';border-radius:6px;padding:2px 6px">SoftPOS</span>’:’’)+’</div>’+
+‘<div style="font-weight:900;color:'+OR+'">’+sue.length+’ in giro</div></div>’+
+sue.map(function(o){return ‘<div style="font-size:12px;color:'+GM+';margin-top:4px">• ‘+esc(o.nomeCliente)+’ — €’+(o.totale||0).toFixed(2)+’</div>’}).join(’’)+
+‘</div>’;
+}).join(’’)+
+‘<button class="btn bfull" style="background:'+BL+';color:#fff;margin-top:16px" data-sc="nuovo">➕ Nuovo Ordine</button>’;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// NUOVO ORDINE
+// ═══════════════════════════════════════════════════════════════════
+function rNuovo(){
+if(!FORM)FORM=initForm();
+var f=FORM,cl=f.clienteId?DB.clienti[f.clienteId]:null;
+var zone=Object.values(DB.zone),z=zone.find(function(x){return x.id===f.zonaId});
+var tp=f.prodotti.reduce(function(s,p){return s+(parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1)},0);
+var tc=z?z.costo:0,tt=tp+tc;
+var ora=new Date(),hm=ora.getHours()*60+ora.getMinutes(),avv=’’;
+if(z&&!z.orariLiberi){
+var ok=(z.orari||’’).split(’,’).some(function(r){
+var ab=r.trim().split(’-’).map(function(t){var p=t.split(’:’);return parseInt(p[0])*60+parseInt(p[1])});
+return hm>=ab[0]&&hm<=ab[1];
+});
+if(!ok)avv=’<div style="background:'+YL+';border:2px solid '+YE+';border-radius:10px;padding:10px 12px;margin-bottom:8px;font-weight:800;color:'+YE+';font-size:13px">⚠️ Zona blu — orari consigliati: ‘+esc(z.orari)+’</div>’;
+}
+return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:16px">➕ Nuovo Ordine</div>’+
+‘<div class="stit">Come ha ordinato?</div>’+
+‘<div style="display:flex;gap:8px;margin-bottom:16px">’+
+‘<button class="btn fb" data-f="telefono" style="flex:1;justify-content:center;background:'+(f.fonte==='telefono'?BL:GY)+';color:'+(f.fonte==='telefono'?'#fff':BD)+'">📞 Telefono</button>’+
+‘<button class="btn fb" data-f="whatsapp" style="flex:1;justify-content:center;background:'+(f.fonte==='whatsapp'?BL:GY)+';color:'+(f.fonte==='whatsapp'?'#fff':BD)+'">💬 WhatsApp</button></div>’+
+‘<div class="stit">Cliente</div>’+
+(cl?
+‘<div class="card" style="border:2px solid '+BL+'"><div style="display:flex;justify-content:space-between">’+
+‘<div><div style="font-weight:900;font-size:16px">’+esc(cl.cognome)+’ ‘+esc(cl.nome)+’</div>’+
+‘<div style="font-size:13px;color:'+GM+'">📞 ‘+esc(cl.telefono||’—’)+’</div>’+
+‘<div style="font-size:13px;color:'+GM+'">📍 ‘+esc(cl.indirizzo||’—’)+’</div></div>’+
+‘<button class="btn bsm" id="b-rmcl" style="background:'+RL+';color:'+RE+'">✕</button></div></div>’:
+‘<input class="inp" id="f-rcl" placeholder="🔍 Cerca per cognome o telefono..." value="'+esc(RCLI)+'" style="margin-bottom:8px"/>’+
+‘<div id="res-cl"></div>’+
+‘<div style="margin-bottom:12px"><button class="btn bsm" id="b-ncl" style="background:'+GL+';color:'+GR+'">+ Nuovo Cliente</button></div>’+
+‘<div class="g2" style="margin-bottom:8px">’+
+‘<div><label class="lbl">Nome</label><input class="inp" id="f-nomM" value="'+esc(f.nomeM)+'" placeholder="Mario Rossi"/></div>’+
+‘<div><label class="lbl">Telefono</label><input class="inp" id="f-telM" value="'+esc(f.telM)+'" placeholder="091..."/></div>’+
+‘<div style="grid-column:1/-1"><label class="lbl">Indirizzo</label><input class="inp" id="f-indM" value="'+esc(f.indirM)+'" placeholder="Via..."/></div></div>’)+
+‘<div class="stit">Zona Consegna</div>’+
+‘<select class="inp" id="sel-zona" style="margin-bottom:8px">’+
+‘<option value="">– Seleziona zona –</option>’+
+zone.map(function(z){return ‘<option value=”’+z.id+’”’+(f.zonaId===z.id?’ selected’:’’)+’>’+esc(z.nome)+’ · €’+z.costo+’</option>’}).join(’’)+
+‘<option value=“fuori”’+(f.zonaId===‘fuori’?’ selected’:’’)+’>Fuori zona</option></select>’+avv+
+‘<div class="stit">Prodotti</div>’+
+f.prodotti.map(function(p,i){
+return ‘<div style="display:grid;grid-template-columns:44px 1fr 64px 60px 32px;gap:6px;margin-bottom:8px;align-items:center">’+
+‘<input class="inp pq" data-pid="'+p.id+'" type="number" min="1" value="'+esc(p.qty)+'" style="padding:8px;text-align:center"/>’+
+‘<input class="inp pn" data-pid="'+p.id+'" value="'+esc(p.nome)+'" placeholder="Prodotto '+(i+1)+'" style="padding:8px"/>’+
+‘<input class="inp pp" data-pid="'+p.id+'" type="number" step="0.5" value="'+esc(p.prezzo)+'" placeholder="€" style="padding:8px"/>’+
+‘<div style="font-size:11px;font-weight:800;color:'+GM+';text-align:center">€’+((parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1)).toFixed(2)+’</div>’+
+(f.prodotti.length>1?’<button class="btn bsm pr" data-pid="'+p.id+'" style="background:'+RL+';color:'+RE+';padding:4px 6px">✕</button>’:’<div></div>’)+’</div>’;
+}).join(’’)+
+‘<button class="btn bsm" id="b-addp" style="background:'+LL+';color:'+BL+';margin-bottom:12px">+ Prodotto</button>’+
+‘<div class="stit">Note</div>’+
+‘<textarea class="inp" id="f-note" style="height:70px;resize:vertical;margin-bottom:16px" placeholder="Citofono, piano...">’+esc(f.note)+’</textarea>’+
+‘<div style="background:'+LL+';border-radius:12px;padding:14px 16px;margin-bottom:16px">’+
+‘<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:'+GM+'">Prodotti</span><span>€’+tp.toFixed(2)+’</span></div>’+
+(z?’<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:'+GM+'">Consegna</span><span>€’+tc.toFixed(2)+’</span></div>’:’’)+
+‘<div class="divl"></div>’+
+‘<div style="display:flex;justify-content:space-between"><span style="font-size:16px;font-weight:900">TOTALE</span><span style="font-size:22px;font-weight:900;color:'+BL+'">€’+tt.toFixed(2)+’</span></div></div>’+
+‘<button class="btn bfull" id="b-conf" style="background:'+BL+';color:#fff">✅ Conferma Ordine</button>’;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ORDINI
+// ═══════════════════════════════════════════════════════════════════
+function rOrdini(){
+var ord=ordOggi(),fil=FILTRO===‘tutti’?ord:ord.filter(function(o){return o.stato===FILTRO});
+var isAD=USER.ruolo===‘admin’||USER.ruolo===‘dispatch’;
+return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:12px">📋 Ordini</div>’+
+‘<div style="display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px;-webkit-overflow-scrolling:touch">’+
+‘<button class="btn bsm fb2" data-f="tutti" style="background:'+(FILTRO==='tutti'?BL:GY)+';color:'+(FILTRO==='tutti'?'#fff':BD)+';white-space:nowrap">Tutti (’+ord.length+’)</button>’+
+Object.entries(STATI).map(function(e){var s=e[0],v=e[1];
+return ‘<button class="btn bsm fb2" data-f="'+s+'" style="background:'+(FILTRO===s?v.border:GY)+';color:'+(FILTRO===s?'#fff':BD)+';white-space:nowrap">’+v.emoji+’ ‘+v.label+’ (’+ord.filter(function(o){return o.stato===s}).length+’)</button>’;
+}).join(’’)+’</div>’+
+(fil.length===0?’<div style="text-align:center;color:'+GM+';padding:32px">Nessun ordine</div>’:’’)+
+fil.map(function(o){
+var rider=o.fattorinoId?DB.utenti[o.fattorinoId]:null;
+return ‘<div class="card" style="border-left:5px solid '+(STATI[o.stato]?STATI[o.stato].border:GM)+'">’+
+‘<div style="display:flex;justify-content:space-between;align-items:flex-start">’+
+‘<div style="flex:1;min-width:0">’+
+‘<div style="font-weight:900;font-size:16px">’+esc(o.nomeCliente)+’</div>’+
+‘<div style="font-size:12px;color:'+GM+'">📍 ‘+esc(o.indirizzo||’—’)+’</div>’+
+(o.zona?’<div style="font-size:12px;color:'+GM+'">📦 ‘+esc(o.zona)+’</div>’:’’)+
+(rider?’<div style="font-size:12px;color:'+OR+';font-weight:800">🛵 ‘+esc(rider.nome)+’</div>’:’’)+
+(o.note?’<div style="font-size:12px;color:'+OR+'">📝 ‘+esc(o.note)+’</div>’:’’)+
+‘</div><div style="text-align:right;margin-left:8px">’+
+‘<div style="font-size:18px;font-weight:900;color:'+BL+'">€’+(o.totale||0).toFixed(2)+’</div>’+
+‘<span class="badge" style="background:'+STATI[o.stato].bg+';color:'+STATI[o.stato].text+';border:1.5px solid '+STATI[o.stato].border+'">’+STATI[o.stato].emoji+’ ‘+STATI[o.stato].label+’</span>’+
+‘<div style="font-size:11px;color:'+GM+';margin-top:4px">’+fmt(o.data)+’</div></div></div>’+
+(isAD?’<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">’+
+(o.stato===‘nuovo’?’<button class="btn bsm sb" data-id="'+o.id+'" data-s="cucina" style="background:'+YL+';color:'+YE+'">👨‍🍳 In Cucina</button>’:’’)+
+(o.stato===‘cucina’?’<button class="btn bsm sb" data-id="'+o.id+'" data-s="pronto" style="background:'+GL+';color:'+GR+'">✅ Pronto</button>’:’’)+
+(o.stato===‘consegna’?
+‘<button class="btn bsm sb" data-id="'+o.id+'" data-s="pagato" style="background:'+GL+';color:'+GR+'">💰 Pagato</button>’+
+‘<button class="btn bsm sb" data-id="'+o.id+'" data-s="nonpagato" style="background:'+RL+';color:'+RE+'">❌ Non pagato</button>’+
+‘<button class="btn bsm rbn" data-id="'+o.id+'" style="background:'+LL+';color:'+BL+'">🔄 Riassegna</button>’:’’)+
+‘</div>’:’’)+
+‘</div>’;
+}).join(’’);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DISPATCH
+// ═══════════════════════════════════════════════════════════════════
+function rDispatch(){
+var ord=ordOggi(),pronti=ord.filter(function(o){return o.stato===‘pronto’});
+var rp=getRidersPresenti(),riass=ord.filter(function(o){return o.riassegnaRichiesta&&o.stato===‘consegna’});
+var nSel=Object.keys(DSEL).length;
+return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:4px">📦 Dispatch</div>’+
+‘<div style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:16px">Gestisci le uscite</div>’+
+(riass.length>0?
+‘<div style="background:'+YL+';border:2px solid '+YE+';border-radius:14px;padding:12px 14px;margin-bottom:16px">’+
+‘<div style="font-weight:900;color:'+YE+';margin-bottom:8px">🔄 Riassegnazioni richieste (’+riass.length+’)</div>’+
+riass.map(function(o){
+return ‘<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">’+
+‘<div><div style="font-weight:900;font-size:13px">’+esc(o.nomeCliente)+’</div>’+
+‘<div style="font-size:12px;color:'+GM+'">da: ‘+esc((DB.utenti[o.fattorinoId]||{}).nome||’—’)+’</div></div>’+
+‘<button class="btn bsm rbn" data-id="'+o.id+'" style="background:'+OR+';color:#fff">Riassegna</button></div>’;
+}).join(’’)+’</div>’:’’)+
+‘<div class="stit">Ordini pronti — tocca per selezionare (’+pronti.length+’)</div>’+
+(pronti.length===0?’<div style="color:'+GM+';font-weight:700;font-size:13px;margin-bottom:16px">Nessun ordine pronto</div>’:’’)+
+pronti.map(function(o){
+var sel=DSEL[o.id];
+return ‘<div class="card dcard" data-id="'+o.id+'" style="border:2px solid '+(sel?GR:LL)+';background:'+(sel?GL:'#fff')+';cursor:pointer">’+
+‘<div style="display:flex;justify-content:space-between;align-items:center">’+
+‘<div style="flex:1">’+
+‘<div style="font-weight:900;font-size:16px">’+(sel?‘✅ ‘:’’)+esc(o.nomeCliente)+’</div>’+
+‘<div style="font-size:12px;color:'+GM+'">📍 ‘+esc(o.indirizzo||’—’)+’</div>’+
+‘<div style="font-size:12px;color:'+GM+'">📦 ‘+esc(o.zona||’—’)+’</div>’+
+(o.note?’<div style="font-size:12px;color:'+OR+'">📝 ‘+esc(o.note)+’</div>’:’’)+
+‘</div><div style="font-size:20px;font-weight:900;color:'+BL+';margin-left:8px">€’+(o.totale||0).toFixed(2)+’</div></div></div>’;
+}).join(’’)+
+(nSel>0?
+‘<div style="background:'+LL+';border-radius:12px;padding:12px 14px;margin:12px 0">’+
+‘<div style="font-weight:900;color:'+BL+'">📋 Selezionati: ‘+nSel+’ ordini</div>’+
+‘<div style="font-size:13px;color:'+GM+'">Scegli il rider</div></div>’+
+‘<div class="stit">Assegna a rider</div>’+
+(rp.length===0?’<div style="color:'+GM+';font-size:13px">Nessun rider presente — vai su Appello</div>’:’’)+
+rp.map(function(r){
+var ig=ord.filter(function(o){return o.fattorinoId===r.id&&o.stato===‘consegna’}).length;
+return ‘<button class="btn card arb" data-rid="'+r.id+'" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:8px;border:2px solid '+OR+'">’+
+‘<div style="width:44px;height:44px;border-radius:12px;background:'+OR+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🛵</div>’+
+‘<div><div style="font-weight:900">’+esc(r.nome)+’ ‘+esc(r.cognome||’’)+(r.softpos?’ 💳’:’’)+’</div>’+
+‘<div style="font-size:12px;color:'+GM+'">’+ig+’ consegne in corso</div></div></button>’;
+}).join(’’):’’)+
+‘<div class="stit">Riders in giro</div>’+
+rp.map(function(r){
+var sue=ord.filter(function(o){return o.fattorinoId===r.id&&o.stato===‘consegna’});
+return ‘<div class="card"><div style="display:flex;justify-content:space-between">’+
+‘<div style="font-weight:900">🛵 ‘+esc(r.nome)+’</div>’+
+‘<div style="color:'+OR+';font-weight:900">’+sue.length+’ in giro</div></div>’+
+sue.map(function(o){return ‘<div style="font-size:12px;color:'+GM+';margin-top:4px">• ‘+esc(o.nomeCliente)+’ — ‘+esc(o.indirizzo||’—’)+’ — €’+(o.totale||0).toFixed(2)+’</div>’}).join(’’)+’</div>’;
+}).join(’’);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MIE CONSEGNE
+// ═══════════════════════════════════════════════════════════════════
+function rMiei(){
+var u=USER;
+var mie=ordOggi().filter(function(o){return o.fattorinoId===u.id&&[‘consegna’,‘pagato’,‘nonpagato’].indexOf(o.stato)>=0});
+var ic=mie.filter(function(o){return o.stato===‘consegna’});
+var con=mie.filter(function(o){return o.stato===‘pagato’||o.stato===‘nonpagato’});
+var tot=mie.filter(function(o){return o.stato===‘pagato’}).reduce(function(s,o){return s+(o.totale||0)},0);
+return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:4px">🛵 Le Mie Consegne</div>’+
+‘<div style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:16px">Ciao ‘+esc(u.nome)+’! ‘+(u.softpos?‘💳 SoftPOS attivo’:’’)+’</div>’+
+‘<div style="background:'+GL+';border:2px solid '+GR+';border-radius:14px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">’+
+‘<span style="font-weight:800;color:'+GR+'">💰 Il mio totale</span>’+
+‘<span style="font-size:22px;font-weight:900;color:'+GR+'">€’+tot.toFixed(2)+’</span></div>’+
+(ic.length>0?’<div class="stit">In consegna ora (’+ic.length+’)</div>’+
+ic.map(function(o){
+return ‘<div class="card" style="border:2px solid '+OR+'">’+
+‘<div style="font-weight:900;font-size:16px">’+esc(o.nomeCliente)+’</div>’+
+‘<div style="font-size:13px;color:'+GM+'">📍 ‘+esc(o.indirizzo||’—’)+’</div>’+
+(o.note?’<div style="font-size:12px;color:'+OR+';margin-top:4px">📝 ‘+esc(o.note)+’</div>’:’’)+
+‘<div style="font-size:20px;font-weight:900;color:'+BL+';margin:8px 0">€’+(o.totale||0).toFixed(2)+’</div>’+
+‘<div style="display:flex;gap:8px;flex-wrap:wrap">’+
+‘<button class="btn ib" data-id="'+o.id+'" style="flex:1;justify-content:center;background:'+GR+';color:#fff">💰 Incassato</button>’+
+‘<button class="btn npb" data-id="'+o.id+'" style="flex:1;justify-content:center;background:'+RL+';color:'+RE+'">❌ Non pagato</button></div>’+
+‘<button class="btn bsm pb" data-id="'+o.id+'" style="background:'+LL+';color:'+BL+';width:100%;justify-content:center;margin-top:8px">🔄 Passa a un collega</button></div>’;
+}).join(’’):
+‘<div style="text-align:center;color:'+GM+';padding:32px;font-weight:700">Nessuna consegna assegnata</div>’)+
+(con.length>0?’<div class="stit">Concluse (’+con.length+’)</div>’+
+con.map(function(o){
+return ‘<div class="card" style="opacity:.8"><div style="display:flex;justify-content:space-between;align-items:center">’+
+‘<div><div style="font-weight:900">’+esc(o.nomeCliente)+’</div>’+(o.metodoPagamento?’<div style="font-size:12px;color:'+GM+'">💳 ‘+esc(o.metodoPagamento)+’</div>’:’’)+’</div>’+
+‘<div style="text-align:right"><div style="font-weight:900;color:'+(o.stato==='pagato'?GR:RE)+'">€’+(o.totale||0).toFixed(2)+’</div>’+
+‘<span class="badge" style="background:'+STATI[o.stato].bg+';color:'+STATI[o.stato].text+'">’+STATI[o.stato].emoji+’ ‘+STATI[o.stato].label+’</span></div></div></div>’;
+}).join(’’):’’)+’\n’;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// APPELLO
+// ═══════════════════════════════════════════════════════════════════
+function rAppello(){
+var rds=getRiders(),pr=getPresenti();
+return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:4px">👥 Appello Serata</div>’+
+‘<div style="font-size:13px;font-weight:700;color:'+GM+';margin-bottom:16px">’+new Date().toLocaleDateString(‘it-IT’,{weekday:‘long’,day:‘numeric’,month:‘long’})+’</div>’+
+‘<div style="background:'+LL+';border-radius:12px;padding:12px 14px;margin-bottom:16px">✅ Presenti: <strong>’+Object.keys(pr).length+’</strong> su ‘+rds.length+’ riders</div>’+
+rds.map(function(r){
+var pres=!!pr[r.id];
+return ‘<div class="card" style="border:2px solid '+(pres?GR:LL)+';background:'+(pres?GL:'#fff')+'">’+
+‘<div style="display:flex;justify-content:space-between;align-items:center">’+
+‘<div style="display:flex;align-items:center;gap:12px">’+
+‘<div style="width:44px;height:44px;border-radius:12px;background:'+(pres?GR:GM)+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🛵</div>’+
+‘<div><div style="font-weight:900">’+esc(r.nome)+’ ‘+esc(r.cognome||’’)+’</div>’+
+‘<div style="font-size:12px;color:'+GM+'">’+esc(r.telefono||’—’)+(r.softpos?’ · 💳’:’’)+’</div></div></div>’+
+‘<button class="btn bsm tpb" data-rid="'+r.id+'" data-pr="'+(pres?'1':'0')+'" style="background:'+(pres?RL:GL)+';color:'+(pres?RE:GR)+'">’+(pres?‘❌ Assente’:‘✅ Presente’)+’</button></div></div>’;
+}).join(’’)+
+‘<button class="btn bfull" id="b-addr" style="background:'+BL+';color:#fff;margin-top:8px">➕ Aggiungi nuovo rider</button>’;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CLIENTI
+// ═══════════════════════════════════════════════════════════════════
+function rClienti(){
+var tutti=Object.values(DB.clienti);
+var flt=tutti.filter(function(c){return (c.cognome+’ ‘+c.nome+’ ‘+c.telefono+’ ‘+c.indirizzo).toLowerCase().includes(RCLIP.toLowerCase())});
+return ‘<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">’+
+‘<div style="font-size:22px;font-weight:900;color:'+BD+'">👤 Clienti (’+tutti.length+’)</div>’+
+‘<button class="btn bsm" id="b-nc" style="background:'+BL+';color:#fff">+ Nuovo</button></div>’+
+‘<input class="inp" id="rcl-inp" placeholder="🔍 Cerca..." value="'+esc(RCLIP)+'" style="margin-bottom:12px"/>’+
+(flt.length===0?’<div style="text-align:center;color:'+GM+';padding:32px">Nessun cliente</div>’:’’)+
+flt.map(function(c){
+return ‘<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start">’+
+‘<div><div style="font-weight:900;font-size:15px">’+esc(c.cognome)+’ ‘+esc(c.nome)+’</div>’+
+‘<div style="font-size:13px;color:'+GM+'">📞 ‘+esc(c.telefono||’—’)+’</div>’+
+‘<div style="font-size:13px;color:'+GM+'">📍 ‘+esc(c.indirizzo||’—’)+’</div></div>’+
+‘<div style="display:flex;gap:6px">’+
+‘<button class="btn bsm ecl" data-id="'+c.id+'" style="background:'+LL+';color:'+BL+'">✏️</button>’+
+‘<button class="btn bsm dcl" data-id="'+c.id+'" style="background:'+RL+';color:'+RE+'">🗑️</button></div></div></div>’;
+}).join(’’);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TEAM
+// ═══════════════════════════════════════════════════════════════════
+function rTeam(){
+return ‘<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">’+
+‘<div style="font-size:22px;font-weight:900;color:'+BD+'">⚙️ Team</div>’+
+‘<button class="btn bsm" id="b-nm" style="background:'+BL+';color:#fff">+ Aggiungi</button></div>’+
+Object.values(DB.utenti).map(function(u){
+return ‘<div class="card"><div style="display:flex;justify-content:space-between;align-items:center">’+
+‘<div style="display:flex;gap:12px;align-items:center">’+
+‘<div style="width:44px;height:44px;border-radius:12px;background:'+(u.ruolo==='admin'?BD:u.ruolo==='dispatch'?BL:OR)+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">’+
+(u.ruolo===‘admin’?‘🔑’:u.ruolo===‘dispatch’?‘📦’:‘🛵’)+’</div>’+
+‘<div><div style="font-weight:900">’+esc(u.nome)+’ ‘+esc(u.cognome||’’)+’</div>’+
+‘<div style="font-size:11px;color:'+GM+';text-transform:uppercase">’+u.ruolo+(u.softpos?’ · 💳’:’’)+(u.attivo===false?’ · <span style="color:'+RE+'">DISATTIVO</span>’:’’)+’</div>’+
+(u.telefono?’<div style="font-size:12px;color:'+GM+'">📞 ‘+esc(u.telefono)+’</div>’:’’)+’</div></div>’+
+‘<div style="display:flex;gap:6px">’+
+‘<button class="btn bsm emb" data-id="'+u.id+'" style="background:'+LL+';color:'+BL+'">✏️</button>’+
+(u.ruolo!==‘admin’?’<button class="btn bsm tmb" data-id="'+u.id+'" data-att="'+(u.attivo!==false?'1':'0')+'" style="background:'+(u.attivo===false?GL:RL)+';color:'+(u.attivo===false?GR:RE)+'">’+(u.attivo===false?‘▶️’:‘⏸️’)+’</button>’:’’)+’</div></div></div>’;
+}).join(’’);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// REPORT
+// ═══════════════════════════════════════════════════════════════════
+function rReport(){
+var ord=ordOggi(),rds=Object.values(DB.utenti).filter(function(u){return u.ruolo===‘rider’});
+var tot=ord.filter(function(o){return o.stato===‘pagato’}).reduce(function(s,o){return s+(o.totale||0)},0);
+var np=ord.filter(function(o){return o.stato===‘nonpagato’});
+return ‘<div style="font-size:22px;font-weight:900;color:'+BD+';margin-bottom:16px">📊 Report Serata</div>’+
+‘<div style="background:'+GL+';border:2px solid '+GR+';border-radius:14px;padding:16px;margin-bottom:16px">’+
+‘<div style="font-weight:800;color:'+GR+';margin-bottom:4px">💰 Totale Incassato</div>’+
+‘<div style="font-size:32px;font-weight:900;color:'+GR+'">€’+tot.toFixed(2)+’</div>’+
+‘<div style="font-size:13px;color:'+GR+'">’+ord.filter(function(o){return o.stato===‘pagato’}).length+’ ordini pagati</div></div>’+
+(np.length>0?’<div style="background:'+RL+';border:2px solid '+RE+';border-radius:14px;padding:14px;margin-bottom:16px">’+
+‘<div style="font-weight:900;color:'+RE+';margin-bottom:8px">❌ Non Pagati (’+np.length+’)</div>’+
+np.map(function(o){return ‘<div style="display:flex;justify-content:space-between;padding:6px 0"><span>’+esc(o.nomeCliente)+’</span><strong style="color:'+RE+'">€’+(o.totale||0).toFixed(2)+’</strong></div>’}).join(’’)+’</div>’:’’)+
+‘<div class="stit">Per rider</div>’+
+rds.map(function(r){
+var suoi=ord.filter(function(o){return o.fattorinoId===r.id});
+var pag=suoi.filter(function(o){return o.stato===‘pagato’});
+var npp=suoi.filter(function(o){return o.stato===‘nonpagato’});
+var cont=pag.filter(function(o){return o.metodoPagamento===‘Contanti’}).reduce(function(s,o){return s+(o.totale||0)},0);
+var cart=pag.filter(function(o){return o.metodoPagamento===‘Carta’}).reduce(function(s,o){return s+(o.totale||0)},0);
+var totR=pag.reduce(function(s,o){return s+(o.totale||0)},0);
+return ‘<div class="card" style="border:2px solid '+BL+'">’+
+‘<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">’+
+‘<div style="font-weight:900;font-size:16px">🛵 ‘+esc(r.nome)+’ ‘+esc(r.cognome||’’)+’</div>’+
+‘<div style="font-size:22px;font-weight:900;color:'+BL+'">€’+totR.toFixed(2)+’</div></div>’+
+‘<div class="divl"></div>’+
+‘<div class="g2" style="font-size:13px">’+
+‘<div>✅ Pagate: <strong>’+pag.length+’</strong></div>’+
+‘<div>❌ Non pagate: <strong style="color:'+RE+'">’+npp.length+’</strong></div>’+
+‘<div>📦 Totali: <strong>’+suoi.length+’</strong></div>’+
+(cont>0?’<div>💵 Contanti: <strong>€’+cont.toFixed(2)+’</strong></div>’:’’)+
+(cart>0?’<div>💳 Carta: <strong>€’+cart.toFixed(2)+’</strong></div>’:’’)+’</div>’+
+(npp.length>0?’<div style="margin-top:8px;padding:8px;background:'+RL+';border-radius:8px">’+npp.map(function(o){return ‘<div style="font-size:12px;color:'+RE+'">• ‘+esc(o.nomeCliente)+’ — €’+(o.totale||0).toFixed(2)+’</div>’}).join(’’)+’</div>’:’’)+
+‘</div>’;
+}).join(’’);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════════════════
+function rModal(){
+var m=MODAL,body=’’;
+if(m.tipo===‘pagamento’){
+body=’<div style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:4px">💰 Come ha pagato?</div>’+
+‘<div style="font-weight:700;color:'+GM+';margin-bottom:16px">’+esc(m.data.nomeCliente)+’ — €’+(m.data.totale||0).toFixed(2)+’</div>’+
+‘<button class="btn bfull" id="m-cont" style="background:'+GR+';color:#fff;margin-bottom:10px">💵 Contanti</button>’+
+(USER.softpos?’<button class="btn bfull" id="m-carta" style="background:'+BL+';color:#fff;margin-bottom:10px">💳 Carta (SoftPOS)</button>’:’’)+
+‘<button class="btn bfull" id="m-cls" style="background:'+GY+';color:'+BD+'">Annulla</button>’;
+} else if(m.tipo===‘riassegna’){
+var rp=getRidersPresenti().filter(function(r){return r.id!==m.data.fattorinoId});
+body=’<div style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:16px">🔄 Riassegna Consegna</div>’+
+rp.map(function(r){
+return ‘<button class="btn card rab" data-rid="'+r.id+'" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:8px;border:2px solid '+OR+'">’+
+‘<div style="width:40px;height:40px;border-radius:10px;background:'+OR+';display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🛵</div>’+
+‘<div style="font-weight:900">’+esc(r.nome)+’ ‘+esc(r.cognome||’’)+(r.softpos?’ 💳’:’’)+’</div></button>’;
+}).join(’’)+
+(rp.length===0?’<div style="color:'+GM+';font-weight:700;margin-bottom:16px">Nessun altro rider presente</div>’:’’)+
+‘<button class="btn bfull" id="m-cls" style="background:'+GY+';color:'+BD+'">Annulla</button>’;
+} else if(m.tipo===‘nuovoCliente’||m.tipo===‘editCliente’){
+var c=m.data||{};
+body=’<div style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:16px">’+(m.tipo===‘editCliente’?‘Modifica’:‘Nuovo’)+’ Cliente</div>’+
+‘<div style="margin-bottom:10px"><label class="lbl">Cognome *</label><input class="inp" id="mc-cog" value="'+esc(c.cognome||'')+'"/></div>’+
+‘<div style="margin-bottom:10px"><label class="lbl">Nome</label><input class="inp" id="mc-nom" value="'+esc(c.nome||'')+'"/></div>’+
+‘<div style="margin-bottom:10px"><label class="lbl">Telefono</label><input class="inp" id="mc-tel" value="'+esc(c.telefono||'')+'"/></div>’+
+‘<div style="margin-bottom:16px"><label class="lbl">Indirizzo</label><input class="inp" id="mc-ind" value="'+esc(c.indirizzo||'')+'"/></div>’+
+‘<div style="display:flex;gap:10px">’+
+‘<button class="btn" id="m-savcl" style="flex:1;justify-content:center;background:'+BL+';color:#fff">Salva</button>’+
+‘<button class="btn" id="m-cls" style="flex:1;justify-content:center;background:'+GY+';color:'+BD+'">Annulla</button></div>’;
+} else if(m.tipo===‘nuovoMembro’||m.tipo===‘editMembro’){
+var u=m.data||{};
+body=’<div style="font-size:18px;font-weight:900;color:'+BD+';margin-bottom:16px">’+(m.tipo===‘editMembro’?‘Modifica’:‘Nuovo’)+’ membro</div>’+
+‘<div style="margin-bottom:10px"><label class="lbl">Nome *</label><input class="inp" id="mm-nom" value="'+esc(u.nome||'')+'"/></div>’+
+‘<div style="margin-bottom:10px"><label class="lbl">Cognome</label><input class="inp" id="mm-cog" value="'+esc(u.cognome||'')+'"/></div>’+
+‘<div style="margin-bottom:10px"><label class="lbl">Telefono</label><input class="inp" id="mm-tel" value="'+esc(u.telefono||'')+'"/></div>’+
+‘<div style="margin-bottom:10px"><label class="lbl">Ruolo</label>’+
+‘<select class="inp" id="mm-ruo">’+
+‘<option value=“rider” ‘+((u.ruolo||‘rider’)===‘rider’?‘selected’:’’)+’>🛵 Rider</option>’+
+‘<option value=“dispatch” ‘+(u.ruolo===‘dispatch’?‘selected’:’’)+’>📦 Dispatch</option>’+
+‘<option value=“admin” ‘+(u.ruolo===‘admin’?‘selected’:’’)+’>🔑 Admin</option>’+
+‘</select></div>’+
+‘<div style="margin-bottom:10px"><label class="lbl">PIN (4 cifre) *</label><input class="inp" id="mm-pin" type="number" value="'+esc(u.pin||'')+'" placeholder="0000"/></div>’+
+‘<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">’+
+‘<input type=“checkbox” id=“mm-sp” ‘+(u.softpos?‘checked’:’’)+’/><label for="mm-sp" style="font-weight:800;cursor:pointer">💳 Accetta SoftPOS</label></div>’+
+‘<div style="display:flex;gap:10px">’+
+‘<button class="btn" id="m-savmb" style="flex:1;justify-content:center;background:'+BL+';color:#fff">Salva</button>’+
+‘<button class="btn" id="m-cls" style="flex:1;justify-content:center;background:'+GY+';color:'+BD+'">Annulla</button></div>’;
+}
+return ‘<div class="ovl" id="ovl-bg"><div class="mdl" onclick="event.stopPropagation()">’+body+’</div></div>’;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// BIND PAGE
+// ═══════════════════════════════════════════════════════════════════
+function bPage(){
+each(’[data-sc]’,function(b){b.addEventListener(‘click’,function(){SC=this.dataset.sc;R()})});
+
+if(SC===‘nuovo’){
+if(!FORM)FORM=initForm();
+var f=FORM;
+each(’.fb’,function(b){b.addEventListener(‘click’,function(){f.fonte=this.dataset.f;rePg()})});
+on(‘b-rmcl’,‘click’,function(){f.clienteId=’’;RCLI=’’;rePg()});
+on(‘f-rcl’,‘input’,function(){
+RCLI=this.value;
+var q=this.value.toLowerCase(),div=el(‘res-cl’);
+if(div&&q.length>0){
+var res=Object.values(DB.clienti).filter(function(c){return (c.cognome+’ ‘+c.nome+’ ‘+c.telefono).toLowerCase().includes(q)}).slice(0,6);
+div.innerHTML=’<div style="border:2px solid '+LL+';border-radius:10px;margin-bottom:8px;max-height:180px;overflow-y:auto">’+
+res.map(function(c){return ‘<div class="sccl" data-id="'+c.id+'" style="padding:10px 12px;border-bottom:1px solid '+LL+';cursor:pointer"><div style="font-weight:900">’+esc(c.cognome)+’ ‘+esc(c.nome)+’</div><div style="font-size:12px;color:'+GM+'">’+esc(c.telefono||’’)+’ · ‘+esc(c.indirizzo||’’)+’</div></div>’}).join(’’)+
+(res.length===0?’<div style="padding:12px;color:'+GM+'">Nessun cliente trovato</div>’:’’)+’</div>’;
+each(’.sccl’,function(e){e.addEventListener(‘click’,function(){f.clienteId=this.dataset.id;RCLI=’’;rePg()})});
+} else if(div)div.innerHTML=’’;
+});
+on(‘f-nomM’,‘input’,function(){f.nomeM=this.value});
+on(‘f-telM’,‘input’,function(){f.telM=this.value});
+on(‘f-indM’,‘input’,function(){f.indirM=this.value});
+on(‘f-note’,‘input’,function(){f.note=this.value});
+on(‘sel-zona’,‘change’,function(){f.zonaId=this.value;rePg()});
+each(’.pn’,function(i){i.addEventListener(‘input’,function(){var p=f.prodotti.find(function(x){return x.id===i.dataset.pid});if(p)p.nome=this.value})});
+each(’.pq’,function(i){i.addEventListener(‘input’,function(){var p=f.prodotti.find(function(x){return x.id===i.dataset.pid});if(p){p.qty=this.value;rePg()}})});
+each(’.pp’,function(i){i.addEventListener(‘input’,function(){var p=f.prodotti.find(function(x){return x.id===i.dataset.pid});if(p){p.prezzo=this.value;rePg()}})});
+each(’.pr’,function(b){b.addEventListener(‘click’,function(){f.prodotti=f.prodotti.filter(function(p){return p.id!==b.dataset.pid});rePg()})});
+on(‘b-addp’,‘click’,function(){f.prodotti.push({id:uid(),nome:’’,qty:1,prezzo:’’});rePg()});
+on(‘b-ncl’,‘click’,function(){MODAL={tipo:‘nuovoCliente’,data:null};R()});
+on(‘b-conf’,‘click’,function(){
+var cl=f.clienteId?DB.clienti[f.clienteId]:null;
+if(!cl&&!f.nomeM)return toast(‘Scegli o inserisci un cliente’,‘err’);
+if(f.prodotti.some(function(p){return !p.nome}))return toast(‘Inserisci nome ad ogni prodotto’,‘err’);
+var zona=Object.values(DB.zone).find(function(z){return z.id===f.zonaId});
+var tp=f.prodotti.reduce(function(s,p){return s+(parseFloat(p.prezzo)||0)*(parseInt(p.qty)||1)},0);
+var ordine={id:uid(),data:nowISO(),stato:‘nuovo’,clienteId:f.clienteId||’’,
+nomeCliente:cl?(cl.cognome+’ ‘+cl.nome).trim():f.nomeM,
+telefono:cl?cl.telefono||’’:f.telM,indirizzo:cl?cl.indirizzo||’’:f.indirM,
+zona:zona?zona.nome:’’,zonaId:f.zonaId||’’,costoConsegna:zona?zona.costo:0,
+note:f.note,fonte:f.fonte,prodotti:f.prodotti,totale:tp+(zona?zona.costo:0),
+fattorinoId:null,pagato:false,metodoPagamento:null};
+fset(‘ordini/’+ordine.id,ordine).then(function(){toast(‘Ordine creato ✓’);FORM=initForm();RCLI=’’;SC=‘ordini’;R()});
+});
+}
+
+if(SC===‘ordini’){
+each(’.fb2’,function(b){b.addEventListener(‘click’,function(){FILTRO=this.dataset.f;rePg()})});
+each(’.sb’,function(b){b.addEventListener(‘click’,function(){fupd(‘ordini/’+this.dataset.id,{stato:this.dataset.s}).then(function(){toast(‘Stato aggiornato ✓’)})})});
+each(’.rbn’,function(b){b.addEventListener(‘click’,function(){var o=ordOggi().find(function(x){return x.id===b.dataset.id});MODAL={tipo:‘riassegna’,data:o};R()})});
+}
+
+if(SC===‘dispatch’){
+each(’.dcard’,function(c){c.addEventListener(‘click’,function(){var id=this.dataset.id;if(DSEL[id])delete DSEL[id];else DSEL[id]=true;rePg()})});
+each(’.arb’,function(b){b.addEventListener(‘click’,function(){
+var rid=this.dataset.rid,ids=Object.keys(DSEL);
+if(ids.length===0)return toast(‘Seleziona almeno un ordine’,‘err’);
+Promise.all(ids.map(function(id){return fupd(‘ordini/’+id,{fattorinoId:rid,stato:‘consegna’,oraUscita:nowISO(),riassegnaRichiesta:false})}))
+.then(function(){DSEL={};toast(ids.length+’ consegne assegnate ✓’);rePg()});
+})});
+each(’.rbn’,function(b){b.addEventListener(‘click’,function(){var o=ordOggi().find(function(x){return x.id===b.dataset.id});MODAL={tipo:‘riassegna’,data:o};R()})});
+}
+
+if(SC===‘miei’){
+each(’.ib’,function(b){b.addEventListener(‘click’,function(){var o=ordOggi().find(function(x){return x.id===b.dataset.id});MODAL={tipo:‘pagamento’,data:o};R()})});
+each(’.npb’,function(b){b.addEventListener(‘click’,function(){fupd(‘ordini/’+this.dataset.id,{stato:‘nonpagato’,oraRientro:nowISO()}).then(function(){toast(‘Segnato ✓’)})})});
+each(’.pb’,function(b){b.addEventListener(‘click’,function(){fupd(‘ordini/’+this.dataset.id,{riassegnaRichiesta:true}).then(function(){toast(‘Richiesta inviata ✓’)})})});
+}
+
+if(SC===‘appello’){
+each(’.tpb’,function(b){b.addEventListener(‘click’,function(){
+var rid=this.dataset.rid,pr=this.dataset.pr===‘1’,key=oggiKey();
+if(pr)frem(‘presenti/’+key+’/’+rid);else fset(‘presenti/’+key+’/’+rid,true);
+})});
+on(‘b-addr’,‘click’,function(){MODAL={tipo:‘nuovoMembro’,data:{ruolo:‘rider’}};R()});
+}
+
+if(SC===‘clienti’){
+on(‘b-nc’,‘click’,function(){MODAL={tipo:‘nuovoCliente’,data:null};R()});
+on(‘rcl-inp’,‘input’,function(){RCLIP=this.value;rePg()});
+each(’.ecl’,function(b){b.addEventListener(‘click’,function(){MODAL={tipo:‘editCliente’,data:Object.assign({},DB.clienti[this.dataset.id])};R()})});
+each(’.dcl’,function(b){b.addEventListener(‘click’,function(){frem(‘clienti/’+this.dataset.id).then(function(){toast(‘Cliente eliminato’)})})});
+}
+
+if(SC===‘team’){
+on(‘b-nm’,‘click’,function(){MODAL={tipo:‘nuovoMembro’,data:null};R()});
+each(’.emb’,function(b){b.addEventListener(‘click’,function(){MODAL={tipo:‘editMembro’,data:Object.assign({},DB.utenti[this.dataset.id])};R()})});
+each(’.tmb’,function(b){b.addEventListener(‘click’,function(){var att=this.dataset.att===‘1’;fupd(‘utenti/’+this.dataset.id,{attivo:!att}).then(function(){toast(att?‘Disattivato’:‘Riattivato’)})})});
+}
+}
+
+function bModal(){
+var m=MODAL;if(!m)return;
+on(‘m-cls’,‘click’,closeM);
+on(‘ovl-bg’,‘click’,closeM);
+on(‘m-cont’,‘click’,function(){fupd(‘ordini/’+m.data.id,{stato:‘pagato’,metodoPagamento:‘Contanti’,oraRientro:nowISO()}).then(function(){toast(‘Incasso registrato ✓’);closeM()})});
+on(‘m-carta’,‘click’,function(){fupd(‘ordini/’+m.data.id,{stato:‘pagato’,metodoPagamento:‘Carta’,oraRientro:nowISO()}).then(function(){toast(‘Incasso registrato ✓’);closeM()})});
+each(’.rab’,function(b){b.addEventListener(‘click’,function(){fupd(‘ordini/’+m.data.id,{fattorinoId:this.dataset.rid,riassegnaRichiesta:false,oraUscita:nowISO()}).then(function(){toast(‘Riassegnato ✓’);DSEL={};closeM()})})});
+on(‘m-savcl’,‘click’,function(){
+var cog=(el(‘mc-cog’)||{}).value||’’;
+if(!cog.trim())return toast(‘Inserisci il cognome’,‘err’);
+var data={cognome:cog.trim(),nome:(el(‘mc-nom’)||{}).value||’’,telefono:(el(‘mc-tel’)||{}).value||’’,indirizzo:(el(‘mc-ind’)||{}).value||’’};
+if(m.tipo===‘editCliente’){fupd(‘clienti/’+m.data.id,data).then(function(){toast(‘Aggiornato ✓’);closeM()})}
+else{var id=uid();fset(‘clienti/’+id,Object.assign({id:id},data)).then(function(){if(FORM&&SC===‘nuovo’)FORM.clienteId=id;toast(‘Salvato ✓’);closeM()})}
+});
+on(‘m-savmb’,‘click’,function(){
+var nom=((el(‘mm-nom’)||{}).value||’’).trim();
+var pin=String((el(‘mm-pin’)||{}).value||’’);
+if(!nom)return toast(‘Inserisci il nome’,‘err’);
+if(pin.length!==4)return toast(‘PIN deve essere 4 cifre’,‘err’);
+var data={nome:nom,cognome:(el(‘mm-cog’)||{}).value||’’,telefono:(el(‘mm-tel’)||{}).value||’’,ruolo:(el(‘mm-ruo’)||{}).value||‘rider’,pin:pin,softpos:!!(el(‘mm-sp’)||{}).checked,attivo:true};
+if(m.tipo===‘editMembro’){fupd(‘utenti/’+m.data.id,data).then(function(){toast(‘Aggiornato ✓’);closeM()})}
+else{var id=uid();fset(‘utenti/’+id,Object.assign({id:id},data)).then(function(){toast(‘Aggiunto ✓’);closeM()})}
+});
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════════════════
+startListeners();
 </script>
 
 </body>
