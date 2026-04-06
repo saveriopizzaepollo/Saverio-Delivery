@@ -6,293 +6,277 @@
     <title>SAVERIO DELIVERY</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --neon: #39FF14; --bor: #D0DCE8; --rosso: #FF4444; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; }
+        :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --neon: #39FF14; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; font-weight: 900; }
         body { background: var(--blu); color: white; height: 100vh; overflow: hidden; }
 
-        /* PAGINE */
-        .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
-        .page.show { display: flex; }
+        /* SCHERMATE INIZIALI */
+        .page-init { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 2000; background: var(--blu); }
+        .page-init.show { display: flex; }
 
-        /* PAGINA INIZIALE E PIN PAD */
-        #title-main { font-size: 3rem; font-weight: 900; letter-spacing: 2px; margin-bottom: 50px; text-align: center; }
-        .btn-main { width: 100%; max-width: 300px; padding: 20px; background: var(--ora); border: none; border-radius: 15px; color: white; font-weight: 900; font-size: 1.2rem; cursor: pointer; text-transform: uppercase; }
-        .pin-container { display: flex; gap: 15px; margin-bottom: 30px; }
-        .dot { width: 18px; height: 18px; border: 2px solid white; border-radius: 50%; }
-        .dot.active { background: var(--ora); border-color: var(--ora); }
-        .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .num-key { width: 75px; height: 75px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 1.8rem; font-weight: 900; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        /* HEADER E NAVIGAZIONE FISSI */
+        .fixed-top { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; }
+        .header-main { background: var(--blu); height: 75px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); }
+        #main-total { color: var(--giallo); font-size: 2.2rem; text-shadow: 0 0 10px rgba(255,239,0,0.5); }
+        .order-tag { background: var(--ora); color: white; padding: 5px 12px; border-radius: 8px; font-size: 1.2rem; }
+        
+        /* BARRA DEI TASTI PAGINA */
+        .nav-bar { background: #f4f7f9; display: flex; padding: 8px; gap: 8px; border-bottom: 2px solid var(--bor); }
+        .nav-btn { flex: 1; padding: 15px 5px; border: none; border-radius: 10px; background: #D0DCE8; color: var(--blu); font-size: 0.85rem; cursor: pointer; text-transform: uppercase; border-bottom: 3px solid #b0c4d8; }
+        .nav-btn.active { background: var(--ora); color: white; border-bottom: 3px solid #a64507; }
 
-        /* APP ADMIN - HEADER FISSO */
-        #app-admin { display: none; position: fixed; inset: 0; flex-direction: column; background: #f4f7f9; }
-        #app-admin.show { display: flex; }
-        .header-fixed { 
-            background: var(--blu); height: 75px; display: flex; align-items: center; 
-            justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000;
-        }
-        #main-total { color: var(--giallo); font-weight: 900; font-size: 2rem; text-shadow: 0 0 10px rgba(255,239,0,0.5); }
-        .order-tag { background: var(--ora); color: white; padding: 5px 12px; border-radius: 8px; font-weight: 900; font-size: 1.2rem; }
+        /* AREA CONTENUTO */
+        .content-area { margin-top: 150px; height: calc(100vh - 150px); overflow-y: auto; background: #f4f7f9; color: var(--blu); padding: 20px; }
+        .tab-content { display: none; }
+        .tab-content.show { display: block; }
 
-        /* SLIDER 4 PAGINE */
-        .slider-container { display: flex; width: 400vw; height: calc(100vh - 75px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
-        .slider-container::-webkit-scrollbar { display: none; }
-        .section { width: 100vw; height: 100%; scroll-snap-align: start; padding: 20px; overflow-y: auto; color: var(--blu); position: relative; }
-
-        /* STILI INPUT (FORZATI MAIUSCOLO E GRASSETTO) */
-        .label { display: block; font-weight: 900; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
-        .input-big { 
-            width: 100%; padding: 15px; border: 2px solid var(--bor); border-radius: 12px; 
-            font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; outline: none; background: white;
-            text-transform: uppercase;
-        }
-        .btn-x { background: var(--rosso); color: white; border: none; width: 55px; height: 58px; border-radius: 12px; font-weight: 900; cursor: pointer; }
-        .btn-maps { background: #4285F4; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 900; width: 100%; margin-bottom: 15px; cursor: pointer; }
-
-        .cost-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
-        .btn-cost { padding: 15px 5px; background: white; border: 2px solid var(--blu); border-radius: 12px; font-weight: 900; cursor: pointer; }
-        .btn-cost.active { background: var(--blu); color: white; }
-        .btn-rider { flex: 1; padding: 15px; background: #D0DCE8; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; color: var(--blu); }
-        .btn-rider.active { background: #4285F4; color: white; }
-
+        /* INPUT (MAIUSCOLO + GRASSETTO) */
+        .label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+        .input-big { width: 100%; padding: 15px; border: 2px solid var(--bor); border-radius: 12px; font-size: 1.2rem; margin-bottom: 15px; outline: none; text-transform: uppercase; color: var(--blu); background: white; }
+        
         /* QUADERNO PIZZE */
         .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 12px; display: grid; grid-template-columns: 60px 1fr 120px; overflow: hidden; }
         .col-qty, .col-gusto { border-right: 1px solid #F0E6BC; display: flex; flex-direction: column; }
-        .col-prezzo { background: white; display: flex; flex-direction: column; border-left: 3px solid var(--blu); }
-        .line-input {
-            height: 45px; border: none; border-bottom: 1px solid #F0E6BC; background: transparent; 
-            font-weight: 900; font-size: 1.2rem; text-transform: uppercase; padding: 5px 10px; outline: none;
-        }
-        .col-prezzo .line-input { text-align: right; font-size: 1.3rem; padding-right: 15px; color: var(--blu); }
-        .btn-gf-neon { background: var(--neon); color: var(--blu); border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(57,255,20,0.4); }
+        .col-prezzo { background: white; border-left: 3px solid var(--blu); display: flex; flex-direction: column; }
+        .line-input { height: 46px; border: none; border-bottom: 1px solid #F0E6BC; background: transparent; font-size: 1.2rem; text-transform: uppercase; padding: 5px 10px; outline: none; color: var(--blu); font-weight: 900; }
+        .col-prezzo .line-input { text-align: right; font-size: 1.3rem; padding-right: 15px; }
         .is-gf { color: #00E676 !important; }
-        .col-prezzo .line-input.is-gf { background: #e8fff5; color: #00E676 !important; border-color: #00E676 !important; }
+        .col-prezzo .line-input.is-gf { background: #e8fff5; color: #00E676 !important; }
 
-        /* PALLINI NAVIGAZIONE */
-        .nav-dots { position: fixed; bottom: 15px; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; pointer-events: none; }
-        .dot { width: 10px; height: 10px; background: rgba(0,0,0,0.15); border-radius: 50%; }
-        .dot.active { background: var(--ora); width: 25px; border-radius: 10px; }
+        /* PIN PAD */
+        .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .num-key { width: 75px; height: 75px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="page-start" class="page show">
-        <h1 id="title-main">SAVERIO DELIVERY</h1>
-        <button class="btn-main" onclick="openPinPad()">ADMIN LOGIN</button>
+    <div id="page-start" class="page-init show">
+        <h1 style="font-size:3rem; margin-bottom:50px; font-weight:900;">SAVERIO DELIVERY</h1>
+        <button class="btn-main" style="padding:20px 40px; border-radius:15px; background:var(--ora); color:white; border:none; font-size:1.5rem; font-weight:900; cursor:pointer;" onclick="showPin()">ADMIN LOGIN</button>
     </div>
 
-    <div id="page-pin" class="page">
+    <div id="page-pin" class="page-init">
         <h2 style="margin-bottom:20px; font-weight:900;">INSERISCI PIN</h2>
-        <div class="pin-container">
-            <div class="dot" id="dot-0"></div><div class="dot" id="dot-1"></div>
-            <div class="dot" id="dot-2"></div><div class="dot" id="dot-3"></div>
+        <div id="pin-dots" style="display:flex; gap:15px; margin-bottom:30px;">
+            <div style="width:18px; height:18px; border:2px solid white; border-radius:50%;" id="dot-0"></div>
+            <div style="width:18px; height:18px; border:2px solid white; border-radius:50%;" id="dot-1"></div>
+            <div style="width:18px; height:18px; border:2px solid white; border-radius:50%;" id="dot-2"></div>
+            <div style="width:18px; height:18px; border:2px solid white; border-radius:50%;" id="dot-3"></div>
         </div>
         <div class="grid-pin" id="numpad"></div>
-        <button class="btn-main" style="background:#2B5F8E; margin-top:20px; font-size:0.9rem;" onclick="resetPin()">CANCELLA</button>
+        <button onclick="resetPin()" style="margin-top:20px; background:none; border:none; color:white; font-weight:900; text-decoration:underline;">CANCELLA</button>
     </div>
 
-    <div id="app-admin">
-        <div class="header-fixed">
-            <span style="font-weight:900; font-size:0.9rem; color:white;">SAVERIO DELIVERY</span>
-            <div id="main-total">0,00 €</div>
-            <div class="order-tag" id="order-num">#01</div>
+    <div id="app-admin" style="display:none;">
+        <div class="fixed-top">
+            <div class="header-main">
+                <span style="font-size:0.8rem; font-weight:900;">SAVERIO DELIVERY</span>
+                <div id="main-total">0,00 €</div>
+                <div class="order-tag">#01</div>
+            </div>
+            <div class="nav-bar">
+                <button class="nav-btn active" id="btn-t1" onclick="showTab(1)">CLIENTE</button>
+                <button class="nav-btn" id="btn-t2" onclick="showTab(2)">PIZZE</button>
+                <button class="nav-btn" id="btn-t3" onclick="showTab(3)">POLLO/ALTRO</button>
+                <button class="nav-btn" id="btn-t4" onclick="showTab(4)">RIEPILOGO</button>
+            </div>
         </div>
 
-        <div class="slider-container" id="slider">
-            
-            <div class="section" id="p1">
-                <h2 style="font-weight:900; margin-bottom:15px; color:var(--blu);">NUOVO ORDINE</h2>
-
-                <span class="label">Cognome *</span>
+        <div class="content-area">
+            <div id="tab1" class="tab-content show">
+                <h2 style="margin-bottom:15px; color:var(--blu);">NUOVO ORDINE</h2>
+                <span class="label">COGNOME *</span>
                 <input type="text" id="o-cognome" class="input-big" placeholder="OBBLIGATORIO" oninput="validate()">
-
-                <span class="label">Cellulare *</span>
+                
+                <span class="label">CELLULARE *</span>
                 <div style="display:flex; gap:10px; margin-bottom:15px;">
                     <input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;" placeholder="NUMERO O 'X'">
-                    <button class="btn-x" onclick="skipTel()">X</button>
+                    <button style="background:var(--rosso); color:white; border:none; width:60px; border-radius:12px; font-weight:900; font-size:1.5rem;" onclick="skipTel()">X</button>
                 </div>
 
-                <span class="label">Indirizzo *</span>
+                <span class="label">INDIRIZZO *</span>
                 <input type="text" id="o-indirizzo" class="input-big" placeholder="VIA E CIVICO" oninput="validate()">
+                <button style="width:100%; padding:15px; background:#4285F4; color:white; border:none; border-radius:12px; margin-bottom:15px; font-weight:900;" onclick="verifyMaps()">📍 VERIFICA POSIZIONE</button>
                 
-                <button class="btn-maps" onclick="verifyMaps()">📍 VERIFICA POSIZIONE (MAPS)</button>
-
-                <span class="label">Costo Consegna *</span>
-                <div class="cost-grid">
-                    <button class="btn-cost" id="c1" onclick="setCost(1)">1€</button>
-                    <button class="btn-cost" id="c2" onclick="setCost(2)">2€</button>
-                    <button class="btn-cost" id="c3" onclick="setCost(3)">3€</button>
-                    <button class="btn-cost" id="c4" onclick="setCost(4)">4€</button>
-                    <button class="btn-cost" id="c5" onclick="setCost(5)">5€</button>
+                <span class="label">COSTO CONSEGNA *</span>
+                <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:8px; margin-bottom:15px;">
+                    <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost1" onclick="setCost(1)">1€</button>
+                    <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost2" onclick="setCost(2)">2€</button>
+                    <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost3" onclick="setCost(3)">3€</button>
+                    <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost4" onclick="setCost(4)">4€</button>
+                    <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost5" onclick="setCost(5)">5€</button>
                 </div>
 
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <div><span class="label">Scala</span><input type="text" id="o-scala" class="input-big"></div>
-                    <div><span class="label">Piano</span><input type="text" id="o-piano" class="input-big"></div>
+                    <div><span class="label">SCALA</span><input type="text" id="o-scala" class="input-big"></div>
+                    <div><span class="label">PIANO</span><input type="text" id="o-piano" class="input-big"></div>
                 </div>
 
-                <span class="label">Orario Consegna *</span>
-                <select id="o-orario" class="input-big" onchange="validate()">
-                    <option value="">-- : --</option>
-                </select>
+                <span class="label">ORARIO CONSEGNA *</span>
+                <select id="o-orario" class="input-big" onchange="validate()"><option value="">-- : --</option></select>
 
-                <span class="label">Rider Preferito</span>
+                <span class="label">RIDER PREFERITO</span>
                 <div style="display:flex; gap:10px;">
-                    <button class="btn-rider" id="r-porpe" onclick="setRider('PORPE')">PORPE</button>
-                    <button class="btn-rider" id="r-gaspare" onclick="setRider('GASPARE')">GASPARE</button>
+                    <button class="nav-btn" id="r-porpe" onclick="setRider('PORPE')">PORPE</button>
+                    <button class="nav-btn" id="r-gaspare" onclick="setRider('GASPARE')">GASPARE</button>
                 </div>
             </div>
 
-            <div class="section" id="p2">
+            <div id="tab2" class="tab-content">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h2 style="font-weight:900;">PIZZE</h2>
-                    <button class="btn-gf-neon" onclick="insertGF()">+ GLUTEN FREE</button>
+                    <h2 style="color:var(--blu);">PIZZE</h2>
+                    <button style="background:var(--neon); color:var(--blu); border:none; padding:12px 20px; border-radius:10px; font-weight:900; box-shadow: 0 0 10px rgba(57,255,20,0.3);" onclick="insertGF()">+ GLUTEN FREE</button>
                 </div>
-                <div class="comanda-paper" id="comanda-box">
-                    <div class="col-qty" id="col-q"></div>
-                    <div class="col-gusto" id="col-g"></div>
-                    <div class="col-prezzo" id="col-p"></div>
+                <div class="comanda-paper" id="comanda-root">
+                    <div class="col-qty" id="cq"></div>
+                    <div class="col-gusto" id="cg"></div>
+                    <div class="col-prezzo" id="cp"></div>
                 </div>
-                <div style="text-align:right; font-weight:900; font-size:1.6rem; margin-top:10px;">
-                    Tot. Pizze ➔ <span id="tot-pizze-val">0,00 €</span>
+                <div style="text-align:right; font-weight:900; font-size:1.6rem; margin-top:10px; color:var(--blu);">
+                    TOT. PIZZE ➔ <span id="tot-pizze-val">0,00 €</span>
                 </div>
             </div>
 
-            <div class="section" id="p3">
-                <h2 style="font-weight:900; margin-bottom:15px;">CUCINA / ALTRO</h2>
-                <p style="color:#999;">Manda il disegno per questa pagina!</p>
+            <div id="tab3" class="tab-content">
+                <h2 style="color:var(--blu);">POLLO E ALTRO</h2>
+                <p style="color:#999; margin-top:20px;">IN ATTESA DEL DISEGNO PER QUESTA PAGINA...</p>
             </div>
 
-            <div class="section" id="p4">
-                <h2 style="font-weight:900; margin-bottom:15px;">RIEPILOGO</h2>
-                <div id="check-list" style="background:white; padding:20px; border-radius:15px; color:#333; min-height:200px; margin-bottom:20px; font-weight:900;">
-                    COMPILA I DATI OBBLIGATORI...
+            <div id="tab4" class="tab-content">
+                <h2 style="color:var(--blu);">RIEPILOGO FINALE</h2>
+                <div id="riepilogo-box" style="background:white; padding:20px; border-radius:15px; margin:20px 0; min-height:150px; color:#333; font-weight:900;">
+                    COMPILA I DATI PER VEDERE IL RIEPILOGO...
                 </div>
-                <button id="btn-invia" class="btn-rider" style="width:100%; height:80px; background:#ccc; color:white; cursor:not-allowed;" disabled>INVIA ORDINE</button>
+                <button id="btn-invia" style="width:100%; height:85px; background:#ccc; border:none; border-radius:18px; color:white; font-size:1.5rem; font-weight:900;" disabled>INVIA ORDINE</button>
             </div>
-        </div>
-
-        <div class="nav-dots">
-            <div class="dot active" id="d1"></div><div class="dot" id="d2"></div>
-            <div class="dot" id="d3"></div><div class="dot" id="d4"></div>
         </div>
     </div>
 
     <script>
-        const ADMIN_PIN = "0508";
-        let currentPin = "";
+        const PIN = "0508"; 
+        let currentPin = ""; 
         let selectedCost = 0;
         let selectedRider = "";
 
-        // --- PIN PAD ---
+        // PIN PAD LOGIC
         const pad = document.getElementById('numpad');
-        for(let i=1; i<=9; i++) {
-            let btn = document.createElement('div'); btn.className = 'num-key'; btn.innerText = i;
-            btn.onclick = () => pressKey(i.toString()); pad.appendChild(btn);
+        for(let i=1; i<=9; i++){
+            let b = document.createElement('div'); b.className='num-key'; b.innerText=i;
+            b.onclick=()=>pressPin(i); pad.appendChild(b);
         }
         let empty = document.createElement('div'); pad.appendChild(empty);
-        let zero = document.createElement('div'); zero.className = 'num-key'; zero.innerText = "0";
-        zero.onclick = () => pressKey("0"); pad.appendChild(zero);
+        let zero = document.createElement('div'); zero.className='num-key'; zero.innerText="0";
+        zero.onclick=()=>pressPin(0); pad.appendChild(zero);
 
-        function openPinPad() { document.getElementById('page-start').classList.remove('show'); document.getElementById('page-pin').classList.add('show'); }
-        function pressKey(num) {
-            if(currentPin.length < 4) { currentPin += num; updateDots(); }
-            if(currentPin.length === 4) {
-                if(currentPin === ADMIN_PIN) {
+        function pressPin(n){
+            if(currentPin.length < 4) {
+                currentPin += n;
+                document.getElementById('dot-'+(currentPin.length-1)).style.background = "var(--ora)";
+                if(currentPin === PIN) {
                     document.getElementById('page-pin').classList.remove('show');
-                    document.getElementById('app-admin').classList.add('show');
-                } else { alert("PIN ERRATO!"); resetPin(); }
-            }
-        }
-        function updateDots() { for(let i=0; i<4; i++) { document.getElementById('dot-'+i).classList.toggle('active', i < currentPin.length); } }
-        function resetPin() { currentPin = ""; updateDots(); }
-
-        // --- QUADERNO PIZZE (18 RIGHE) ---
-        const cq = document.getElementById('col-q'); const cg = document.getElementById('col-g'); const cp = document.getElementById('col-p');
-        for(let i=0; i<18; i++) {
-            let q = document.createElement('input'); q.className = 'line-input'; q.type = 'number'; q.id = `q-${i}`; q.placeholder="0";
-            q.onkeydown = (e) => { if(e.key === ' ') { e.preventDefault(); document.getElementById(`g-${i}`).focus(); } };
-            
-            let g = document.createElement('input'); g.className = 'line-input'; g.id = `g-${i}`; g.placeholder="GUSTO...";
-            g.onkeydown = (e) => { if(e.key === 'Enter') { e.preventDefault(); if(i<17) document.getElementById(`q-${i+1}`).focus(); } };
-
-            let p = document.createElement('input'); p.className = 'line-input'; p.type = 'number'; p.step = '0.01'; p.id = `p-${i}`; p.placeholder="0.00";
-            p.oninput = () => calcTot();
-            p.onkeydown = (e) => { if(e.key === 'Enter') { e.preventDefault(); if(i<17) document.getElementById(`p-${i+1}`).focus(); } };
-
-            cq.appendChild(q); cg.appendChild(g); cp.appendChild(p);
-        }
-
-        // --- MAPS & POSIZIONE ---
-        function verifyMaps() {
-            const addr = document.getElementById('o-indirizzo').value;
-            if(!addr) return alert("INSERISCI UN INDIRIZZO PRIMA!");
-            // Apre Maps e "registra" la conferma
-            window.open(`comgooglemaps://?q=${encodeURIComponent(addr)}`, '_blank');
-            document.querySelector('.btn-maps').style.background = "#1B8A4A";
-            document.querySelector('.btn-maps').innerText = "📍 POSIZIONE VERIFICATA E REGISTRATA";
-        }
-
-        // --- ORARIO DINAMICO ---
-        const selOra = document.getElementById('o-orario');
-        selOra.addEventListener('mousedown', () => {
-            if(selOra.options.length <= 1) {
-                let now = new Date(); let cur = now.getHours() * 60 + now.getMinutes();
-                let start = Math.ceil((cur + 15) / 15) * 15;
-                if(start < 1080) start = 1080;
-                for(let t=start; t<=1320; t+=15) {
-                    let h = Math.floor(t/60); let m = t%60;
-                    let s = `${h}:${m===0?'00':m}`;
-                    let opt = document.createElement('option'); opt.value = s; opt.innerText = s;
-                    selOra.appendChild(opt);
+                    document.getElementById('app-admin').style.display='block';
+                    initApp();
+                } else if(currentPin.length === 4) {
+                    alert("PIN ERRATO!"); resetPin();
                 }
             }
-        });
+        }
+        function resetPin(){ currentPin = ""; for(let i=0; i<4; i++) document.getElementById('dot-'+i).style.background="none"; }
+        function showPin(){ document.getElementById('page-start').classList.remove('show'); document.getElementById('page-pin').classList.add('show'); }
 
-        // --- FUNZIONI CONTROLLO ---
-        function skipTel() { document.getElementById('o-tel').value = "INTERNO"; validate(); }
-        function setCost(v) {
+        // NAVIGATION
+        function showTab(n){
+            document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show'));
+            document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+            document.getElementById('tab'+n).classList.add('show');
+            document.getElementById('btn-t'+n).classList.add('active');
+        }
+
+        // INIZIALIZZA PIZZE (18 RIGHE)
+        function initApp(){
+            const cq=document.getElementById('cq'), cg=document.getElementById('cg'), cp=document.getElementById('cp');
+            if(cq.children.length > 0) return; // Evita duplicati
+            for(let i=0; i<18; i++){
+                let q=document.createElement('input'); q.className='line-input'; q.type='number'; q.id=`q-${i}`; q.placeholder="0";
+                q.onkeydown=(e)=>{if(e.key===' ') {e.preventDefault(); document.getElementById(`g-${i}`).focus();}};
+                
+                let g=document.createElement('input'); g.className='line-input'; g.id=`g-${i}`; g.placeholder="GUSTO PIZZA...";
+                g.onkeydown=(e)=>{if(e.key==='Enter') {e.preventDefault(); if(i<17) document.getElementById(`q-${i+1}`).focus();}};
+                
+                let p=document.createElement('input'); p.className='line-input'; p.type='number'; p.id=`p-${i}`; p.placeholder="0.00";
+                p.oninput=updateTotals;
+                p.onkeydown=(e)=>{if(e.key==='Enter') {e.preventDefault(); if(i<17) document.getElementById(`p-${i+1}`).focus();}};
+                
+                cq.appendChild(q); cg.appendChild(g); cp.appendChild(p);
+            }
+            // Orario
+            let sel=document.getElementById('o-orario');
+            sel.onmousedown=()=>{ if(sel.options.length<=1){
+                let now=new Date(); let totalMinutes = now.getHours()*60 + now.getMinutes();
+                let start = Math.ceil((totalMinutes + 15)/15)*15;
+                if(start < 1080) start = 1080; // Inizia dalle 18:00
+                for(let t=start; t<=1320; t+=15){
+                    let h=Math.floor(t/60); let m=t%60;
+                    let time=`${h}:${m===0?'00':m}`;
+                    let opt=document.createElement('option'); opt.value=time; opt.innerText=time; sel.appendChild(opt);
+                }
+            }};
+        }
+
+        function setCost(v){
             selectedCost = v;
-            document.querySelectorAll('.btn-cost').forEach(b => b.classList.toggle('active', b.id === 'c'+v));
-            calcTot(); validate();
+            document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white');
+            document.getElementById('cost'+v).style.background='var(--ora)';
+            document.getElementById('cost'+v).style.color='white';
+            updateTotals();
         }
-        function setRider(n) {
+
+        function setRider(n){
             selectedRider = (selectedRider === n) ? "" : n;
-            document.querySelectorAll('.btn-rider').forEach(b => b.classList.toggle('active', b.id === 'r-'+n.toLowerCase()));
+            document.getElementById('r-porpe').classList.toggle('active', selectedRider === 'PORPE');
+            document.getElementById('r-gaspare').classList.toggle('active', selectedRider === 'GASPARE');
         }
-        function insertGF() {
-            let act = document.activeElement;
-            if(act.id && act.id.startsWith('g-')) {
-                let idx = act.id.split('-')[1];
-                if(!act.value.includes("[GF]")) act.value += " [GF]";
-                act.classList.add('is-gf');
-                document.getElementById(`p-${idx}`).classList.add('is-gf');
+
+        function skipTel(){ document.getElementById('o-tel').value="INTERNO"; validate(); }
+
+        function insertGF(){
+            let a=document.activeElement;
+            if(a.id && a.id.startsWith('g-')){
+                let idx = a.id.split('-')[1];
+                if(!a.value.includes("[GF]")) a.value += " [GF]";
+                a.classList.add('is-gf');
+                document.getElementById('p-'+idx).classList.add('is-gf');
             }
         }
-        function calcTot() {
-            let pTot = 0; for(let i=0; i<18; i++) { pTot += parseFloat(document.getElementById(`p-${i}`).value) || 0; }
-            document.getElementById('tot-pizze-val').innerText = pTot.toFixed(2).replace('.', ',') + " €";
-            let finale = pTot + selectedCost;
-            document.getElementById('main-total').innerText = finale.toFixed(2).replace('.', ',') + " €";
+
+        function updateTotals(){
+            let pTot=0; for(let i=0; i<18; i++) pTot+=parseFloat(document.getElementById(`p-${i}`).value)||0;
+            document.getElementById('tot-pizze-val').innerText = pTot.toFixed(2).replace('.',',') + " €";
+            let total = pTot + selectedCost;
+            document.getElementById('main-total').innerText = total.toFixed(2).replace('.',',') + " €";
             validate();
         }
-        function validate() {
-            const cog = document.getElementById('o-cognome').value;
-            const tel = document.getElementById('o-tel').value;
-            const ind = document.getElementById('o-indirizzo').value;
-            const ora = document.getElementById('o-orario').value;
-            let pTot = 0; for(let i=0; i<18; i++) { pTot += parseFloat(document.getElementById(`p-${i}`).value) || 0; }
-            const btn = document.getElementById('btn-invia');
-            const ok = cog && tel && ind && ora && selectedCost > 0 && pTot > 0;
-            if(ok) { btn.style.background = "#1B8A4A"; btn.disabled = false; btn.style.cursor = "pointer"; }
-            else { btn.style.background = "#ccc"; btn.disabled = true; }
+
+        function validate(){
+            let cog = document.getElementById('o-cognome').value;
+            let tel = document.getElementById('o-tel').value;
+            let ind = document.getElementById('o-indirizzo').value;
+            let ora = document.getElementById('o-orario').value;
+            let pTot=0; for(let i=0; i<18; i++) pTot+=parseFloat(document.getElementById(`p-${i}`).value)||0;
+            
+            let ok = cog && tel && ind && ora && selectedCost > 0 && pTot > 0;
+            let btn = document.getElementById('btn-invia');
+            if(ok){ btn.style.background='var(--ver)'; btn.disabled=false; btn.style.cursor='pointer'; }
+            else { btn.style.background='#ccc'; btn.disabled=true; }
         }
 
-        // --- SWIPE LOGIC ---
-        const slider = document.getElementById('slider');
-        slider.addEventListener('scroll', () => {
-            let index = Math.round(slider.scrollLeft / window.innerWidth) + 1;
-            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i+1 === index));
-        });
+        function verifyMaps(){
+            let a=document.getElementById('o-indirizzo').value; if(!a) return alert("INSERISCI L'INDIRIZZO!");
+            window.open(`comgooglemaps://?q=${encodeURIComponent(a)}`);
+            // Segnala visivamente che è stato fatto
+            event.target.style.background = "var(--ver)";
+            event.target.innerText = "📍 POSIZIONE VERIFICATA";
+        }
     </script>
 </body>
 </html>
