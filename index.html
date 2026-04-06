@@ -21,18 +21,22 @@
         .tab-content.show { display: block; }
         .label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; text-transform: uppercase; color: var(--blu); background: white; font-weight: 900; }
-        .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; display: grid; grid-template-columns: 50px 1fr 90px; overflow: hidden; width: 100%; }
+        
+        /* QUADERNO PIZZE CON GF INTEGRATO */
+        .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; display: grid; grid-template-columns: 40px 50px 1fr 90px; overflow: hidden; width: 100%; }
+        .col-gf { border-right: 1px solid #F0E6BC; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #eee; }
         .col-qty { border-right: 1px solid #F0E6BC; display: flex; flex-direction: column; }
         .col-gusto { border-right: 2px solid var(--blu); display: flex; flex-direction: column; }
         .col-prezzo { background: white; display: flex; flex-direction: column; }
         .line-input { height: 45px; border: none; border-bottom: 1px solid #F0E6BC; background: transparent; font-size: 1.1rem; text-transform: uppercase; padding: 5px; outline: none; color: var(--blu); font-weight: 900; }
-        .is-gf { color: #00E676 !important; }
+        .check-gf { width: 25px; height: 25px; accent-color: var(--ver); cursor: pointer; }
+        .row-is-gf { color: #00E676 !important; }
+        .row-is-gf-bg { background: #e8fff5 !important; color: #00E676 !important; }
+
         .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
         .rip-line { margin-bottom: 8px; font-size: 0.95rem; border-bottom: 1px dashed #ccc; padding-bottom: 4px; display: flex; justify-content: space-between; }
-        .rip-label { color: #666; }
-        .rip-data { color: var(--blu); text-transform: uppercase; }
-        .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+        .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -87,25 +91,12 @@
                 </div>
                 <span class="label">ORARIO *</span>
                 <select id="o-orario" class="input-big" onchange="updateRiepilogo()"><option value="">-- : --</option></select>
-                
-                <span class="label">PAGAMENTO *</span>
-                <div class="pay-grid">
-                    <button class="nav-btn" id="p-cont" onclick="setPay('CONTANTI')">CONTANTI</button>
-                    <button class="nav-btn" id="p-pos" onclick="setPay('POS')">POS</button>
-                    <button class="nav-btn" id="p-pag" onclick="setPay('PAGATO')">PAGATO</button>
-                </div>
-                <div id="resto-box" style="display:none;">
-                    <span class="label">NOTA RESTO</span>
-                    <input type="text" id="o-resto" class="input-big" placeholder="ES: RESTO DI 50€" oninput="updateRiepilogo()">
-                </div>
             </div>
 
             <div id="tab2" class="tab-content">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <h2 style="color:var(--blu);">PIZZE</h2>
-                    <button style="background:var(--neon); color:var(--blu); border:none; padding:8px 15px; border-radius:8px;" onclick="insertGF()">+ GLUTEN FREE</button>
-                </div>
+                <h2 style="color:var(--blu); margin-bottom:10px;">PIZZE</h2>
                 <div class="comanda-paper" id="comanda-root">
+                    <div class="col-gf" id="cgf"></div>
                     <div class="col-qty" id="cq"></div>
                     <div class="col-gusto" id="cg"></div>
                     <div class="col-prezzo" id="cp"></div>
@@ -115,9 +106,21 @@
             <div id="tab3" class="tab-content"><h2>CUCINA</h2></div>
 
             <div id="tab4" class="tab-content">
-                <h2 style="margin-bottom:15px;">RIEPILOGO ORDINE</h2>
+                <h2>RIEPILOGO ORDINE</h2>
                 <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin-bottom:15px; color:var(--blu);"></div>
-                <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white;" disabled>INVIA ORDINE</button>
+                
+                <span class="label">PAGAMENTO *</span>
+                <div class="pay-grid">
+                    <button class="nav-btn" id="p-cont" onclick="setPay('CONTANTI')">CONTANTI</button>
+                    <button class="nav-btn" id="p-pos" onclick="setPay('POS')">POS</button>
+                    <button class="nav-btn" id="p-pag" onclick="setPay('PAGATO')">PAGATO</button>
+                </div>
+                <div id="resto-box" style="display:none;">
+                    <span class="label">NOTA RESTO</span>
+                    <input type="text" id="o-resto" class="input-big" placeholder="ES: RESTO DA 50€" oninput="updateRiepilogo()">
+                </div>
+
+                <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; margin-top:10px;" disabled>INVIA ORDINE</button>
             </div>
         </div>
     </div>
@@ -138,9 +141,13 @@
         function showTab(n){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById('tab'+n).classList.add('show'); document.getElementById('btn-t'+n).classList.add('active'); updateRiepilogo(); }
 
         function initApp(){
-            const cq=document.getElementById('cq'), cg=document.getElementById('cg'), cp=document.getElementById('cp');
+            const cgf=document.getElementById('cgf'), cq=document.getElementById('cq'), cg=document.getElementById('cg'), cp=document.getElementById('cp');
             if(cq.children.length>0) return;
             for(let i=0; i<18; i++){
+                let f=document.createElement('div'); f.style.height="45px"; f.style.display="flex"; f.style.alignItems="center"; f.style.borderBottom="1px solid #F0E6BC";
+                let chk=document.createElement('input'); chk.type="checkbox"; chk.className="check-gf"; chk.id=`f-${i}`;
+                chk.onchange=()=>toggleGF(i); f.appendChild(chk); cgf.appendChild(f);
+
                 let q=document.createElement('input'); q.className='line-input'; q.id=`q-${i}`;
                 let g=document.createElement('input'); g.className='line-input'; g.id=`g-${i}`;
                 let p=document.createElement('input'); p.className='line-input'; p.type='number'; p.id=`p-${i}`;
@@ -153,36 +160,28 @@
             let sel=document.getElementById('o-orario');
             let now=new Date(); let m = Math.ceil((now.getHours()*60+now.getMinutes()+15)/15)*15;
             for(let t=Math.max(m,1080); t<=1320; t+=15){
-                let time=`${Math.floor(t/60)}:${t%60===0?'00':t%60}`;
-                let opt=document.createElement('option'); opt.value=time; opt.innerText=time; sel.appendChild(opt);
+                let opt=document.createElement('option'); let time=`${Math.floor(t/60)}:${t%60===0?'00':t%60}`;
+                opt.value=time; opt.innerText=time; sel.appendChild(opt);
             }
         }
 
-        function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
-        
-        function setPay(type){
-            sPay = type;
-            document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8');
-            if(type==='CONTANTI') document.getElementById('p-cont').style.background='var(--ora)';
-            if(type==='POS') document.getElementById('p-pos').style.background='var(--ora)';
-            if(type==='PAGATO') document.getElementById('p-pag').style.background='var(--ora)';
-            document.getElementById('resto-box').style.display = (type==='CONTANTI') ? 'block' : 'none';
+        function toggleGF(i){
+            let isChecked = document.getElementById(`f-${i}`).checked;
+            let g = document.getElementById(`g-${i}`);
+            let p = document.getElementById(`p-${i}`);
+            if(isChecked) {
+                g.classList.add('row-is-gf'); p.classList.add('row-is-gf-bg');
+                if(!g.value.includes("[GF]")) g.value += " [GF]";
+            } else {
+                g.classList.remove('row-is-gf'); p.classList.remove('row-is-gf-bg');
+                g.value = g.value.replace(" [GF]", "");
+            }
             updateRiepilogo();
         }
 
+        function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
+        function setPay(t){ sPay=t; document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); document.getElementById('p-'+t.toLowerCase().substring(0,4)).style.background='var(--ora)'; document.getElementById('resto-box').style.display = (t==='CONTANTI') ? 'block' : 'none'; updateRiepilogo(); }
         function skipTel(){ document.getElementById('o-tel').value="INTERNO"; updateRiepilogo(); }
-
-        function insertGF(){ 
-            let a = document.activeElement; 
-            if(a && a.id.startsWith('g-')){ 
-                let idx = a.id.split('-')[1]; 
-                let pField = document.getElementById('p-'+idx);
-                if(!a.value.includes("[GF]")) a.value += " [GF]";
-                a.classList.add('is-gf');
-                pField.classList.add('is-gf');
-                updateRiepilogo();
-            } else { alert("CLICCA PRIMA SULLA RIGA DELLA PIZZA!"); }
-        }
 
         function updateRiepilogo(){
             let pt=0; let lHtml = "";
@@ -200,12 +199,12 @@
             let res = document.getElementById('o-resto').value.toUpperCase();
 
             document.getElementById('riepilogo-box').innerHTML = `
-                <div class="rip-line"><span class="rip-label">CLIENTE</span><span class="rip-data">${cog||"---"}</span></div>
-                <div class="rip-line"><span class="rip-label">INDIRIZZO</span><span class="rip-data">${ind||"---"}</span></div>
-                <div class="rip-line"><span class="rip-label">ORARIO</span><span class="rip-data">${ora||"--:--"}</span></div>
-                <div class="rip-line"><span class="rip-label">CONSEGNA</span><span class="rip-data">${sCost.toFixed(2)}€</span></div>
-                <div class="rip-line"><span class="rip-label">PAGAMENTO</span><span class="rip-data">${sPay||"---"}</span></div>
-                ${sPay==='CONTANTI' && res ? `<div class="rip-line"><span class="rip-label">NOTA RESTO</span><span class="rip-data">${res}</span></div>` : ''}
+                <div class="rip-line"><span style="color:#666">CLIENTE</span><span style="color:var(--blu)">${cog||"---"}</span></div>
+                <div class="rip-line"><span style="color:#666">INDIRIZZO</span><span style="color:var(--blu)">${ind||"---"}</span></div>
+                <div class="rip-line"><span style="color:#666">ORARIO</span><span style="color:var(--blu)">${ora||"--:--"}</span></div>
+                <div class="rip-line"><span style="color:#666">CONSEGNA</span><span style="color:var(--blu)">${sCost.toFixed(2)}€</span></div>
+                <div class="rip-line"><span style="color:#666">PAGAMENTO</span><span style="color:var(--blu)">${sPay||"---"}</span></div>
+                ${sPay==='CONTANTI' && res ? `<div class="rip-line"><span style="color:#666">NOTA RESTO</span><span style="color:var(--blu)">${res}</span></div>` : ''}
                 <div style="margin-top:10px; border-top:1px solid #333; padding-top:10px;">${lHtml}</div>
                 <div style="margin-top:10px; text-align:right; color:var(--ora); font-size:1.2rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
             `;
