@@ -27,7 +27,6 @@
             justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000;
         }
         #main-total { color: var(--giallo); font-size: 2.2rem; }
-        .order-tag { background: var(--ora); color: white; padding: 5px 12px; border-radius: 8px; font-size: 1.2rem; }
 
         /* BARRA NAVIGAZIONE */
         .nav-bar { 
@@ -49,7 +48,7 @@
         .label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; text-transform: uppercase; color: var(--blu); background: white; font-weight: 900; }
 
-        /* QUADERNO PIZZE */
+        /* QUADERNO PIZZE - FISSO E ALLINEATO */
         .comanda-paper { 
             background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; 
             display: grid; grid-template-columns: 50px 1fr 90px; overflow: hidden; width: 100%;
@@ -63,14 +62,13 @@
             padding: 5px; outline: none; color: var(--blu); font-weight: 900; 
         }
         .col-prezzo .line-input { text-align: right; padding-right: 8px; font-size: 1.1rem; color: var(--blu); }
-        
-        /* CLASSE GF VERDE - APPLICATA DA JAVASCRIPT */
-        .is-gf { color: #00E676 !important; }
+        .is-gf { color: #00E676 !important; font-weight: 900 !important; }
 
         /* PIN PAD */
         .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
 
+        /* RIEPILOGO LISTA */
         #riepilogo-box div { border-bottom: 1px solid #eee; padding: 5px 0; font-size: 0.9rem; }
     </style>
 </head>
@@ -78,7 +76,7 @@
 
     <div id="page-start" class="page-init show">
         <h1 id="title-main">SAVERIO DELIVERY</h1>
-        <button onclick="showPin()" style="padding:20px 40px; background:var(--ora); color:white; border:none; border-radius:15px; font-size:1.5rem; font-weight:900;">ADMIN LOGIN</button>
+        <button onclick="showPin()" style="padding:20px 40px; background:var(--ora); color:white; border:none; border-radius:15px; font-size:1.5rem;">ADMIN LOGIN</button>
     </div>
 
     <div id="page-pin" class="page-init">
@@ -111,11 +109,11 @@
                 <span class="label">CELLULARE *</span>
                 <div style="display:flex; gap:5px; margin-bottom:12px;">
                     <input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;">
-                    <button style="width:50px; background:var(--rosso); color:white; border:none; border-radius:10px; font-weight:900; font-size:1.2rem;" onclick="skipTel()">X</button>
+                    <button style="width:50px; background:var(--rosso); color:white; border:none; border-radius:10px;" onclick="skipTel()">X</button>
                 </div>
                 <span class="label">INDIRIZZO *</span>
                 <input type="text" id="o-indirizzo" class="input-big" oninput="updateRiepilogo()">
-                <button style="width:100%; padding:15px; background:#4285F4; color:white; border:none; border-radius:10px; margin-bottom:12px; font-weight:900;" onclick="verifyMaps()">📍 VERIFICA POSIZIONE</button>
+                <button style="width:100%; padding:15px; background:#4285F4; color:white; border:none; border-radius:10px; margin-bottom:12px;" onclick="verifyMaps()">📍 VERIFICA POSIZIONE</button>
                 <span class="label">CONSEGNA *</span>
                 <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:5px; margin-bottom:12px;">
                     <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost1" onclick="setCost(1)">1€</button>
@@ -128,31 +126,27 @@
                 <select id="o-orario" class="input-big" onchange="updateRiepilogo()"><option value="">-- : --</option></select>
             </div>
             <div id="tab2" class="tab-content">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px; align-items:center;">
-                    <h2 style="color:var(--blu);">PIZZE</h2>
-                    <button style="background:var(--neon); color:var(--blu); border:none; padding:10px 15px; border-radius:8px; font-weight:900;" onclick="insertGF()">+ GLUTEN FREE</button>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <h2>PIZZE</h2>
+                    <button style="background:var(--neon); color:var(--blu); border:none; padding:8px 15px; border-radius:8px;" onclick="insertGF()">+ GLUTEN FREE</button>
                 </div>
                 <div class="comanda-paper" id="comanda-root">
                     <div class="col-qty" id="cq"></div>
                     <div class="col-gusto" id="cg"></div>
                     <div class="col-prezzo" id="cp"></div>
                 </div>
-                <div style="text-align:right; font-weight:900; font-size:1.6rem; margin-top:10px; color:var(--blu);">
-                    TOT. PIZZE ➔ <span id="tot-pizze-val">0,00 €</span>
-                </div>
             </div>
             <div id="tab3" class="tab-content"><h2>CUCINA</h2></div>
             <div id="tab4" class="tab-content">
                 <h2>RIEPILOGO</h2>
-                <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin:15px 0; color:var(--blu); font-weight:900;"></div>
-                <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; font-size:1.5rem; font-weight:900;" disabled>INVIA ORDINE</button>
+                <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin:15px 0; color:var(--blu);"></div>
+                <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white;" disabled>INVIA ORDINE</button>
             </div>
         </div>
     </div>
 
     <script>
-        const PIN = "0508"; let currentPin = ""; let sCost = 0; let lastGustoId = null;
-
+        const PIN = "0508"; let currentPin = ""; let sCost = 0;
         const pad = document.getElementById('numpad');
         for(let i=1; i<=9; i++){ let b=document.createElement('div'); b.className='num-key'; b.innerText=i; b.onclick=()=>pressPin(i); pad.appendChild(b); }
         let z=document.createElement('div'); z.className='num-key'; z.innerText="0"; z.style.gridColumnStart="2"; z.onclick=()=>pressPin(0); pad.appendChild(z);
@@ -172,15 +166,11 @@
             for(let i=0; i<18; i++){
                 let q=document.createElement('input'); q.className='line-input'; q.type='number'; q.id=`q-${i}`;
                 q.onkeydown=(e)=>{if(e.key===' '){e.preventDefault(); document.getElementById(`g-${i}`).focus();}};
-                
                 let g=document.createElement('input'); g.className='line-input'; g.id=`g-${i}`;
-                g.onfocus=() => { lastGustoId = `g-${i}`; }; // Ricorda l'ultima riga toccata
                 g.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<17) document.getElementById(`q-${i+1}`).focus();}};
-                
                 let p=document.createElement('input'); p.className='line-input'; p.type='number'; p.id=`p-${i}`;
                 p.oninput=updateRiepilogo;
-                p.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<17) document.getElementById(`q-${i+1}`).focus();}};
-                
+                p.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<17) document.getElementById(`p-${i+1}`).focus();}};
                 cq.appendChild(q); cg.appendChild(g); cp.appendChild(p);
             }
             let sel=document.getElementById('o-orario');
@@ -193,20 +183,13 @@
 
         function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
         function skipTel(){ document.getElementById('o-tel').value="INTERNO"; updateRiepilogo(); }
-        
-        // FUNZIONE GLUTEN FREE - SEMPLICE E DIRETTA
         function insertGF(){ 
-            if(!lastGustoId) return alert("TOCCA PRIMA LA RIGA DELLA PIZZA!");
-            let rigaIdx = lastGustoId.split('-')[1];
-            let inputGusto = document.getElementById(`g-${rigaIdx}`);
-            let inputPrezzo = document.getElementById(`p-${rigaIdx}`);
-            
-            if(!inputGusto.value.includes("[GF]")) {
-                inputGusto.value += " [GF]";
-            }
-            inputGusto.classList.add('is-gf');
-            inputPrezzo.classList.add('is-gf');
-            updateRiepilogo();
+            let a=document.activeElement; 
+            if(a.id && a.id.startsWith('g-')){ 
+                let idx=a.id.split('-')[1]; 
+                if(!a.value.includes("[GF]")) a.value+=" [GF]"; 
+                a.classList.add('is-gf'); document.getElementById('p-'+idx).classList.add('is-gf'); 
+            } 
         }
 
         function updateRiepilogo(){
@@ -215,29 +198,24 @@
                 let v = parseFloat(document.getElementById(`p-${i}`).value)||0;
                 let g = document.getElementById(`g-${i}`).value;
                 let q = document.getElementById(`q-${i}`).value;
-                if(v>0 || g){ 
-                    pt+=v; 
-                    let coloreGf = document.getElementById(`g-${i}`).classList.contains('is-gf') ? 'color:#00E676;' : '';
-                    listHtml += `<div style="${coloreGf}">${q}x ${g} - ${v.toFixed(2)}€</div>`; 
-                }
+                if(v>0 || g){ pt+=v; listHtml += `<div>${q}x ${g} - ${v.toFixed(2)}€</div>`; }
             }
             let tot = pt + sCost;
             document.getElementById('main-total').innerText = tot.toFixed(2).replace('.',',') + " €";
-            document.getElementById('tot-pizze-val').innerText = pt.toFixed(2).replace('.',',') + " €";
             
-            let cog = document.getElementById('o-cognome').value;
-            let ind = document.getElementById('o-indirizzo').value;
-            let ora = document.getElementById('o-orario').value;
+            let cognome = document.getElementById('o-cognome').value;
+            let indirizzo = document.getElementById('o-indirizzo').value;
+            let orario = document.getElementById('o-orario').value;
             
             document.getElementById('riepilogo-box').innerHTML = `
-                <p>CLIENTE: ${cog}</p>
-                <p>INDIRIZZO: ${ind}</p>
-                <p>ORARIO: ${ora}</p><hr>
+                <p><b>CLIENTE:</b> ${cognome}</p>
+                <p><b>INDIRIZZO:</b> ${indirizzo}</p>
+                <p><b>ORARIO:</b> ${orario}</p><hr>
                 ${listHtml} <hr>
-                <p style="font-size:1.2rem; text-align:right;">TOTALE: ${tot.toFixed(2)}€</p>
+                <p style="font-size:1.2rem; text-align:right;"><b>TOTALE: ${tot.toFixed(2)}€</b></p>
             `;
             
-            let ok = cog && ind && ora && sCost>0 && pt>0;
+            let ok = cognome && indirizzo && orario && sCost>0 && pt>0;
             let btn = document.getElementById('btn-invia');
             if(ok){ btn.style.background='var(--ver)'; btn.disabled=false; } else { btn.style.background='#ccc'; btn.disabled=true; }
         }
