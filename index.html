@@ -11,36 +11,22 @@
         
         body { background: var(--blu); color: white; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
 
-        /* SCHERMATA START - CENTRATURA ASSOLUTA */
-        .page-init { 
-            position: fixed; inset: 0; display: none; flex-direction: column; 
-            align-items: center; justify-content: center; padding: 20px; 
-            z-index: 2000; background: var(--blu); text-align: center;
-        }
+        /* SCHERMATA START - CENTRATA */
+        .page-init { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 2000; background: var(--blu); text-align: center; }
         .page-init.show { display: flex; }
         #title-main { font-size: 3rem; margin-bottom: 40px; width: 100%; text-align: center; }
 
         /* HEADER FISSO */
-        .header-main { 
-            position: fixed; top: 0; left: 0; right: 0; height: 75px;
-            background: var(--blu); display: flex; align-items: center; 
-            justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000;
-        }
+        .header-main { position: fixed; top: 0; left: 0; right: 0; height: 75px; background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000; }
         #main-total { color: var(--giallo); font-size: 2.2rem; }
 
-        /* BARRA NAVIGAZIONE */
-        .nav-bar { 
-            position: fixed; top: 75px; left: 0; right: 0; height: 60px;
-            background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 999;
-        }
+        /* NAV BAR */
+        .nav-bar { position: fixed; top: 75px; left: 0; right: 0; height: 60px; background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 999; }
         .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: var(--blu); font-size: 0.75rem; cursor: pointer; text-transform: uppercase; }
         .nav-btn.active { background: var(--ora); color: white; }
 
         /* AREA CONTENUTO */
-        .content-area { 
-            position: absolute; top: 135px; bottom: 0; left: 0; right: 0;
-            overflow-y: auto; background: #f4f7f9; color: var(--blu); padding: 15px;
-        }
+        .content-area { position: absolute; top: 135px; bottom: 0; left: 0; right: 0; overflow-y: auto; background: #f4f7f9; color: var(--blu); padding: 15px; }
         .tab-content { display: none; }
         .tab-content.show { display: block; }
 
@@ -48,28 +34,24 @@
         .label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; text-transform: uppercase; color: var(--blu); background: white; font-weight: 900; }
 
-        /* QUADERNO PIZZE - FISSO E ALLINEATO */
-        .comanda-paper { 
-            background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; 
-            display: grid; grid-template-columns: 50px 1fr 90px; overflow: hidden; width: 100%;
-        }
+        /* QUADERNO PIZZE */
+        .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; display: grid; grid-template-columns: 50px 1fr 90px; overflow: hidden; width: 100%; }
         .col-qty { border-right: 1px solid #F0E6BC; display: flex; flex-direction: column; }
         .col-gusto { border-right: 2px solid var(--blu); display: flex; flex-direction: column; }
         .col-prezzo { background: white; display: flex; flex-direction: column; }
-        .line-input { 
-            height: 45px; border: none; border-bottom: 1px solid #F0E6BC; 
-            background: transparent; font-size: 1.1rem; text-transform: uppercase; 
-            padding: 5px; outline: none; color: var(--blu); font-weight: 900; 
-        }
-        .col-prezzo .line-input { text-align: right; padding-right: 8px; font-size: 1.1rem; color: var(--blu); }
-        .is-gf { color: #00E676 !important; font-weight: 900 !important; }
+        .line-input { height: 45px; border: none; border-bottom: 1px solid #F0E6BC; background: transparent; font-size: 1.1rem; text-transform: uppercase; padding: 5px; outline: none; color: var(--blu); font-weight: 900; }
+        .col-prezzo .line-input { text-align: right; padding-right: 8px; }
+        .is-gf { color: #00E676 !important; }
 
         /* PIN PAD */
         .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
 
-        /* RIEPILOGO LISTA */
-        #riepilogo-box div { border-bottom: 1px solid #eee; padding: 5px 0; font-size: 0.9rem; }
+        /* RIEPILOGO STILE */
+        .rip-line { margin-bottom: 10px; font-size: 1rem; border-bottom: 1px dashed #ccc; padding-bottom: 5px; display: flex; justify-content: space-between; }
+        .rip-label { color: #666; font-weight: 900; }
+        .rip-data { color: var(--blu); font-weight: 900; text-transform: uppercase; }
+        .rip-item { display: flex; justify-content: space-between; padding: 3px 0; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -113,7 +95,7 @@
                 </div>
                 <span class="label">INDIRIZZO *</span>
                 <input type="text" id="o-indirizzo" class="input-big" oninput="updateRiepilogo()">
-                <button style="width:100%; padding:15px; background:#4285F4; color:white; border:none; border-radius:10px; margin-bottom:12px;" onclick="verifyMaps()">📍 VERIFICA POSIZIONE</button>
+                <button id="btn-maps" style="width:100%; padding:15px; background:#4285F4; color:white; border:none; border-radius:10px; margin-bottom:12px;" onclick="verifyMaps()">📍 VERIFICA POSIZIONE</button>
                 <span class="label">CONSEGNA *</span>
                 <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:5px; margin-bottom:12px;">
                     <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost1" onclick="setCost(1)">1€</button>
@@ -127,7 +109,7 @@
             </div>
             <div id="tab2" class="tab-content">
                 <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <h2>PIZZE</h2>
+                    <h2 style="color:var(--blu);">PIZZE</h2>
                     <button style="background:var(--neon); color:var(--blu); border:none; padding:8px 15px; border-radius:8px;" onclick="insertGF()">+ GLUTEN FREE</button>
                 </div>
                 <div class="comanda-paper" id="comanda-root">
@@ -138,8 +120,8 @@
             </div>
             <div id="tab3" class="tab-content"><h2>CUCINA</h2></div>
             <div id="tab4" class="tab-content">
-                <h2>RIEPILOGO</h2>
-                <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin:15px 0; color:var(--blu);"></div>
+                <h2 style="margin-bottom:15px;">RIEPILOGO ORDINE</h2>
+                <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin-bottom:15px; color:var(--blu);"></div>
                 <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white;" disabled>INVIA ORDINE</button>
             </div>
         </div>
@@ -158,7 +140,7 @@
             else if(currentPin.length===4){ alert("PIN ERRATO"); resetPin(); } }
         }
         function resetPin(){ currentPin=""; for(let i=0; i<4; i++) document.getElementById('dot-'+i).style.background="none"; }
-        function showTab(n){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById('tab'+n).classList.add('show'); document.getElementById('btn-t'+n).classList.add('active'); }
+        function showTab(n){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById('tab'+n).classList.add('show'); document.getElementById('btn-t'+n).classList.add('active'); updateRiepilogo(); }
 
         function initApp(){
             const cq=document.getElementById('cq'), cg=document.getElementById('cg'), cp=document.getElementById('cp');
@@ -189,6 +171,7 @@
                 let idx=a.id.split('-')[1]; 
                 if(!a.value.includes("[GF]")) a.value+=" [GF]"; 
                 a.classList.add('is-gf'); document.getElementById('p-'+idx).classList.add('is-gf'); 
+                updateRiepilogo();
             } 
         }
 
@@ -197,22 +180,25 @@
             for(let i=0; i<18; i++){
                 let v = parseFloat(document.getElementById(`p-${i}`).value)||0;
                 let g = document.getElementById(`g-${i}`).value;
-                let q = document.getElementById(`q-${i}`).value;
-                if(v>0 || g){ pt+=v; listHtml += `<div>${q}x ${g} - ${v.toFixed(2)}€</div>`; }
+                let q = document.getElementById(`q-${i}`).value || 0;
+                if(v>0 || g){ 
+                    pt+=v; 
+                    listHtml += `<div class="rip-item"><span>${q}X ${g.toUpperCase()}</span> <span>${v.toFixed(2)}€</span></div>`; 
+                }
             }
             let tot = pt + sCost;
             document.getElementById('main-total').innerText = tot.toFixed(2).replace('.',',') + " €";
             
-            let cognome = document.getElementById('o-cognome').value;
-            let indirizzo = document.getElementById('o-indirizzo').value;
+            let cognome = document.getElementById('o-cognome').value.toUpperCase();
+            let indirizzo = document.getElementById('o-indirizzo').value.toUpperCase();
             let orario = document.getElementById('o-orario').value;
             
             document.getElementById('riepilogo-box').innerHTML = `
-                <p><b>CLIENTE:</b> ${cognome}</p>
-                <p><b>INDIRIZZO:</b> ${indirizzo}</p>
-                <p><b>ORARIO:</b> ${orario}</p><hr>
-                ${listHtml} <hr>
-                <p style="font-size:1.2rem; text-align:right;"><b>TOTALE: ${tot.toFixed(2)}€</b></p>
+                <div class="rip-line"><span class="rip-label">CLIENTE</span> <span class="rip-data">${cognome || "---"}</span></div>
+                <div class="rip-line"><span class="rip-label">INDIRIZZO</span> <span class="rip-data">${indirizzo || "---"}</span></div>
+                <div class="rip-line"><span class="rip-label">ORARIO</span> <span class="rip-data">${orario || "--:--"}</span></div>
+                <div style="margin-top:15px; border-top:2px solid var(--blu); padding-top:10px;">${listHtml}</div>
+                <div style="margin-top:10px; font-size:1.3rem; text-align:right; color:var(--ora);"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
             `;
             
             let ok = cognome && indirizzo && orario && sCost>0 && pt>0;
@@ -220,7 +206,14 @@
             if(ok){ btn.style.background='var(--ver)'; btn.disabled=false; } else { btn.style.background='#ccc'; btn.disabled=true; }
         }
 
-        function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("INSERISCI INDIRIZZO"); window.open(`comgooglemaps://?q=${encodeURIComponent(a)}`); }
+        function verifyMaps(){ 
+            let a=document.getElementById('o-indirizzo').value; 
+            if(!a) return alert("INSERISCI INDIRIZZO"); 
+            window.open(`comgooglemaps://?q=${encodeURIComponent(a)}`); 
+            let b = document.getElementById('btn-maps');
+            b.style.background = "var(--ver)";
+            b.innerText = "📍 POSIZIONE VERIFICATA";
+        }
     </script>
 </body>
 </html>
