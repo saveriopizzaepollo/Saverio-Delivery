@@ -38,14 +38,16 @@
         .slider-container::-webkit-scrollbar { display: none; }
         .section { width: 100vw; height: 100%; scroll-snap-align: start; padding: 20px; overflow-y: auto; color: var(--blu); position: relative; }
 
-        /* STILI INPUT (MAIUSCOLO + GRASSETTO FORZATO) */
+        /* STILI INPUT (FORZATI MAIUSCOLO E GRASSETTO) */
         .label { display: block; font-weight: 900; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         .input-big { 
             width: 100%; padding: 15px; border: 2px solid var(--bor); border-radius: 12px; 
             font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; outline: none; background: white;
-            text-transform: uppercase; /* Scrive in maiuscolo visivamente */
+            text-transform: uppercase;
         }
         .btn-x { background: var(--rosso); color: white; border: none; width: 55px; height: 58px; border-radius: 12px; font-weight: 900; cursor: pointer; }
+        .btn-maps { background: #4285F4; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 900; width: 100%; margin-bottom: 15px; cursor: pointer; }
+
         .cost-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
         .btn-cost { padding: 15px 5px; background: white; border: 2px solid var(--blu); border-radius: 12px; font-weight: 900; cursor: pointer; }
         .btn-cost.active { background: var(--blu); color: white; }
@@ -63,7 +65,7 @@
         .col-prezzo .line-input { text-align: right; font-size: 1.3rem; padding-right: 15px; color: var(--blu); }
         .btn-gf-neon { background: var(--neon); color: var(--blu); border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; box-shadow: 0 0 15px rgba(57,255,20,0.4); }
         .is-gf { color: #00E676 !important; }
-        .col-prezzo .line-input.is-gf { background: #e8fff5; color: #00E676 !important; }
+        .col-prezzo .line-input.is-gf { background: #e8fff5; color: #00E676 !important; border-color: #00E676 !important; }
 
         /* PALLINI NAVIGAZIONE */
         .nav-dots { position: fixed; bottom: 15px; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; pointer-events: none; }
@@ -91,13 +93,15 @@
     <div id="app-admin">
         <div class="header-fixed">
             <span style="font-weight:900; font-size:0.9rem; color:white;">SAVERIO DELIVERY</span>
-            <div id="main-total">0.00€</div>
+            <div id="main-total">0,00 €</div>
             <div class="order-tag" id="order-num">#01</div>
         </div>
 
         <div class="slider-container" id="slider">
             
             <div class="section" id="p1">
+                <h2 style="font-weight:900; margin-bottom:15px; color:var(--blu);">NUOVO ORDINE</h2>
+
                 <span class="label">Cognome *</span>
                 <input type="text" id="o-cognome" class="input-big" placeholder="OBBLIGATORIO" oninput="validate()">
 
@@ -110,6 +114,8 @@
                 <span class="label">Indirizzo *</span>
                 <input type="text" id="o-indirizzo" class="input-big" placeholder="VIA E CIVICO" oninput="validate()">
                 
+                <button class="btn-maps" onclick="verifyMaps()">📍 VERIFICA POSIZIONE (MAPS)</button>
+
                 <span class="label">Costo Consegna *</span>
                 <div class="cost-grid">
                     <button class="btn-cost" id="c1" onclick="setCost(1)">1€</button>
@@ -153,7 +159,7 @@
 
             <div class="section" id="p3">
                 <h2 style="font-weight:900; margin-bottom:15px;">CUCINA / ALTRO</h2>
-                <p style="color:#999;">In attesa del tuo disegno per questa pagina...</p>
+                <p style="color:#999;">Manda il disegno per questa pagina!</p>
             </div>
 
             <div class="section" id="p4">
@@ -177,7 +183,7 @@
         let selectedCost = 0;
         let selectedRider = "";
 
-        // --- PIN PAD LOGIC ---
+        // --- PIN PAD ---
         const pad = document.getElementById('numpad');
         for(let i=1; i<=9; i++) {
             let btn = document.createElement('div'); btn.className = 'num-key'; btn.innerText = i;
@@ -216,6 +222,16 @@
             cq.appendChild(q); cg.appendChild(g); cp.appendChild(p);
         }
 
+        // --- MAPS & POSIZIONE ---
+        function verifyMaps() {
+            const addr = document.getElementById('o-indirizzo').value;
+            if(!addr) return alert("INSERISCI UN INDIRIZZO PRIMA!");
+            // Apre Maps e "registra" la conferma
+            window.open(`comgooglemaps://?q=${encodeURIComponent(addr)}`, '_blank');
+            document.querySelector('.btn-maps').style.background = "#1B8A4A";
+            document.querySelector('.btn-maps').innerText = "📍 POSIZIONE VERIFICATA E REGISTRATA";
+        }
+
         // --- ORARIO DINAMICO ---
         const selOra = document.getElementById('o-orario');
         selOra.addEventListener('mousedown', () => {
@@ -233,7 +249,7 @@
         });
 
         // --- FUNZIONI CONTROLLO ---
-        function skipTel() { document.getElementById('o-tel').value = "NON RICHIESTO"; validate(); }
+        function skipTel() { document.getElementById('o-tel').value = "INTERNO"; validate(); }
         function setCost(v) {
             selectedCost = v;
             document.querySelectorAll('.btn-cost').forEach(b => b.classList.toggle('active', b.id === 'c'+v));
@@ -256,7 +272,7 @@
             let pTot = 0; for(let i=0; i<18; i++) { pTot += parseFloat(document.getElementById(`p-${i}`).value) || 0; }
             document.getElementById('tot-pizze-val').innerText = pTot.toFixed(2).replace('.', ',') + " €";
             let finale = pTot + selectedCost;
-            document.getElementById('main-total').innerText = finale.toFixed(2) + " €";
+            document.getElementById('main-total').innerText = finale.toFixed(2).replace('.', ',') + " €";
             validate();
         }
         function validate() {
