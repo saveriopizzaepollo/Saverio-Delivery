@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>SAVERIO DELIVERY - FIX GF</title>
+    <title>SAVERIO DELIVERY - GF FIXED</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --neon: #39FF14; --bor: #D0DCE8; --rosso: #FF4444; }
@@ -66,10 +66,10 @@
 
         <div class="slider-wrapper" id="slider">
             <div class="section">
-                <span class="label">Cognome *</span><input type="text" id="o-cognome" class="input-big" oninput="updateSummary()" placeholder="ES: PERRONE">
+                <span class="label">Cognome *</span><input type="text" id="o-cognome" class="input-big" oninput="updateSummary()">
                 <span class="label">Cellulare *</span>
-                <div style="display:flex; gap:10px; margin-bottom:12px;"><input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;" placeholder="333..."><button class="btn-x" onclick="document.getElementById('o-tel').value='NON RICHIESTO';updateSummary()">X</button></div>
-                <span class="label">Indirizzo *</span><input type="text" id="o-indirizzo" class="input-big" oninput="updateSummary()" placeholder="VIA...">
+                <div style="display:flex; gap:10px; margin-bottom:12px;"><input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;"><button class="btn-x" onclick="document.getElementById('o-tel').value='NON RICHIESTO';updateSummary()">X</button></div>
+                <span class="label">Indirizzo *</span><input type="text" id="o-indirizzo" class="input-big" oninput="updateSummary()">
                 <span class="label">Costo Consegna *</span>
                 <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin-bottom:12px;">
                     <button class="btn-cost" onclick="setCost(1, this)">1€</button><button class="btn-cost" onclick="setCost(2, this)">2€</button><button class="btn-cost" onclick="setCost(3, this)">3€</button><button class="btn-cost" onclick="setCost(4, this)">4€</button><button class="btn-cost" onclick="setCost(5, this)">5€</button>
@@ -94,7 +94,6 @@
             <div class="section">
                 <h2 style="margin-bottom:10px;">RIEPILOGO</h2>
                 <div class="summary-box" id="final-summary"></div>
-                
                 <span class="label">PAGAMENTO *</span>
                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
                     <button class="btn-pay pay-opt" onclick="setPay('CONTANTI', this)">CONTANTI</button>
@@ -102,7 +101,6 @@
                     <button class="btn-pay pay-opt" onclick="setPay('PAGATO', this)">PAGATO</button>
                 </div>
                 <div id="resto-box" style="display:none;"><input type="text" id="o-resto" class="input-big" placeholder="RESTO DA..." oninput="updateSummary()"></div>
-                
                 <button id="btn-invia" style="width:100%; height:70px; background:#ccc; color:white; border:none; border-radius:12px; font-weight:900; margin-top:10px;" disabled>INVIA ORDINE</button>
             </div>
         </div>
@@ -111,29 +109,27 @@
 
     <script>
         let pin = ""; let selectedCost = 0; let rider = ""; let payMeth = "";
-        
+        let lastFocusedGustoId = null; // Memoria per il tasto GF
+
         // LOGIN
         const np = document.getElementById('numpad');
         for(let i=1; i<=9; i++) { let b = document.createElement('div'); b.className='num-btn'; b.innerText=i; b.onclick=()=>press(i); np.appendChild(b); }
         let b0 = document.createElement('div'); b0.className='num-btn'; b0.innerText="0"; b0.style.gridColumn="2"; b0.onclick=()=>press(0); np.appendChild(b0);
-        function press(n) { 
-            if(pin.length < 4) { pin+=n; document.getElementById('dot-'+(pin.length-1)).classList.add('active'); }
-            if(pin==="0508"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-main').style.display='flex'; } 
-            else if(pin.length===4){ pin=""; document.querySelectorAll('.pin-dot').forEach(d=>d.classList.remove('active')); } 
-        }
+        function press(n) { pin+=n; document.getElementById('dot-'+(pin.length-1)).classList.add('active'); if(pin==="0508"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-main').style.display='flex'; } else if(pin.length===4){ pin=""; document.querySelectorAll('.pin-dot').forEach(d=>d.classList.remove('active')); } }
 
-        // QUADERNO PIZZE
+        // GENERAZIONE RIGHE
         const rows = document.getElementById('comanda-rows');
         function addR(i) {
             const q = document.createElement('input'); q.className='line-input'; q.type='number'; q.id=`q-${i}`; q.placeholder="0"; 
             q.onkeydown=(e)=>{if(e.key===' '){e.preventDefault(); document.getElementById(`g-${i}`).focus();}};
             
             const g = document.createElement('input'); g.className='line-input'; g.id=`g-${i}`; g.placeholder="..."; 
-            g.oninput=updateSummary;
+            g.onfocus = () => { lastFocusedGustoId = `g-${i}`; }; // Ricorda la riga
+            g.oninput = updateSummary;
             g.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(document.getElementById(`q-${i+1}`)) document.getElementById(`q-${i+1}`).focus(); else addR(i+1);}};
             
             const p = document.createElement('input'); p.className='line-input col-prezzo'; p.type='number'; p.id=`p-${i}`; p.placeholder="0.00"; 
-            p.oninput=updateSummary; 
+            p.oninput = updateSummary; 
             p.onkeydown=(e)=>{if(e.key==='Enter' && document.getElementById(`p-${i+1}`)) document.getElementById(`p-${i+1}`).focus();};
             
             rows.append(q,g,p);
@@ -141,10 +137,9 @@
         for(let i=0; i<12; i++) addR(i);
 
         function makeGF() {
-            // Cerchiamo l'input del gusto attualmente attivo
-            let el = document.activeElement;
-            if(el && el.id.startsWith('g-')){
-                let idNum = el.id.split('-')[1];
+            if(lastFocusedGustoId) {
+                let el = document.getElementById(lastFocusedGustoId);
+                let idNum = lastFocusedGustoId.split('-')[1];
                 if(!el.value.includes("[GF]")) {
                     el.value += " [GF]";
                     el.style.color = "var(--neon)";
@@ -152,7 +147,7 @@
                     updateSummary();
                 }
             } else {
-                alert("Clicca prima sulla riga della pizza che vuoi rendere Gluten Free!");
+                alert("Tocca prima la riga della pizza!");
             }
         }
 
@@ -162,18 +157,16 @@
 
         function updateSummary() {
             let sum = 0; let pList = "";
-            // Cicliamo su tutte le righe create
             const allGusti = document.querySelectorAll('[id^="g-"]');
             allGusti.forEach((gInput) => {
                 let i = gInput.id.split('-')[1];
                 let qty = document.getElementById(`q-${i}`).value || "1";
-                let gst = gInput.value.trim();
+                let gst = gInput.value.trim().toUpperCase();
                 let prz = parseFloat(document.getElementById(`p-${i}`).value) || 0;
-                
                 if(gst) { 
                     sum += prz; 
-                    let isNeon = gInput.style.color === "var(--neon)" ? 'style="color:var(--neon)"' : '';
-                    pList += `<div class="summary-line" ${isNeon}><span>${qty}x ${gst}</span><span>${prz.toFixed(2)}€</span></div>`; 
+                    let color = (gInput.style.color === "var(--neon)") ? 'style="color:#00E676"' : '';
+                    pList += `<div class="summary-line" ${color}><span>${qty}x ${gst}</span><span>${prz.toFixed(2)}€</span></div>`; 
                 }
             });
 
@@ -182,7 +175,7 @@
             document.getElementById('tot-pizze-val').innerText = sum.toFixed(2).replace('.', ',') + " €";
             
             let resto = document.getElementById('o-resto').value;
-            let html = `
+            document.getElementById('final-summary').innerHTML = `
                 <div class="summary-line" style="color:var(--ora)"><span>CLIENTE:</span> <span>${document.getElementById('o-cognome').value.toUpperCase()}</span></div>
                 <div class="summary-line"><span>TEL:</span> <span>${document.getElementById('o-tel').value}</span></div>
                 <div class="summary-line"><span>VIA:</span> <span>${document.getElementById('o-indirizzo').value.toUpperCase()} ${document.getElementById('o-scala').value?' S.'+document.getElementById('o-scala').value.toUpperCase():''} ${document.getElementById('o-piano').value?' P.'+document.getElementById('o-piano').value.toUpperCase():''}</span></div>
@@ -193,14 +186,12 @@
                 <div class="summary-line" style="color:var(--ora)"><span>RIDER:</span> <span>${rider || '---'}</span></div>
                 <div class="summary-line"><span>PAGAMENTO:</span> <span>${payMeth} ${resto ? '('+resto+')' : ''}</span></div>
             `;
-            document.getElementById('final-summary').innerHTML = html;
             
             let ok = document.getElementById('o-cognome').value && document.getElementById('o-tel').value && document.getElementById('o-indirizzo').value && selectedCost>0 && sum>0 && document.getElementById('o-orario').value && payMeth;
             let btn = document.getElementById('btn-invia');
             btn.disabled = !ok; btn.style.background = ok ? "#1B8A4A" : "#ccc";
         }
 
-        // ORARIO DINAMICO
         const sel = document.getElementById('o-orario');
         sel.onfocus = () => {
             if(sel.options.length>1) return;
@@ -211,13 +202,8 @@
             }
         };
 
-        // GESTIONE PALLINI
         const s = document.getElementById('slider');
-        s.onscroll = () => { 
-            let i = Math.round(s.scrollLeft / window.innerWidth); 
-            document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', i === idx)); 
-        };
+        s.onscroll = () => { let i = Math.round(s.scrollLeft / window.innerWidth); document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', i === idx)); };
     </script>
 </body>
 </html>
-
