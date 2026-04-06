@@ -2,270 +2,222 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SAVERIO DELIVERY - SWIPE FIX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>SAVERIO DELIVERY - FIX GF</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --neon: #39FF14; --bor: #D0DCE8; --rosso: #FF4444; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; }
-        
-        /* BLOCCA RIMBALZO SU IOS/TABLET */
-        html, body { 
-            height: 100%; width: 100%; overflow: hidden; 
-            background: var(--blu); position: fixed; 
-        }
+        body, html { height: 100%; width: 100%; overflow: hidden; background: var(--blu); position: fixed; }
 
-        /* HEADER FISSO */
-        .header-fixed { 
-            position: absolute; top: 0; left: 0; right: 0; height: 75px;
-            background: var(--blu); display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000;
-        }
-        #main-total { color: var(--giallo); font-weight: 900; font-size: 2rem; text-shadow: 0 0 10px rgba(255,239,0,0.5); }
-        .order-tag { background: var(--ora); padding: 5px 12px; border-radius: 8px; font-weight: 900; font-size: 1.2rem; color: white; }
+        /* LOGIN */
+        .page-login { position: fixed; inset: 0; background: var(--blu); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; }
+        .pin-dot { width: 15px; height: 15px; border: 2px solid white; border-radius: 50%; margin: 0 10px; }
+        .pin-dot.active { background: var(--ora); border-color: var(--ora); }
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; }
+        .num-btn { width: 70px; height: 70px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white; font-size: 1.5rem; font-weight: 900; display: flex; align-items: center; justify-content: center; }
 
-        /* MOTORE SWIPE CORRETTO */
-        .slider-wrapper {
-            display: flex;
-            width: 100vw;
-            height: calc(100% - 75px);
-            margin-top: 75px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory; /* Forza l'aggancio magnetico */
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch; /* Rende lo swipe fluido su iPad/iPhone */
-        }
+        /* HEADER */
+        .header-fixed { height: 75px; background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000; position: relative; }
+        #main-total { color: var(--giallo); font-weight: 900; font-size: 2rem; }
+        .order-tag { background: var(--ora); padding: 5px 12px; border-radius: 8px; font-weight: 900; color: white; }
+
+        /* SLIDER */
+        .slider-wrapper { flex: 1; display: flex; height: calc(100% - 75px); overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
         .slider-wrapper::-webkit-scrollbar { display: none; }
+        .section { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; padding: 15px; overflow-y: auto; background: #f4f7f9; color: var(--blu); }
 
-        .section { 
-            flex: 0 0 100vw; /* Ogni sezione è larga esattamente lo schermo */
-            width: 100vw;
-            height: 100%;
-            scroll-snap-align: start; 
-            padding: 20px;
-            overflow-y: auto;
-            background: #f4f7f9;
-            color: var(--blu);
-        }
+        /* INPUTS */
+        .label { display: block; font-weight: 900; font-size: 0.75rem; color: #666; margin-bottom: 4px; text-transform: uppercase; }
+        .input-big { width: 100%; padding: 14px; border: 2px solid var(--bor); border-radius: 12px; font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; outline: none; background: white; }
+        .btn-x { background: var(--rosso); color: white; border: none; width: 50px; height: 50px; border-radius: 10px; font-weight: 900; }
+        .btn-cost, .btn-pay { padding: 12px; background: white; border: 2px solid var(--blu); border-radius: 10px; font-weight: 900; cursor: pointer; color: var(--blu); }
+        .btn-cost.active, .btn-pay.active { background: var(--blu); color: white; }
 
-        /* STILI ANAGRAFICA */
-        .label { display: block; font-weight: 900; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
-        .input-big { width: 100%; padding: 15px; border: 2px solid var(--bor); border-radius: 12px; font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; outline: none; background: white; color: var(--blu); }
-        .btn-x { background: var(--rosso); color: white; border: none; width: 55px; height: 58px; border-radius: 12px; font-weight: 900; cursor: pointer; }
-        .cost-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
-        .btn-cost { padding: 15px 5px; background: white; border: 2px solid var(--blu); border-radius: 12px; font-weight: 900; cursor: pointer; color: var(--blu); }
-        .btn-cost.active { background: var(--blu); color: white; }
-        .btn-rider { flex: 1; padding: 15px; background: #D0DCE8; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; color: var(--blu); }
-        .btn-rider.active { background: #4285F4; color: white; }
+        /* QUADERNO */
+        .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; display: grid; grid-template-columns: 45px 1fr 85px; overflow: hidden; }
+        .line-input { height: 42px; border: none; border-bottom: 1px solid #F0E6BC; background: transparent; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; padding: 0 8px; outline: none; }
+        .col-prezzo .line-input { text-align: right; border-left: 1px solid #F0E6BC; background: white; }
 
-        /* QUADERNO PIZZE */
-        .comanda-paper {
-            background: #FFF9E5; border: 2px solid var(--blu); border-radius: 12px;
-            display: grid; grid-template-columns: 60px 1fr 120px; overflow: hidden;
-        }
-        .col-qty, .col-gusto { border-right: 1px solid #F0E6BC; display: flex; flex-direction: column; }
-        .col-prezzo { background: white; display: flex; flex-direction: column; border-left: 3px solid var(--blu); }
-        .line-input {
-            height: 45px; border: none; border-bottom: 1px solid #F0E6BC;
-            background: transparent; font-family: 'Barlow', sans-serif; font-weight: 900;
-            font-size: 1.2rem; text-transform: uppercase; padding: 5px 10px; outline: none; color: var(--blu);
-        }
-        .col-prezzo .line-input { text-align: right; font-size: 1.3rem; padding-right: 15px; }
-        .btn-gf-neon { background: var(--neon); color: var(--blu); border: none; padding: 12px 20px; border-radius: 10px; font-weight: 900; cursor: pointer; box-shadow: 0 0 10px rgba(57,255,20,0.3); }
-        .is-gf { color: #00E676 !important; }
-        .col-prezzo .line-input.is-gf { background: #e8fff5; border-bottom: 1px solid #00E676; }
-
-        /* PALLINI */
-        .nav-dots { position: fixed; bottom: 15px; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; pointer-events: none; z-index: 1000; }
-        .dot { width: 10px; height: 10px; background: rgba(0,0,0,0.2); border-radius: 50%; }
-        .dot.active { background: var(--ora); width: 25px; border-radius: 10px; }
+        /* RIEPILOGO */
+        .summary-box { background: white; padding: 15px; border-radius: 15px; border: 2px dashed var(--ora); margin-bottom: 15px; }
+        .summary-line { border-bottom: 1px solid #eee; padding: 8px 0; font-weight: 700; display: flex; justify-content: space-between; font-size: 0.9rem; }
+        
+        .nav-dots { position: fixed; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 8px; z-index: 1000; pointer-events: none; }
+        .dot { width: 8px; height: 8px; background: rgba(0,0,0,0.2); border-radius: 50%; }
+        .dot.active { background: var(--ora); width: 20px; border-radius: 10px; }
     </style>
 </head>
-<body>
+<body onclick="if(event.target.className === 'section') document.activeElement.blur()">
 
-    <div class="header-fixed">
-        <span style="font-weight:900; font-size:0.7rem; color:white;">SAVERIO DELIVERY</span>
-        <div id="main-total">0,00€</div>
-        <div class="order-tag" id="order-num">#01</div>
+    <div id="login-screen" class="page-login">
+        <h1 style="margin-bottom:20px;">ADMIN LOGIN</h1>
+        <div style="display:flex;"><div class="pin-dot" id="dot-0"></div><div class="pin-dot" id="dot-1"></div><div class="pin-dot" id="dot-2"></div><div class="pin-dot" id="dot-3"></div></div>
+        <div class="numpad" id="numpad"></div>
     </div>
 
-    <div class="slider-wrapper" id="slider">
-        
-        <div class="section" id="p1">
-            <span class="label">Cognome *</span>
-            <input type="text" id="o-cognome" class="input-big" placeholder="OBBLIGATORIO" oninput="validate()">
-
-            <span class="label">Cellulare *</span>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;" placeholder="NUMERO O 'X'">
-                <button class="btn-x" onclick="skipTel()">X</button>
-            </div>
-
-            <span class="label">Indirizzo *</span>
-            <input type="text" id="o-indirizzo" class="input-big" placeholder="VIA E CIVICO" oninput="validate()">
-            
-            <span class="label">Costo Consegna *</span>
-            <div class="cost-grid">
-                <button class="btn-cost" id="c1" onclick="setCost(1)">1€</button>
-                <button class="btn-cost" id="c2" onclick="setCost(2)">2€</button>
-                <button class="btn-cost" id="c3" onclick="setCost(3)">3€</button>
-                <button class="btn-cost" id="c4" onclick="setCost(4)">4€</button>
-                <button class="btn-cost" id="c5" onclick="setCost(5)">5€</button>
-            </div>
-
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div><span class="label">Scala</span><input type="text" id="o-scala" class="input-big"></div>
-                <div><span class="label">Piano</span><input type="text" id="o-piano" class="input-big"></div>
-            </div>
-
-            <span class="label">Orario *</span>
-            <select id="o-orario" class="input-big" onchange="validate()">
-                <option value="">-- : --</option>
-            </select>
-
-            <span class="label">Rider</span>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-rider" id="r-porpe" onclick="setRider('PORPE')">PORPE</button>
-                <button class="btn-rider" id="r-gaspare" onclick="setRider('GASPARE')">GASPARE</button>
-            </div>
-            <p style="text-align:center; margin-top:20px; font-weight:900; color:#ccc;">⬅ SCORRI PER LE PIZZE</p>
+    <div id="app-main" style="display:none; flex-direction:column; height:100%;">
+        <div class="header-fixed">
+            <span style="font-weight:900; font-size:0.7rem; color:white;">SAVERIO DELIVERY</span>
+            <div id="main-total">0,00€</div>
+            <div class="order-tag" id="order-num">#01</div>
         </div>
 
-        <div class="section" id="p2">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h2 style="font-weight:900;">PIZZE</h2>
-                <button class="btn-gf-neon" onclick="insertGF()">+ GLUTEN FREE</button>
+        <div class="slider-wrapper" id="slider">
+            <div class="section">
+                <span class="label">Cognome *</span><input type="text" id="o-cognome" class="input-big" oninput="updateSummary()" placeholder="ES: PERRONE">
+                <span class="label">Cellulare *</span>
+                <div style="display:flex; gap:10px; margin-bottom:12px;"><input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;" placeholder="333..."><button class="btn-x" onclick="document.getElementById('o-tel').value='NON RICHIESTO';updateSummary()">X</button></div>
+                <span class="label">Indirizzo *</span><input type="text" id="o-indirizzo" class="input-big" oninput="updateSummary()" placeholder="VIA...">
+                <span class="label">Costo Consegna *</span>
+                <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:5px; margin-bottom:12px;">
+                    <button class="btn-cost" onclick="setCost(1, this)">1€</button><button class="btn-cost" onclick="setCost(2, this)">2€</button><button class="btn-cost" onclick="setCost(3, this)">3€</button><button class="btn-cost" onclick="setCost(4, this)">4€</button><button class="btn-cost" onclick="setCost(5, this)">5€</button>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><input type="text" id="o-scala" class="input-big" placeholder="SCALA" oninput="updateSummary()"><input type="text" id="o-piano" class="input-big" placeholder="PIANO" oninput="updateSummary()"></div>
+                <span class="label">Orario *</span><select id="o-orario" class="input-big" onchange="updateSummary()"><option value="">-- : --</option></select>
+                <span class="label">Rider</span>
+                <div style="display:flex; gap:10px;"><button class="btn-pay" id="r-porpe" onclick="setRider('PORPE')">PORPE</button><button class="btn-pay" id="r-gaspare" onclick="setRider('GASPARE')">GASPARE</button></div>
             </div>
-            <div class="comanda-paper" id="comanda-box">
-                <div class="col-qty" id="col-q"></div>
-                <div class="col-gusto" id="col-g"></div>
-                <div class="col-prezzo" id="col-p"></div>
+
+            <div class="section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h2>PIZZE</h2>
+                    <button style="background:var(--neon); border:none; padding:10px 20px; border-radius:10px; font-weight:900; box-shadow: 0 0 10px rgba(57,255,20,0.4);" onclick="makeGF()">+ GLUTEN FREE</button>
+                </div>
+                <div class="comanda-paper" id="comanda-rows"></div>
+                <div style="text-align:right; font-weight:900; font-size:1.4rem; margin-top:8px;">Tot. Pizze ➔ <span id="tot-pizze-val">0,00 €</span></div>
             </div>
-            <div style="text-align:right; font-weight:900; font-size:1.6rem; margin-top:10px;">
-                Tot. Pizze ➔ <span id="tot-pizze-val">0,00 €</span>
+
+            <div class="section"><h2>CUCINA / ALTRO</h2></div>
+
+            <div class="section">
+                <h2 style="margin-bottom:10px;">RIEPILOGO</h2>
+                <div class="summary-box" id="final-summary"></div>
+                
+                <span class="label">PAGAMENTO *</span>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px;">
+                    <button class="btn-pay pay-opt" onclick="setPay('CONTANTI', this)">CONTANTI</button>
+                    <button class="btn-pay pay-opt" onclick="setPay('POS', this)">POS</button>
+                    <button class="btn-pay pay-opt" onclick="setPay('PAGATO', this)">PAGATO</button>
+                </div>
+                <div id="resto-box" style="display:none;"><input type="text" id="o-resto" class="input-big" placeholder="RESTO DA..." oninput="updateSummary()"></div>
+                
+                <button id="btn-invia" style="width:100%; height:70px; background:#ccc; color:white; border:none; border-radius:12px; font-weight:900; margin-top:10px;" disabled>INVIA ORDINE</button>
             </div>
         </div>
-
-        <div class="section" id="p3">
-            <h2 style="font-weight:900; margin-bottom:15px;">CUCINA / ALTRO</h2>
-            <div style="background:white; padding:20px; border-radius:15px; text-align:center; color:#999;">
-                Spazio per Polli e Fritti...
-            </div>
-        </div>
-
-        <div class="section" id="p4">
-            <h2 style="font-weight:900; margin-bottom:15px;">RIEPILOGO</h2>
-            <div id="check-list" style="background:white; padding:20px; border-radius:15px; color:#333; min-height:200px; margin-bottom:20px; font-weight:700;">
-                Compila i campi per attivare l'invio...
-            </div>
-            <button id="btn-invia" class="btn-rider" style="width:100%; height:80px; background:#ccc; color:white; cursor:not-allowed;" disabled>INVIA ORDINE</button>
-        </div>
-
-    </div>
-
-    <div class="nav-dots">
-        <div class="dot active" id="d1"></div><div class="dot" id="d2"></div>
-        <div class="dot" id="d3"></div><div class="dot" id="d4"></div>
+        <div class="nav-dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
     </div>
 
     <script>
-        let selectedCost = 0;
-        let selectedRider = "";
-
-        // 1. GENERAZIONE QUADERNO
-        const cq = document.getElementById('col-q');
-        const cg = document.getElementById('col-g');
-        const cp = document.getElementById('col-p');
-
-        for(let i=0; i<18; i++) {
-            let q = document.createElement('input'); q.className = 'line-input'; q.type = 'number'; q.id = `q-${i}`; q.placeholder="0";
-            q.onkeydown = (e) => { if(e.key === ' ') { e.preventDefault(); document.getElementById(`g-${i}`).focus(); } };
-            
-            let g = document.createElement('input'); g.className = 'line-input'; g.id = `g-${i}`; g.placeholder="...";
-            g.onkeydown = (e) => { if(e.key === 'Enter') { e.preventDefault(); if(i<17) document.getElementById(`q-${i+1}`).focus(); } };
-
-            let p = document.createElement('input'); p.className = 'line-input'; p.type = 'number'; p.step = '0.01'; p.id = `p-${i}`; p.placeholder="0.00";
-            p.oninput = () => calcTot();
-            p.onkeydown = (e) => { if(e.key === 'Enter') { e.preventDefault(); if(i<17) document.getElementById(`p-${i+1}`).focus(); } };
-
-            cq.appendChild(q); cg.appendChild(g); cp.appendChild(p);
-        }
-
-        // 2. LOGICA ORARIO
-        const selOra = document.getElementById('o-orario');
-        selOra.addEventListener('focus', () => {
-            if(selOra.options.length <= 1) {
-                let now = new Date();
-                let cur = now.getHours() * 60 + now.getMinutes();
-                let start = Math.ceil((cur + 15) / 15) * 15;
-                if(start < 1080) start = 1080;
-                for(let t=start; t<=1320; t+=15) {
-                    let h = Math.floor(t/60); let m = t%60;
-                    let s = `${h}:${m===0?'00':m}`;
-                    let opt = document.createElement('option'); opt.value = s; opt.innerText = s;
-                    selOra.appendChild(opt);
-                }
-            }
-        });
-
-        // 3. FUNZIONI
-        function skipTel() { document.getElementById('o-tel').value = "NON RICHIESTO"; validate(); }
+        let pin = ""; let selectedCost = 0; let rider = ""; let payMeth = "";
         
-        function setCost(v) {
-            selectedCost = v;
-            document.querySelectorAll('.btn-cost').forEach(b => b.classList.toggle('active', b.id === 'c'+v));
-            calcTot(); validate();
+        // LOGIN
+        const np = document.getElementById('numpad');
+        for(let i=1; i<=9; i++) { let b = document.createElement('div'); b.className='num-btn'; b.innerText=i; b.onclick=()=>press(i); np.appendChild(b); }
+        let b0 = document.createElement('div'); b0.className='num-btn'; b0.innerText="0"; b0.style.gridColumn="2"; b0.onclick=()=>press(0); np.appendChild(b0);
+        function press(n) { 
+            if(pin.length < 4) { pin+=n; document.getElementById('dot-'+(pin.length-1)).classList.add('active'); }
+            if(pin==="0508"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-main').style.display='flex'; } 
+            else if(pin.length===4){ pin=""; document.querySelectorAll('.pin-dot').forEach(d=>d.classList.remove('active')); } 
         }
 
-        function setRider(n) {
-            selectedRider = (selectedRider === n) ? "" : n;
-            document.querySelectorAll('.btn-rider').forEach(b => b.classList.toggle('active', b.id === 'r-'+n.toLowerCase()));
-        }
-
-        function insertGF() {
-            let act = document.activeElement;
-            if(act.id.startsWith('g-')) {
-                let idx = act.id.split('-')[1];
-                if(!act.value.includes("[GF]")) act.value += " [GF]";
-                act.classList.add('is-gf');
-                document.getElementById(`p-${idx}`).classList.add('is-gf');
-            }
-        }
-
-        function calcTot() {
-            let pTot = 0;
-            for(let i=0; i<18; i++) { pTot += parseFloat(document.getElementById(`p-${i}`).value) || 0; }
-            document.getElementById('tot-pizze-val').innerText = pTot.toFixed(2).replace('.', ',') + " €";
-            let finale = pTot + selectedCost;
-            document.getElementById('main-total').innerText = finale.toFixed(2).replace('.', ',') + "€";
-            validate();
-        }
-
-        function validate() {
-            const cog = document.getElementById('o-cognome').value;
-            const tel = document.getElementById('o-tel').value;
-            const ind = document.getElementById('o-indirizzo').value;
-            const ora = document.getElementById('o-orario').value;
-            let pTot = 0; for(let i=0; i<18; i++) { pTot += parseFloat(document.getElementById(`p-${i}`).value) || 0; }
+        // QUADERNO PIZZE
+        const rows = document.getElementById('comanda-rows');
+        function addR(i) {
+            const q = document.createElement('input'); q.className='line-input'; q.type='number'; q.id=`q-${i}`; q.placeholder="0"; 
+            q.onkeydown=(e)=>{if(e.key===' '){e.preventDefault(); document.getElementById(`g-${i}`).focus();}};
             
-            const ok = cog && tel && ind && ora && selectedCost > 0 && pTot > 0;
-            const btn = document.getElementById('btn-invia');
+            const g = document.createElement('input'); g.className='line-input'; g.id=`g-${i}`; g.placeholder="..."; 
+            g.oninput=updateSummary;
+            g.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(document.getElementById(`q-${i+1}`)) document.getElementById(`q-${i+1}`).focus(); else addR(i+1);}};
+            
+            const p = document.createElement('input'); p.className='line-input col-prezzo'; p.type='number'; p.id=`p-${i}`; p.placeholder="0.00"; 
+            p.oninput=updateSummary; 
+            p.onkeydown=(e)=>{if(e.key==='Enter' && document.getElementById(`p-${i+1}`)) document.getElementById(`p-${i+1}`).focus();};
+            
+            rows.append(q,g,p);
+        }
+        for(let i=0; i<12; i++) addR(i);
 
-            if(ok) {
-                btn.style.background = "#1B8A4A"; btn.disabled = false; btn.style.cursor = "pointer";
-                document.getElementById('check-list').innerHTML = "PRONTO PER L'INVIO! ✅";
+        function makeGF() {
+            // Cerchiamo l'input del gusto attualmente attivo
+            let el = document.activeElement;
+            if(el && el.id.startsWith('g-')){
+                let idNum = el.id.split('-')[1];
+                if(!el.value.includes("[GF]")) {
+                    el.value += " [GF]";
+                    el.style.color = "var(--neon)";
+                    document.getElementById('p-'+idNum).style.color = "var(--neon)";
+                    updateSummary();
+                }
             } else {
-                btn.style.background = "#ccc"; btn.disabled = true;
-                document.getElementById('check-list').innerHTML = "MANCANO DATI OBBLIGATORI... ❌";
+                alert("Clicca prima sulla riga della pizza che vuoi rendere Gluten Free!");
             }
         }
 
-        // SWIPE FIX: Gestione pallini
-        const slider = document.getElementById('slider');
-        slider.addEventListener('scroll', () => {
-            let index = Math.round(slider.scrollLeft / window.innerWidth) + 1;
-            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i+1 === index));
-        });
+        function setCost(v, b) { selectedCost=v; document.querySelectorAll('.btn-cost').forEach(x=>x.classList.remove('active')); b.classList.add('active'); updateSummary(); }
+        function setRider(n) { rider=n; document.querySelectorAll('#r-porpe, #r-gaspare').forEach(x=>x.classList.remove('active')); document.getElementById('r-'+n.toLowerCase()).classList.add('active'); updateSummary(); }
+        function setPay(m, b) { payMeth=m; document.querySelectorAll('.pay-opt').forEach(x=>x.classList.remove('active')); b.classList.add('active'); document.getElementById('resto-box').style.display = (m==='CONTANTI') ? 'block' : 'none'; updateSummary(); }
+
+        function updateSummary() {
+            let sum = 0; let pList = "";
+            // Cicliamo su tutte le righe create
+            const allGusti = document.querySelectorAll('[id^="g-"]');
+            allGusti.forEach((gInput) => {
+                let i = gInput.id.split('-')[1];
+                let qty = document.getElementById(`q-${i}`).value || "1";
+                let gst = gInput.value.trim();
+                let prz = parseFloat(document.getElementById(`p-${i}`).value) || 0;
+                
+                if(gst) { 
+                    sum += prz; 
+                    let isNeon = gInput.style.color === "var(--neon)" ? 'style="color:var(--neon)"' : '';
+                    pList += `<div class="summary-line" ${isNeon}><span>${qty}x ${gst}</span><span>${prz.toFixed(2)}€</span></div>`; 
+                }
+            });
+
+            let tot = sum + selectedCost;
+            document.getElementById('main-total').innerText = tot.toFixed(2).replace('.', ',') + "€";
+            document.getElementById('tot-pizze-val').innerText = sum.toFixed(2).replace('.', ',') + " €";
+            
+            let resto = document.getElementById('o-resto').value;
+            let html = `
+                <div class="summary-line" style="color:var(--ora)"><span>CLIENTE:</span> <span>${document.getElementById('o-cognome').value.toUpperCase()}</span></div>
+                <div class="summary-line"><span>TEL:</span> <span>${document.getElementById('o-tel').value}</span></div>
+                <div class="summary-line"><span>VIA:</span> <span>${document.getElementById('o-indirizzo').value.toUpperCase()} ${document.getElementById('o-scala').value?' S.'+document.getElementById('o-scala').value.toUpperCase():''} ${document.getElementById('o-piano').value?' P.'+document.getElementById('o-piano').value.toUpperCase():''}</span></div>
+                <div class="summary-line" style="color:var(--ora)"><span>ORARIO:</span> <span>${document.getElementById('o-orario').value || '--:--'}</span></div>
+                <div style="margin:8px 0; border-top:1px solid #ddd; padding-top:8px;">${pList}</div>
+                <div class="summary-line"><span>DOMICILIO:</span> <span>${selectedCost.toFixed(2)}€</span></div>
+                <div class="summary-line" style="font-size:1.3rem; color:var(--blu)"><span>TOTALE:</span> <span>${tot.toFixed(2)}€</span></div>
+                <div class="summary-line" style="color:var(--ora)"><span>RIDER:</span> <span>${rider || '---'}</span></div>
+                <div class="summary-line"><span>PAGAMENTO:</span> <span>${payMeth} ${resto ? '('+resto+')' : ''}</span></div>
+            `;
+            document.getElementById('final-summary').innerHTML = html;
+            
+            let ok = document.getElementById('o-cognome').value && document.getElementById('o-tel').value && document.getElementById('o-indirizzo').value && selectedCost>0 && sum>0 && document.getElementById('o-orario').value && payMeth;
+            let btn = document.getElementById('btn-invia');
+            btn.disabled = !ok; btn.style.background = ok ? "#1B8A4A" : "#ccc";
+        }
+
+        // ORARIO DINAMICO
+        const sel = document.getElementById('o-orario');
+        sel.onfocus = () => {
+            if(sel.options.length>1) return;
+            let n=new Date(); let m=Math.ceil((n.getHours()*60+n.getMinutes()+15)/15)*15;
+            for(let t=Math.max(1080,m); t<=1320; t+=15) {
+                let h=Math.floor(t/60); let mm=t%60;
+                let o=document.createElement('option'); o.value=o.text=`${h}:${mm==0?'00':mm}`; sel.add(o);
+            }
+        };
+
+        // GESTIONE PALLINI
+        const s = document.getElementById('slider');
+        s.onscroll = () => { 
+            let i = Math.round(s.scrollLeft / window.innerWidth); 
+            document.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', i === idx)); 
+        };
     </script>
 </body>
 </html>
+
