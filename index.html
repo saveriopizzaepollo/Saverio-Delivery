@@ -176,7 +176,7 @@
             for(let i=0; i<25; i++){
                 let v = parseFloat(document.getElementById(`p-${i}`).value)||0; let g = document.getElementById(`g-${i}`).value; let q = document.getElementById(`q-${i}`).value || "0"; let isGf = document.getElementById(`f-${i}`).checked;
                 if(v>0 || g.trim() !== ""){ pt+=v; let gfTag = isGf ? '<span class="gf-text">GLUTEN FREE </span>' : ''; let itemClass = isGf ? 'gf-text' : '';
-                    lHtml += `<div class="pizza-item ${itemClass}"><div class="pizza-qty">${q}X</div><div class="pizza-desc">${gfTag}${g.toUpperCase()}</div><div class="pizza-price">${v.toFixed(2)}€</div></div>`;
+                    lHtml += `<div class="pizza-item ${itemClass}"><div class="pizza-qty">${q}</div><div class="pizza-desc">${gfTag}${g.toUpperCase()}</div><div class="pizza-price">${v.toFixed(2)}€</div></div>`;
                 }
             }
             let tot = pt + sCost; document.getElementById('main-total').innerText = tot.toFixed(2).replace('.',',') + " €";
