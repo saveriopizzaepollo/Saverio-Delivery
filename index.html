@@ -21,15 +21,37 @@
         .tab-content.show { display: block; }
         .label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; text-transform: uppercase; color: var(--blu); background: white; font-weight: 900; }
+        
+        /* QUADERNO PIZZE ELASTICO */
         .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; display: grid; grid-template-columns: 40px 50px 1fr 90px; overflow: hidden; width: 100%; }
-        .col-gf { border-right: 1px solid #F0E6BC; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #eee; }
-        .col-qty { border-right: 1px solid #F0E6BC; display: flex; flex-direction: column; }
-        .col-gusto { border-right: 2px solid var(--blu); display: flex; flex-direction: column; }
-        .col-prezzo { background: white; display: flex; flex-direction: column; }
-        .line-input { height: 45px; border: none; border-bottom: 1px solid #F0E6BC; background: transparent; font-size: 1.1rem; text-transform: uppercase; padding: 5px; outline: none; color: var(--blu); font-weight: 900; }
-        .check-gf { width: 25px; height: 25px; accent-color: var(--ver); cursor: pointer; }
+        .col-gf, .col-qty, .col-gusto, .col-prezzo { display: flex; flex-direction: column; }
+        .col-gf { border-right: 1px solid #F0E6BC; background: #eee; }
+        .col-qty { border-right: 1px solid #F0E6BC; }
+        .col-gusto { border-right: 2px solid var(--blu); }
+        .col-prezzo { background: white; }
+        
+        .row-container { display: contents; } /* Allinea le celle sulla stessa riga della griglia */
+        
+        .cell { 
+            min-height: 45px; border-bottom: 1px solid #F0E6BC; display: flex; align-items: center; 
+            padding: 5px; background: transparent; font-size: 1.1rem; color: var(--blu); 
+        }
+        
+        /* TEXTAREA ELASTICA PER IL GUSTO */
+        .area-input { 
+            width: 100%; border: none; background: transparent; outline: none; 
+            resize: none; overflow: hidden; font-family: inherit; font-weight: 900; 
+            font-size: 1.1rem; text-transform: uppercase; color: inherit;
+            line-height: 1.2;
+        }
+        
+        .line-input { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; }
+        .col-prezzo .line-input { text-align: right; }
+        
+        .check-gf { width: 22px; height: 22px; accent-color: var(--ver); cursor: pointer; }
         .row-is-gf { color: #00E676 !important; }
         .row-is-gf-bg { background: #e8fff5 !important; color: #00E676 !important; }
+
         .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
         .rip-line { margin-bottom: 8px; font-size: 0.95rem; border-bottom: 1px dashed #ccc; padding-bottom: 4px; display: flex; justify-content: space-between; }
@@ -140,18 +162,28 @@
         function initApp(){
             const cgf=document.getElementById('cgf'), cq=document.getElementById('cq'), cg=document.getElementById('cg'), cp=document.getElementById('cp');
             if(cq.children.length>0) return;
-            for(let i=0; i<18; i++){
-                let f=document.createElement('div'); f.style.height="45px"; f.style.display="flex"; f.style.alignItems="center"; f.style.borderBottom="1px solid #F0E6BC";
+            for(let i=0; i<20; i++){
+                // GF
+                let f=document.createElement('div'); f.className="cell"; f.id=`cell-f-${i}`;
                 let chk=document.createElement('input'); chk.type="checkbox"; chk.className="check-gf"; chk.id=`f-${i}`;
                 chk.onchange=()=>toggleGF(i); f.appendChild(chk); cgf.appendChild(f);
+                // QTY
+                let qdiv=document.createElement('div'); qdiv.className="cell"; qdiv.id=`cell-q-${i}`;
                 let q=document.createElement('input'); q.className='line-input'; q.id=`q-${i}`;
-                let g=document.createElement('input'); g.className='line-input'; g.id=`g-${i}`;
-                let p=document.createElement('input'); p.className='line-input'; p.type='number'; p.id=`p-${i}`;
                 q.onkeydown=(e)=>{if(e.key===' '){e.preventDefault(); document.getElementById(`g-${i}`).focus();}};
-                g.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<17) document.getElementById(`q-${i+1}`).focus();}};
+                qdiv.appendChild(q); cq.appendChild(qdiv);
+                // GUSTO (TextArea elastica)
+                let gdiv=document.createElement('div'); gdiv.className="cell"; gdiv.id=`cell-g-${i}`;
+                let g=document.createElement('textarea'); g.className='area-input'; g.id=`g-${i}`; g.rows=1;
+                g.oninput=()=>{ g.style.height = "auto"; g.style.height = g.scrollHeight + "px"; updateRiepilogo(); };
+                g.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<19) document.getElementById(`q-${i+1}`).focus();}};
+                gdiv.appendChild(g); cg.appendChild(gdiv);
+                // PREZZO
+                let pdiv=document.createElement('div'); pdiv.className="cell"; pdiv.id=`cell-p-${i}`;
+                let p=document.createElement('input'); p.className='line-input'; p.type='number'; p.id=`p-${i}`;
                 p.oninput=updateRiepilogo;
-                p.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<17) document.getElementById(`p-${i+1}`).focus();}};
-                cq.appendChild(q); cg.appendChild(g); cp.appendChild(p);
+                p.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<19) document.getElementById(`p-${i+1}`).focus();}};
+                pdiv.appendChild(p); cp.appendChild(pdiv);
             }
             let sel=document.getElementById('o-orario');
             let now=new Date(); let m = Math.ceil((now.getHours()*60+now.getMinutes()+15)/15)*15;
@@ -163,34 +195,22 @@
 
         function toggleGF(i){
             let isChecked = document.getElementById(`f-${i}`).checked;
-            let g = document.getElementById(`g-${i}`);
-            let p = document.getElementById(`p-${i}`);
-            if(isChecked) {
-                g.classList.add('row-is-gf'); p.classList.add('row-is-gf-bg');
-                if(!g.value.includes("[GF]")) g.value += " [GF]";
-            } else {
-                g.classList.remove('row-is-gf'); p.classList.remove('row-is-gf-bg');
-                g.value = g.value.replace(" [GF]", "");
-            }
+            let cells = [`cell-f-${i}`, `cell-q-${i}`, `cell-g-${i}`, `cell-p-${i}`];
+            cells.forEach(id => {
+                let el = document.getElementById(id);
+                if(isChecked) { el.classList.add('row-is-gf-bg'); el.style.color="#00E676"; }
+                else { el.classList.remove('row-is-gf-bg'); el.style.color=""; }
+            });
             updateRiepilogo();
         }
 
         function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
-        
-        function setPay(t){ 
-            sPay=t; 
-            document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); 
-            let key = t === 'PAGATO' ? 'pag' : t === 'CONTANTI' ? 'cont' : 'pos';
-            document.getElementById('p-'+key).style.background='var(--ora)'; 
-            document.getElementById('resto-box').style.display = (t==='CONTANTI') ? 'block' : 'none'; 
-            updateRiepilogo(); 
-        }
-
+        function setPay(t){ sPay=t; document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); let key = t === 'PAGATO' ? 'pag' : t === 'CONTANTI' ? 'cont' : 'pos'; document.getElementById('p-'+key).style.background='var(--ora)'; document.getElementById('resto-box').style.display = (t==='CONTANTI') ? 'block' : 'none'; updateRiepilogo(); }
         function skipTel(){ document.getElementById('o-tel').value="INTERNO"; updateRiepilogo(); }
 
         function updateRiepilogo(){
             let pt=0; let lHtml = "";
-            for(let i=0; i<18; i++){
+            for(let i=0; i<20; i++){
                 let v = parseFloat(document.getElementById(`p-${i}`).value)||0;
                 let g = document.getElementById(`g-${i}`).value;
                 let q = document.getElementById(`q-${i}`).value || "0";
@@ -204,13 +224,9 @@
             let res = document.getElementById('o-resto').value.toUpperCase();
 
             let payLabel = "";
-            if(sPay === 'CONTANTI' && res) {
-                payLabel = `<span style="color:var(--blu); margin-right:10px;">${res}</span>`;
-            } else if(sPay === 'POS') {
-                payLabel = `<span style="color:var(--rosso); margin-right:10px;">POS</span>`;
-            } else if(sPay === 'PAGATO') {
-                payLabel = `<span style="color:var(--ver); margin-right:10px;">PAGATO</span>`;
-            }
+            if(sPay === 'CONTANTI' && res) { payLabel = `<span style="color:var(--blu); margin-right:10px;">${res}</span>`; } 
+            else if(sPay === 'POS') { payLabel = `<span style="color:var(--rosso); margin-right:10px;">POS</span>`; } 
+            else if(sPay === 'PAGATO') { payLabel = `<span style="color:var(--ver); margin-right:10px;">PAGATO</span>`; }
 
             document.getElementById('riepilogo-box').innerHTML = `
                 <div class="rip-line"><span style="color:#666">CLIENTE</span><span style="color:var(--blu)">${cog||"---"}</span></div>
