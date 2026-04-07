@@ -9,24 +9,17 @@
         :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --neon: #39FF14; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; font-weight: 900; }
         body { background: var(--blu); color: white; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
-        
         .page-init { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 2000; background: var(--blu); text-align: center; }
         .page-init.show { display: flex; }
-        
         .header-main { position: fixed; top: 0; left: 0; right: 0; height: 75px; background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000; }
         #main-total { color: var(--giallo); font-size: 2.2rem; }
-        
         .nav-bar { position: fixed; top: 75px; left: 0; right: 0; height: 60px; background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 999; }
         .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: var(--blu); font-size: 0.9rem; cursor: pointer; text-transform: uppercase; }
         .nav-btn.active { background: var(--ora); color: white; }
-        
         .content-area { position: absolute; top: 135px; bottom: 0; left: 0; right: 0; overflow-y: auto; background: #f4f7f9; color: var(--blu); padding: 15px; }
         .tab-content { display: none; }
         .tab-content.show { display: block; }
-        
-        .label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; text-transform: uppercase; color: var(--blu); background: white; font-weight: 900; }
-
         .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; overflow: hidden; width: 100%; display: table; border-collapse: collapse; }
         .row-piz { display: table-row; border-bottom: 1px solid #F0E6BC; }
         .cell-piz { display: table-cell; vertical-align: middle; padding: 5px; min-height: 50px; }
@@ -38,18 +31,18 @@
         .input-piz { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: center; }
         .input-prezzo { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: right; }
         .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
-
         .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
         
-        .rip-line { margin-bottom: 12px; font-size: 1rem; border-bottom: 1px dashed #ccc; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .big-data { font-size: 1.4rem; color: var(--blu); }
-        .pizza-item { display: flex; align-items: flex-start; margin-bottom: 15px; font-size: 1.2rem; }
-        .pizza-qty { width: 45px; color: var(--ora); flex-shrink: 0; }
-        .pizza-desc { flex-grow: 1; text-transform: uppercase; line-height: 1.1; padding-right: 10px; }
+        /* RIEPILOGO NUOVO STILE */
+        .rip-row-top { font-size: 1.6rem; color: var(--ora); margin-bottom: 10px; display: flex; gap: 20px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+        .rip-row-client { font-size: 1.3rem; color: var(--blu); margin-bottom: 15px; line-height: 1.4; }
+        .pizza-item { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 1.2rem; }
+        .pizza-qty { width: 40px; color: var(--blu); flex-shrink: 0; }
+        .pizza-desc { flex-grow: 1; text-transform: uppercase; line-height: 1.1; }
         .pizza-price { width: 80px; text-align: right; color: #555; flex-shrink: 0; }
         .gf-text { color: var(--ver); }
-        .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; margin-top: 15px; }
+        .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
         .pay-note-big { font-size: 1.6rem; font-weight: 900; text-align: right; margin-top: 8px; text-transform: uppercase; }
     </style>
 </head>
@@ -75,7 +68,7 @@
         <div class="header-main">
             <span style="font-size:0.8rem;">SAVERIO DELIVERY</span>
             <div id="main-total">0,00 €</div>
-            <div class="order-tag">#01</div>
+            <div class="order-tag" id="header-tag">#01</div>
         </div>
         <div class="nav-bar">
             <button class="nav-btn active" id="btn-t1" onclick="showTab(1)">CLIENTE</button>
@@ -84,17 +77,13 @@
         </div>
         <div class="content-area">
             <div id="tab1" class="tab-content show">
-                <span class="label">COGNOME *</span>
-                <input type="text" id="o-cognome" class="input-big" oninput="updateRiepilogo()">
-                <span class="label">CELLULARE *</span>
+                <input type="text" id="o-cognome" class="input-big" placeholder="👤 COGNOME" oninput="updateRiepilogo()">
                 <div style="display:flex; gap:5px; margin-bottom:12px;">
-                    <input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;">
+                    <input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;" placeholder="📞 TELEFONO">
                     <button style="width:50px; background:var(--rosso); color:white; border:none; border-radius:10px;" onclick="skipTel()">X</button>
                 </div>
-                <span class="label">INDIRIZZO *</span>
-                <input type="text" id="o-indirizzo" class="input-big" oninput="updateRiepilogo()">
+                <input type="text" id="o-indirizzo" class="input-big" placeholder="📍 INDIRIZZO" oninput="updateRiepilogo()">
                 <button id="btn-maps" style="width:100%; padding:15px; background:#4285F4; color:white; border:none; border-radius:10px; margin-bottom:12px;" onclick="verifyMaps()">📍 VERIFICA POSIZIONE</button>
-                <span class="label">CONSEGNA *</span>
                 <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:5px; margin-bottom:12px;">
                     <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost1" onclick="setCost(1)">1€</button>
                     <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost2" onclick="setCost(2)">2€</button>
@@ -102,8 +91,7 @@
                     <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost4" onclick="setCost(4)">4€</button>
                     <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost5" onclick="setCost(5)">5€</button>
                 </div>
-                <span class="label">ORARIO *</span>
-                <select id="o-orario" class="input-big" onchange="updateRiepilogo()"><option value="">-- : --</option></select>
+                <select id="o-orario" class="input-big" onchange="updateRiepilogo()"><option value="">🕒 ORARIO CONSEGNA</option></select>
             </div>
 
             <div id="tab2" class="tab-content">
@@ -112,21 +100,17 @@
             </div>
 
             <div id="tab4" class="tab-content">
-                <h2>RIEPILOGO ORDINE</h2>
+                <h2>RIEPILOGO</h2>
                 <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin-bottom:15px; color:var(--blu);"></div>
-                
-                <span class="label">PAGAMENTO *</span>
                 <div class="pay-grid">
                     <button class="nav-btn" id="p-cont" onclick="setPay('CONTANTI')">CONTANTI</button>
                     <button class="nav-btn" id="p-pos" onclick="setPay('POS')">POS</button>
                     <button class="nav-btn" id="p-pag" onclick="setPay('PAGATO')">PAGATO</button>
                 </div>
-                <div id="resto-box" style="display:none;">
-                    <span class="label">NOTA RESTO</span>
+                <div id="resto-box" style="display:none; margin-top:10px;">
                     <input type="text" id="o-resto" class="input-big" placeholder="ES: RESTO DA 50€" oninput="updateRiepilogo()">
                 </div>
-
-                <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; margin-top:10px;" disabled>INVIA ORDINE</button>
+                <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; margin-top:15px;" disabled>INVIA ORDINE</button>
             </div>
         </div>
     </div>
@@ -180,10 +164,31 @@
                 }
             }
             let tot = pt + sCost; document.getElementById('main-total').innerText = tot.toFixed(2).replace('.',',') + " €";
-            let cog = document.getElementById('o-cognome').value.toUpperCase(); let ind = document.getElementById('o-indirizzo').value.toUpperCase(); let ora = document.getElementById('o-orario').value; let res = document.getElementById('o-resto').value.toUpperCase();
-            let pL = ""; if(sPay === 'CONTANTI' && res) { pL = `<div class="pay-note-big" style="color:var(--blu);">${res}</div>`; } else if(sPay === 'POS') { pL = `<div class="pay-note-big" style="color:var(--rosso);">POS</div>`; } else if(sPay === 'PAGATO') { pL = `<div class="pay-note-big" style="color:var(--ver);">PAGATO</div>`; }
+            let nOrd = document.getElementById('header-tag').innerText;
+            let cog = document.getElementById('o-cognome').value.toUpperCase(); 
+            let ind = document.getElementById('o-indirizzo').value.toUpperCase(); 
+            let tel = document.getElementById('o-tel').value.toUpperCase();
+            let ora = document.getElementById('o-orario').value; 
+            let res = document.getElementById('o-resto').value.toUpperCase();
+            
+            let pL = ""; 
+            if(sPay === 'CONTANTI' && res) { pL = `<div class="pay-note-big" style="color:var(--blu);">${res}</div>`; } 
+            else if(sPay === 'POS') { pL = `<div class="pay-note-big" style="color:var(--rosso);">POS</div>`; } 
+            else if(sPay === 'PAGATO') { pL = `<div class="pay-note-big" style="color:var(--ver);">PAGATO</div>`; }
 
-            document.getElementById('riepilogo-box').innerHTML = `<div class="rip-line"><span style="color:#666">CLIENTE</span><span class="big-data">${cog||"---"}</span></div><div class="rip-line"><span style="color:#666">INDIRIZZO</span><span class="big-data">${ind||"---"}</span></div><div class="rip-line"><span style="color:#666">ORARIO</span><span style="color:var(--blu); font-size:1.2rem;">${ora||"--:--"}</span></div><div class="rip-line"><span style="color:#666">CONSEGNA</span><span style="color:var(--blu); font-size:1.2rem;">${sCost.toFixed(2)}€</span></div><div style="margin-top:20px; border-top:2px solid #333; padding-top:15px;">${lHtml}</div><div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;"><div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>${pL}</div>`;
+            document.getElementById('riepilogo-box').innerHTML = `
+                <div class="rip-row-top"><span>🏷️ ${nOrd}</span> <span>🕒 ${ora||"--:--"}</span></div>
+                <div class="rip-row-client">
+                    👤 <b>${cog||"---"}</b><br>
+                    📍 <b>${ind||"---"}</b><br>
+                    📞 <b>${tel||"---"}</b><br>
+                    🛵 <b>${sCost.toFixed(2)}€</b>
+                </div>
+                <div style="margin-top:10px; border-top:2px solid #333; padding-top:10px;">${lHtml}</div>
+                <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
+                    <div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
+                    ${pL}
+                </div>`;
             let ok = cog && ind && ora && sCost>0 && pt>0 && sPay;
             document.getElementById('btn-invia').style.background = ok ? 'var(--ver)' : '#ccc'; document.getElementById('btn-invia').disabled = !ok;
         }
