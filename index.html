@@ -9,51 +9,49 @@
         :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --neon: #39FF14; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; font-weight: 900; }
         body { background: var(--blu); color: white; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
+        
         .page-init { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 2000; background: var(--blu); text-align: center; }
         .page-init.show { display: flex; }
+        
         .header-main { position: fixed; top: 0; left: 0; right: 0; height: 75px; background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000; }
         #main-total { color: var(--giallo); font-size: 2.2rem; }
+        
         .nav-bar { position: fixed; top: 75px; left: 0; right: 0; height: 60px; background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 999; }
         .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: var(--blu); font-size: 0.75rem; cursor: pointer; text-transform: uppercase; }
         .nav-btn.active { background: var(--ora); color: white; }
+        
         .content-area { position: absolute; top: 135px; bottom: 0; left: 0; right: 0; overflow-y: auto; background: #f4f7f9; color: var(--blu); padding: 15px; }
         .tab-content { display: none; }
         .tab-content.show { display: block; }
+        
         .label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; text-transform: uppercase; color: var(--blu); background: white; font-weight: 900; }
-        
+
         /* QUADERNO PIZZE ELASTICO */
-        .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; display: grid; grid-template-columns: 40px 50px 1fr 90px; overflow: hidden; width: 100%; }
-        .col-gf, .col-qty, .col-gusto, .col-prezzo { display: flex; flex-direction: column; }
-        .col-gf { border-right: 1px solid #F0E6BC; background: #eee; }
-        .col-qty { border-right: 1px solid #F0E6BC; }
-        .col-gusto { border-right: 2px solid var(--blu); }
-        .col-prezzo { background: white; }
+        .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; overflow: hidden; width: 100%; display: table; border-collapse: collapse; }
+        .row-piz { display: table-row; border-bottom: 1px solid #F0E6BC; }
+        .cell-piz { display: table-cell; vertical-align: middle; padding: 5px; min-height: 50px; }
         
-        .row-container { display: contents; } /* Allinea le celle sulla stessa riga della griglia */
-        
-        .cell { 
-            min-height: 45px; border-bottom: 1px solid #F0E6BC; display: flex; align-items: center; 
-            padding: 5px; background: transparent; font-size: 1.1rem; color: var(--blu); 
-        }
-        
-        /* TEXTAREA ELASTICA PER IL GUSTO */
-        .area-input { 
+        .c-gf { width: 40px; text-align: center; background: #eee; }
+        .c-qty { width: 50px; border-left: 1px solid #F0E6BC; border-right: 1px solid #F0E6BC; }
+        .c-gusto { border-right: 2px solid var(--blu); }
+        .c-prezzo { width: 90px; background: white; }
+
+        /* AREA SCRITTURA CHE VA A CAPO */
+        .area-gusto { 
             width: 100%; border: none; background: transparent; outline: none; 
-            resize: none; overflow: hidden; font-family: inherit; font-weight: 900; 
-            font-size: 1.1rem; text-transform: uppercase; color: inherit;
+            font-size: 1.1rem; font-weight: 900; text-transform: uppercase; 
+            color: inherit; resize: none; overflow: hidden; display: block;
             line-height: 1.2;
         }
-        
-        .line-input { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; }
-        .col-prezzo .line-input { text-align: right; }
-        
-        .check-gf { width: 22px; height: 22px; accent-color: var(--ver); cursor: pointer; }
-        .row-is-gf { color: #00E676 !important; }
-        .row-is-gf-bg { background: #e8fff5 !important; color: #00E676 !important; }
+        .input-piz { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: center; }
+        .input-prezzo { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: right; }
+
+        .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
 
         .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
+        
         .rip-line { margin-bottom: 8px; font-size: 0.95rem; border-bottom: 1px dashed #ccc; padding-bottom: 4px; display: flex; justify-content: space-between; }
         .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; margin-top: 15px; }
     </style>
@@ -61,7 +59,7 @@
 <body>
 
     <div id="page-start" class="page-init show">
-        <h1 style="font-size:3rem; margin-bottom:40px;">SAVERIO DELIVERY</h1>
+        <h1 style="font-size:3.5rem; margin-bottom:40px;">SAVERIO DELIVERY</h1>
         <button onclick="showPin()" style="padding:20px 40px; background:var(--ora); color:white; border:none; border-radius:15px; font-size:1.5rem;">ADMIN LOGIN</button>
     </div>
 
@@ -115,11 +113,7 @@
             <div id="tab2" class="tab-content">
                 <h2 style="color:var(--blu); margin-bottom:10px;">PIZZE</h2>
                 <div class="comanda-paper" id="comanda-root">
-                    <div class="col-gf" id="cgf"></div>
-                    <div class="col-qty" id="cq"></div>
-                    <div class="col-gusto" id="cg"></div>
-                    <div class="col-prezzo" id="cp"></div>
-                </div>
+                    </div>
             </div>
 
             <div id="tab3" class="tab-content"><h2>CUCINA</h2></div>
@@ -160,31 +154,20 @@
         function showTab(n){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById('tab'+n).classList.add('show'); document.getElementById('btn-t'+n).classList.add('active'); updateRiepilogo(); }
 
         function initApp(){
-            const cgf=document.getElementById('cgf'), cq=document.getElementById('cq'), cg=document.getElementById('cg'), cp=document.getElementById('cp');
-            if(cq.children.length>0) return;
+            const root = document.getElementById('comanda-root');
+            if(root.children.length > 0) return;
             for(let i=0; i<20; i++){
-                // GF
-                let f=document.createElement('div'); f.className="cell"; f.id=`cell-f-${i}`;
-                let chk=document.createElement('input'); chk.type="checkbox"; chk.className="check-gf"; chk.id=`f-${i}`;
-                chk.onchange=()=>toggleGF(i); f.appendChild(chk); cgf.appendChild(f);
-                // QTY
-                let qdiv=document.createElement('div'); qdiv.className="cell"; qdiv.id=`cell-q-${i}`;
-                let q=document.createElement('input'); q.className='line-input'; q.id=`q-${i}`;
-                q.onkeydown=(e)=>{if(e.key===' '){e.preventDefault(); document.getElementById(`g-${i}`).focus();}};
-                qdiv.appendChild(q); cq.appendChild(qdiv);
-                // GUSTO (TextArea elastica)
-                let gdiv=document.createElement('div'); gdiv.className="cell"; gdiv.id=`cell-g-${i}`;
-                let g=document.createElement('textarea'); g.className='area-input'; g.id=`g-${i}`; g.rows=1;
-                g.oninput=()=>{ g.style.height = "auto"; g.style.height = g.scrollHeight + "px"; updateRiepilogo(); };
-                g.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<19) document.getElementById(`q-${i+1}`).focus();}};
-                gdiv.appendChild(g); cg.appendChild(gdiv);
-                // PREZZO
-                let pdiv=document.createElement('div'); pdiv.className="cell"; pdiv.id=`cell-p-${i}`;
-                let p=document.createElement('input'); p.className='line-input'; p.type='number'; p.id=`p-${i}`;
-                p.oninput=updateRiepilogo;
-                p.onkeydown=(e)=>{if(e.key==='Enter'){e.preventDefault(); if(i<19) document.getElementById(`p-${i+1}`).focus();}};
-                pdiv.appendChild(p); cp.appendChild(pdiv);
+                let row = document.createElement('div'); row.className = 'row-piz'; row.id = `row-${i}`;
+                
+                row.innerHTML = `
+                    <div class="cell-piz c-gf"><input type="checkbox" class="check-gf" id="f-${i}" onchange="toggleGF(${i})"></div>
+                    <div class="cell-piz c-qty"><input type="text" class="input-piz" id="q-${i}" onkeydown="goGusto(event, ${i})"></div>
+                    <div class="cell-piz c-gusto"><textarea class="area-gusto" id="g-${i}" rows="1" oninput="autoExpand(this)" onkeydown="goNext(event, ${i})"></textarea></div>
+                    <div class="cell-piz c-prezzo"><input type="number" class="input-prezzo" id="p-${i}" oninput="updateRiepilogo()" onkeydown="goPrezzoNext(event, ${i})"></div>
+                `;
+                root.appendChild(row);
             }
+            // Orario
             let sel=document.getElementById('o-orario');
             let now=new Date(); let m = Math.ceil((now.getHours()*60+now.getMinutes()+15)/15)*15;
             for(let t=Math.max(m,1080); t<=1320; t+=15){
@@ -193,14 +176,14 @@
             }
         }
 
+        function autoExpand(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; updateRiepilogo(); }
+        function goGusto(e, i) { if(e.key === ' ') { e.preventDefault(); document.getElementById(`g-${i}`).focus(); } }
+        function goNext(e, i) { if(e.key === 'Enter') { e.preventDefault(); if(i<19) document.getElementById(`q-${i+1}`).focus(); } }
+        function goPrezzoNext(e, i) { if(e.key === 'Enter') { e.preventDefault(); if(i<19) document.getElementById(`p-${i+1}`).focus(); } }
+
         function toggleGF(i){
             let isChecked = document.getElementById(`f-${i}`).checked;
-            let cells = [`cell-f-${i}`, `cell-q-${i}`, `cell-g-${i}`, `cell-p-${i}`];
-            cells.forEach(id => {
-                let el = document.getElementById(id);
-                if(isChecked) { el.classList.add('row-is-gf-bg'); el.style.color="#00E676"; }
-                else { el.classList.remove('row-is-gf-bg'); el.style.color=""; }
-            });
+            document.getElementById(`row-${i}`).classList.toggle('row-is-gf', isChecked);
             updateRiepilogo();
         }
 
@@ -224,9 +207,9 @@
             let res = document.getElementById('o-resto').value.toUpperCase();
 
             let payLabel = "";
-            if(sPay === 'CONTANTI' && res) { payLabel = `<span style="color:var(--blu); margin-right:10px;">${res}</span>`; } 
-            else if(sPay === 'POS') { payLabel = `<span style="color:var(--rosso); margin-right:10px;">POS</span>`; } 
-            else if(sPay === 'PAGATO') { payLabel = `<span style="color:var(--ver); margin-right:10px;">PAGATO</span>`; }
+            if(sPay === 'CONTANTI' && res) { payLabel = `<span style="color:var(--blu); font-size:1.1rem;">${res}</span>`; } 
+            else if(sPay === 'POS') { payLabel = `<span style="color:var(--rosso); font-size:1.1rem;">POS</span>`; } 
+            else if(sPay === 'PAGATO') { payLabel = `<span style="color:var(--ver); font-size:1.1rem;">PAGATO</span>`; }
 
             document.getElementById('riepilogo-box').innerHTML = `
                 <div class="rip-line"><span style="color:#666">CLIENTE</span><span style="color:var(--blu)">${cog||"---"}</span></div>
@@ -234,8 +217,8 @@
                 <div class="rip-line"><span style="color:#666">ORARIO</span><span style="color:var(--blu)">${ora||"--:--"}</span></div>
                 <div class="rip-line"><span style="color:#666">CONSEGNA</span><span style="color:var(--blu)">${sCost.toFixed(2)}€</span></div>
                 <div style="margin-top:10px; border-top:1px solid #333; padding-top:10px;">${lHtml}</div>
-                <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
-                    <div style="font-size:1.1rem; font-weight:900;">${payLabel}</div>
+                <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-weight:900;">${payLabel}</div>
                     <div style="color:var(--ora); font-size:1.4rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
                 </div>
             `;
