@@ -44,8 +44,8 @@
         .pay-note-big { font-size: 1.6rem; font-weight: 900; text-align: right; margin-top: 8px; text-transform: uppercase; }
         .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
         
-        /* Allineamento motorino a destra */
-        .rip-costo-riga { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        /* Allineamento motorino FORZATO a destra */
+        .rip-delivery-row { display: flex; width: 100%; justify-content: flex-end; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -188,10 +188,12 @@
                     👤 <b>${cog||"---"}</b><br>
                     📍 <b>${ind||"---"}</b><br>
                     ${nCo ? `<small>📝 ${nCo}</small><br>` : ''}
-                    📞 <b>${tel||"---"}</b><br>
-                    <div class="rip-costo-riga"><span></span> <span style="width:80px; text-align:right;">🛵 <b>${sCost.toFixed(2)}€</b></span></div>
+                    📞 <b>${tel||"---"}</b>
                 </div>
                 <div style="margin-top:10px; border-top:2px solid #333; padding-top:10px;">${lHtml}</div>
+                <div class="rip-delivery-row">
+                    <span style="width:80px; text-align:right; font-size:1.2rem;">🛵 <b>${sCost.toFixed(2)}€</b></span>
+                </div>
                 ${nRi ? `<div style="background:#fff9e5; padding:8px; border-left:4px solid var(--ora); margin-top:10px; font-size:0.9rem;">📝 ${nRi}</div>` : ''}
                 <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
                     <div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
