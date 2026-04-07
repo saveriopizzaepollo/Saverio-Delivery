@@ -6,7 +6,7 @@
     <title>SAVERIO DELIVERY</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --neon: #39FF14; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; }
+        :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --neon: #39FF14; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; --link: #007AFF; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; font-weight: 900; }
         body { background: var(--blu); color: white; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
         .page-init { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 2000; background: var(--blu); text-align: center; }
@@ -57,6 +57,9 @@
         .btn-del { background: var(--rosso); }
         
         .card-body-main { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
+        .card-link-tel { color: var(--link); text-decoration: none; display: inline-block; }
+        .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
+        
         .card-list-wrapper { background: #f9f9f9; padding: 8px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; border: 1px solid #eee; }
         .card-list-wrapper.expanded { background: var(--giallo); padding: 15px; }
         .card-list-text { font-size: 0.9rem; color: #555; }
@@ -310,8 +313,8 @@
                     </div>
                     <div class="card-body-main">
                         <b>👤 ${o.cog}</b><br>
-                        📍 ${o.ind}<br>
-                        <small>📞 ${o.tel}</small>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
+                        <small>📞 <a href="tel:${o.tel}" class="card-link-tel">${o.tel}</a></small>
                     </div>
                     <div class="card-list-wrapper" onclick="toggleCardList(this)">
                         <div class="card-list-text">
@@ -327,7 +330,7 @@
                 </div>`).join('');
         }
 
-        function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`comgooglemaps://?q=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
+        function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
     </script>
 </body>
 </html>
