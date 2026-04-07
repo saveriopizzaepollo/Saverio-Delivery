@@ -60,11 +60,15 @@
         .card-link-tel { color: var(--link); text-decoration: none; display: inline-block; }
         .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
         
+        /* MODIFICA: Stile lista card e Zoom */
         .card-list-wrapper { background: #f9f9f9; padding: 8px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; border: 1px solid #eee; }
-        .card-list-wrapper.expanded { background: var(--giallo); padding: 15px; }
+        .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--blu); } /* Sfondo rimane bianco */
         .card-list-text { font-size: 0.9rem; color: #555; }
         .expanded .card-list-text { font-size: 1.5rem; color: var(--blu); line-height: 1.4; }
         
+        /* MODIFICA: Gluten Free sempre verde nella card */
+        .card-gf-item { color: var(--ver) !important; }
+
         .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
         .pay-label-big { font-size: 1.3rem; font-weight: 900; }
         .tot-label-big { font-size: 1.8rem; color: var(--ora); }
@@ -313,12 +317,12 @@
                     </div>
                     <div class="card-body-main">
                         <b>👤 ${o.cog}</b><br>
-                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
+                        <a href="http://maps.google.com/?q=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
                         <small>📞 <a href="tel:${o.tel}" class="card-link-tel">${o.tel}</a></small>
                     </div>
                     <div class="card-list-wrapper" onclick="toggleCardList(this)">
                         <div class="card-list-text">
-                            ${o.prodotti.map(p => `${p.q} ${p.isGf ? '[GF] ' : ''}${p.g}`).join(o.prodotti.length > 5 ? ' • ' : '<br>')}
+                            ${o.prodotti.map(p => `<span class="${p.isGf ? 'card-gf-item' : ''}">${p.qty}X ${p.isGf ? '[GF] ' : ''}${p.g}</span>`).join(o.prodotti.length > 5 ? ' • ' : '<br>')}
                         </div>
                     </div>
                     <div class="card-footer-big">
@@ -330,7 +334,7 @@
                 </div>`).join('');
         }
 
-        function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
+        function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`http://maps.google.com/?q=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
     </script>
 </body>
 </html>
