@@ -27,32 +27,31 @@
         .label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; text-transform: uppercase; }
         .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; text-transform: uppercase; color: var(--blu); background: white; font-weight: 900; }
 
-        /* QUADERNO PIZZE ELASTICO */
+        /* QUADERNO PIZZE */
         .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; overflow: hidden; width: 100%; display: table; border-collapse: collapse; }
         .row-piz { display: table-row; border-bottom: 1px solid #F0E6BC; }
         .cell-piz { display: table-cell; vertical-align: middle; padding: 5px; min-height: 50px; }
-        
         .c-gf { width: 40px; text-align: center; background: #eee; }
         .c-qty { width: 50px; border-left: 1px solid #F0E6BC; border-right: 1px solid #F0E6BC; }
         .c-gusto { border-right: 2px solid var(--blu); }
         .c-prezzo { width: 90px; background: white; }
-
-        /* AREA SCRITTURA CHE VA A CAPO */
-        .area-gusto { 
-            width: 100%; border: none; background: transparent; outline: none; 
-            font-size: 1.1rem; font-weight: 900; text-transform: uppercase; 
-            color: inherit; resize: none; overflow: hidden; display: block;
-            line-height: 1.2;
-        }
+        .area-gusto { width: 100%; border: none; background: transparent; outline: none; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; color: inherit; resize: none; overflow: hidden; display: block; line-height: 1.2; }
         .input-piz { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: center; }
         .input-prezzo { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: right; }
-
         .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
 
+        /* PIN PAD */
         .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
         
-        .rip-line { margin-bottom: 8px; font-size: 0.95rem; border-bottom: 1px dashed #ccc; padding-bottom: 4px; display: flex; justify-content: space-between; }
+        /* RIEPILOGO AVANZATO */
+        .rip-line { margin-bottom: 12px; font-size: 1rem; border-bottom: 1px dashed #ccc; padding-bottom: 6px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .big-data { font-size: 1.4rem; color: var(--blu); }
+        .pizza-item { display: flex; align-items: flex-start; margin-bottom: 15px; font-size: 1.2rem; }
+        .pizza-qty { width: 45px; color: var(--ora); flex-shrink: 0; }
+        .pizza-desc { flex-grow: 1; text-transform: uppercase; line-height: 1.1; padding-right: 10px; }
+        .pizza-price { width: 80px; text-align: right; color: #555; flex-shrink: 0; }
+        .gf-text { color: var(--ver); }
         .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; margin-top: 15px; }
     </style>
 </head>
@@ -112,8 +111,7 @@
 
             <div id="tab2" class="tab-content">
                 <h2 style="color:var(--blu); margin-bottom:10px;">PIZZE</h2>
-                <div class="comanda-paper" id="comanda-root">
-                    </div>
+                <div class="comanda-paper" id="comanda-root"></div>
             </div>
 
             <div id="tab3" class="tab-content"><h2>CUCINA</h2></div>
@@ -158,7 +156,6 @@
             if(root.children.length > 0) return;
             for(let i=0; i<20; i++){
                 let row = document.createElement('div'); row.className = 'row-piz'; row.id = `row-${i}`;
-                
                 row.innerHTML = `
                     <div class="cell-piz c-gf"><input type="checkbox" class="check-gf" id="f-${i}" onchange="toggleGF(${i})"></div>
                     <div class="cell-piz c-qty"><input type="text" class="input-piz" id="q-${i}" onkeydown="goGusto(event, ${i})"></div>
@@ -167,7 +164,6 @@
                 `;
                 root.appendChild(row);
             }
-            // Orario
             let sel=document.getElementById('o-orario');
             let now=new Date(); let m = Math.ceil((now.getHours()*60+now.getMinutes()+15)/15)*15;
             for(let t=Math.max(m,1080); t<=1320; t+=15){
@@ -197,7 +193,19 @@
                 let v = parseFloat(document.getElementById(`p-${i}`).value)||0;
                 let g = document.getElementById(`g-${i}`).value;
                 let q = document.getElementById(`q-${i}`).value || "0";
-                if(v>0 || g){ pt+=v; lHtml += `<div style="display:flex;justify-content:space-between;font-size:0.9rem;"><span>${q}X ${g.toUpperCase()}</span><span>${v.toFixed(2)}€</span></div>`; }
+                let isGf = document.getElementById(`f-${i}`).checked;
+                
+                if(v>0 || g.trim() !== ""){ 
+                    pt+=v;
+                    let gfTag = isGf ? '<span class="gf-text">GLUTEN FREE </span>' : '';
+                    let itemClass = isGf ? 'gf-text' : '';
+                    lHtml += `
+                        <div class="pizza-item ${itemClass}">
+                            <div class="pizza-qty">${q}X</div>
+                            <div class="pizza-desc">${gfTag}${g.toUpperCase()}</div>
+                            <div class="pizza-price">${v.toFixed(2)}€</div>
+                        </div>`;
+                }
             }
             let tot = pt + sCost;
             document.getElementById('main-total').innerText = tot.toFixed(2).replace('.',',') + " €";
@@ -212,14 +220,14 @@
             else if(sPay === 'PAGATO') { payLabel = `<span style="color:var(--ver); font-size:1.1rem;">PAGATO</span>`; }
 
             document.getElementById('riepilogo-box').innerHTML = `
-                <div class="rip-line"><span style="color:#666">CLIENTE</span><span style="color:var(--blu)">${cog||"---"}</span></div>
-                <div class="rip-line"><span style="color:#666">INDIRIZZO</span><span style="color:var(--blu)">${ind||"---"}</span></div>
-                <div class="rip-line"><span style="color:#666">ORARIO</span><span style="color:var(--blu)">${ora||"--:--"}</span></div>
-                <div class="rip-line"><span style="color:#666">CONSEGNA</span><span style="color:var(--blu)">${sCost.toFixed(2)}€</span></div>
-                <div style="margin-top:10px; border-top:1px solid #333; padding-top:10px;">${lHtml}</div>
+                <div class="rip-line"><span style="color:#666">CLIENTE</span><span class="big-data">${cog||"---"}</span></div>
+                <div class="rip-line"><span style="color:#666">INDIRIZZO</span><span class="big-data">${ind||"---"}</span></div>
+                <div class="rip-line"><span style="color:#666">ORARIO</span><span style="color:var(--blu); font-size:1.2rem;">${ora||"--:--"}</span></div>
+                <div class="rip-line"><span style="color:#666">CONSEGNA</span><span style="color:var(--blu); font-size:1.2rem;">${sCost.toFixed(2)}€</span></div>
+                <div style="margin-top:20px; border-top:2px solid #333; padding-top:15px;">${lHtml}</div>
                 <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
                     <div style="font-weight:900;">${payLabel}</div>
-                    <div style="color:var(--ora); font-size:1.4rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
+                    <div style="color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
                 </div>
             `;
             let ok = cog && ind && ora && sCost>0 && pt>0 && sPay;
