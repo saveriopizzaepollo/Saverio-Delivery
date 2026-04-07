@@ -53,12 +53,15 @@
         .pizza-price { width: 80px; text-align: right; color: #555; flex-shrink: 0; }
         .gf-text { color: var(--ver); }
         .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; margin-top: 15px; }
+        
+        /* STILI PAGAMENTO SOTTO TOTALE */
+        .pay-note-big { font-size: 1.5rem; font-weight: 900; text-align: right; margin-top: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div id="page-start" class="page-init show">
-        <h1 style="font-size:3.5rem; margin-bottom:40px;">SAVERIO DELIVERY</h1>
+        <h1 style="font-size:3rem; margin-bottom:40px;">SAVERIO DELIVERY</h1>
         <button onclick="showPin()" style="padding:20px 40px; background:var(--ora); color:white; border:none; border-radius:15px; font-size:1.5rem;">ADMIN LOGIN</button>
     </div>
 
@@ -214,10 +217,10 @@
             let ora = document.getElementById('o-orario').value;
             let res = document.getElementById('o-resto').value.toUpperCase();
 
-            let payLabel = "";
-            if(sPay === 'CONTANTI' && res) { payLabel = `<span style="color:var(--blu); font-size:1.1rem;">${res}</span>`; } 
-            else if(sPay === 'POS') { payLabel = `<span style="color:var(--rosso); font-size:1.1rem;">POS</span>`; } 
-            else if(sPay === 'PAGATO') { payLabel = `<span style="color:var(--ver); font-size:1.1rem;">PAGATO</span>`; }
+            let payLabelHtml = "";
+            if(sPay === 'CONTANTI' && res) { payLabelHtml = `<div class="pay-note-big" style="color:var(--blu);">${res}</div>`; } 
+            else if(sPay === 'POS') { payLabelHtml = `<div class="pay-note-big" style="color:var(--rosso);">POS</div>`; } 
+            else if(sPay === 'PAGATO') { payLabelHtml = `<div class="pay-note-big" style="color:var(--ver);">PAGATO</div>`; }
 
             document.getElementById('riepilogo-box').innerHTML = `
                 <div class="rip-line"><span style="color:#666">CLIENTE</span><span class="big-data">${cog||"---"}</span></div>
@@ -225,9 +228,9 @@
                 <div class="rip-line"><span style="color:#666">ORARIO</span><span style="color:var(--blu); font-size:1.2rem;">${ora||"--:--"}</span></div>
                 <div class="rip-line"><span style="color:#666">CONSEGNA</span><span style="color:var(--blu); font-size:1.2rem;">${sCost.toFixed(2)}€</span></div>
                 <div style="margin-top:20px; border-top:2px solid #333; padding-top:15px;">${lHtml}</div>
-                <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
-                    <div style="font-weight:900;">${payLabel}</div>
-                    <div style="color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
+                <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
+                    <div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>
+                    ${payLabelHtml}
                 </div>
             `;
             let ok = cog && ind && ora && sCost>0 && pt>0 && sPay;
