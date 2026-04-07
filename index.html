@@ -46,7 +46,6 @@
         .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
         .rip-delivery-row { display: flex; width: 100%; justify-content: flex-end; margin-top: 5px; }
 
-        /* CARDS CONSEGNE AGGIORNATE */
         .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); transition: all 0.3s ease; }
         .card-header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
         .card-num-big { font-size: 1.8rem; color: var(--blu); }
@@ -60,13 +59,10 @@
         .card-link-tel { color: var(--link); text-decoration: none; display: inline-block; }
         .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
         
-        /* MODIFICA: Stile lista card e Zoom */
         .card-list-wrapper { background: #f9f9f9; padding: 8px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; border: 1px solid #eee; }
-        .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--blu); } /* Sfondo rimane bianco */
+        .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--blu); }
         .card-list-text { font-size: 0.9rem; color: #555; }
         .expanded .card-list-text { font-size: 1.5rem; color: var(--blu); line-height: 1.4; }
-        
-        /* MODIFICA: Gluten Free sempre verde nella card */
         .card-gf-item { color: var(--ver) !important; }
 
         .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
@@ -185,10 +181,19 @@
                 row.innerHTML = `<div class="cell-piz c-gf"><input type="checkbox" class="check-gf" id="f-${i}" onchange="toggleGF(${i})"></div><div class="cell-piz c-qty"><input type="text" class="input-piz" id="q-${i}" onkeydown="goGusto(event, ${i})"></div><div class="cell-piz c-gusto"><textarea class="area-gusto" id="g-${i}" rows="1" oninput="autoExpand(this)" onkeydown="goNext(event, ${i})"></textarea></div><div class="cell-piz c-prezzo"><input type="number" class="input-prezzo" id="p-${i}" oninput="updateRiepilogo()" onkeydown="goPrezzoNext(event, ${i})"></div>`;
                 root.appendChild(row);
             }
+            
+            // LOGICA ORARIO CORRETTA
             let sel=document.getElementById('o-orario');
-            let now=new Date(); let m = Math.ceil((now.getHours()*60+now.getMinutes()+15)/15)*15;
-            for(let t=Math.max(m,1080); t<=1320; t+=15){
-                let opt=document.createElement('option'); let time=`${Math.floor(t/60)}:${t%60===0?'00':t%60}`; opt.value=time; opt.innerText=time; sel.appendChild(opt);
+            sel.innerHTML = '<option value="">🕒 ORARIO CONSEGNA</option>';
+            let now=new Date();
+            let startMin = Math.ceil((now.getHours()*60 + now.getMinutes()) / 15) * 15;
+            // Se è mattina presto o tardi, partiamo comunque da un orario logico serale se necessario, 
+            // ma per ora partiamo da "adesso" fino a fine giornata.
+            for(let t=startMin; t < 1440; t+=15){
+                let h = Math.floor(t/60);
+                let m = t%60;
+                let time = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+                let opt=document.createElement('option'); opt.value=time; opt.innerText=time; sel.appendChild(opt);
             }
         }
 
@@ -299,9 +304,7 @@
             }
         }
 
-        function toggleCardList(element) {
-            element.classList.toggle('expanded');
-        }
+        function toggleCardList(element) { element.classList.toggle('expanded'); }
 
         function renderConsegne() {
             const container = document.getElementById('consegne-lista');
@@ -317,12 +320,12 @@
                     </div>
                     <div class="card-body-main">
                         <b>👤 ${o.cog}</b><br>
-                        <a href="http://maps.google.com/?q=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
                         <small>📞 <a href="tel:${o.tel}" class="card-link-tel">${o.tel}</a></small>
                     </div>
                     <div class="card-list-wrapper" onclick="toggleCardList(this)">
                         <div class="card-list-text">
-                            ${o.prodotti.map(p => `<span class="${p.isGf ? 'card-gf-item' : ''}">${p.qty}X ${p.isGf ? '[GF] ' : ''}${p.g}</span>`).join(o.prodotti.length > 5 ? ' • ' : '<br>')}
+                            ${o.prodotti.map(p => `<div class="${p.isGf ? 'card-gf-item' : ''}">${p.q} ${p.isGf ? '[GF] ' : ''}${p.g}</div>`).join('')}
                         </div>
                     </div>
                     <div class="card-footer-big">
@@ -334,7 +337,7 @@
                 </div>`).join('');
         }
 
-        function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`http://maps.google.com/?q=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
+        function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
     </script>
 </body>
 </html>
