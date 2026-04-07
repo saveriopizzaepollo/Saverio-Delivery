@@ -42,9 +42,10 @@
         .gf-text { color: var(--ver); }
         .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
         .pay-note-big { font-size: 1.6rem; font-weight: 900; text-align: right; margin-top: 8px; text-transform: uppercase; }
-        
-        /* NUOVO STILE NOTE */
         .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
+        
+        /* Allineamento motorino a destra */
+        .rip-costo-riga { display: flex; justify-content: space-between; align-items: center; width: 100%; }
     </style>
 </head>
 <body>
@@ -84,9 +85,7 @@
                     <button style="width:50px; background:var(--rosso); color:white; border:none; border-radius:10px;" onclick="skipTel()">X</button>
                 </div>
                 <input type="text" id="o-indirizzo" class="input-big" placeholder="📍 INDIRIZZO" oninput="updateRiepilogo()">
-                
                 <input type="text" id="o-nota-cons" class="input-big note-field" placeholder="📝 NOTA CONSEGNA (ES. CITOFONO/PIANO)" oninput="updateRiepilogo()">
-                
                 <button id="btn-maps" style="width:100%; padding:15px; background:#4285F4; color:white; border:none; border-radius:10px; margin-bottom:12px;" onclick="verifyMaps()">📍 VERIFICA POSIZIONE</button>
                 <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:5px; margin-bottom:12px;">
                     <button class="nav-btn" style="background:white; border:2px solid var(--blu);" id="cost1" onclick="setCost(1)">1€</button>
@@ -106,9 +105,7 @@
             <div id="tab4" class="tab-content">
                 <h2>RIEPILOGO</h2>
                 <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin-bottom:15px; color:var(--blu);"></div>
-                
                 <input type="text" id="o-nota-rip" class="input-big note-field" placeholder="📝 NOTA ORDINE (ES. AGGIUNTE PARTICOLARI)" oninput="updateRiepilogo()">
-                
                 <div class="pay-grid">
                     <button class="nav-btn" id="p-cont" onclick="setPay('CONTANTI')">CONTANTI</button>
                     <button class="nav-btn" id="p-pos" onclick="setPay('POS')">POS</button>
@@ -192,7 +189,7 @@
                     📍 <b>${ind||"---"}</b><br>
                     ${nCo ? `<small>📝 ${nCo}</small><br>` : ''}
                     📞 <b>${tel||"---"}</b><br>
-                    🛵 <b>${sCost.toFixed(2)}€</b>
+                    <div class="rip-costo-riga"><span></span> <span style="width:80px; text-align:right;">🛵 <b>${sCost.toFixed(2)}€</b></span></div>
                 </div>
                 <div style="margin-top:10px; border-top:2px solid #333; padding-top:10px;">${lHtml}</div>
                 ${nRi ? `<div style="background:#fff9e5; padding:8px; border-left:4px solid var(--ora); margin-top:10px; font-size:0.9rem;">📝 ${nRi}</div>` : ''}
