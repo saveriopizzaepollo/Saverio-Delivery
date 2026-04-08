@@ -46,6 +46,7 @@
         .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
         .rip-delivery-row { display: flex; width: 100%; justify-content: flex-end; margin-top: 5px; }
 
+        /* CARDS CONSEGNE AGGIORNATE */
         .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); transition: all 0.3s ease; }
         .card-header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
         .card-num-big { font-size: 1.8rem; color: var(--blu); }
@@ -60,11 +61,10 @@
         .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
         
         .card-list-wrapper { background: #f9f9f9; padding: 8px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; border: 1px solid #eee; }
-        .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--blu); }
+        .card-list-wrapper.expanded { background: var(--giallo); padding: 15px; }
         .card-list-text { font-size: 0.9rem; color: #555; }
         .expanded .card-list-text { font-size: 1.5rem; color: var(--blu); line-height: 1.4; }
-        .card-gf-item { color: var(--ver) !important; }
-
+        
         .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
         .pay-label-big { font-size: 1.3rem; font-weight: 900; }
         .tot-label-big { font-size: 1.8rem; color: var(--ora); }
@@ -181,19 +181,28 @@
                 row.innerHTML = `<div class="cell-piz c-gf"><input type="checkbox" class="check-gf" id="f-${i}" onchange="toggleGF(${i})"></div><div class="cell-piz c-qty"><input type="text" class="input-piz" id="q-${i}" onkeydown="goGusto(event, ${i})"></div><div class="cell-piz c-gusto"><textarea class="area-gusto" id="g-${i}" rows="1" oninput="autoExpand(this)" onkeydown="goNext(event, ${i})"></textarea></div><div class="cell-piz c-prezzo"><input type="number" class="input-prezzo" id="p-${i}" oninput="updateRiepilogo()" onkeydown="goPrezzoNext(event, ${i})"></div>`;
                 root.appendChild(row);
             }
-            
-            // LOGICA ORARIO CORRETTA
+            updateTimeSelect();
+        }
+
+        function updateTimeSelect() {
             let sel=document.getElementById('o-orario');
             sel.innerHTML = '<option value="">🕒 ORARIO CONSEGNA</option>';
-            let now=new Date();
-            let startMin = Math.ceil((now.getHours()*60 + now.getMinutes()) / 15) * 15;
-            // Se è mattina presto o tardi, partiamo comunque da un orario logico serale se necessario, 
-            // ma per ora partiamo da "adesso" fino a fine giornata.
-            for(let t=startMin; t < 1440; t+=15){
-                let h = Math.floor(t/60);
-                let m = t%60;
-                let time = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
-                let opt=document.createElement('option'); opt.value=time; opt.innerText=time; sel.appendChild(opt);
+            
+            let now = new Date();
+            let currentMinutes = now.getHours() * 60 + now.getMinutes();
+            
+            // Start at 18:00 (1080 min) or the current time rounded up to 15 min, whichever is later
+            let startMinutes = Math.max(1080, Math.ceil(currentMinutes / 15) * 15);
+            
+            // Max time is 22:30 (1350 min)
+            for(let t = startMinutes; t <= 1350; t += 15) {
+                let hh = Math.floor(t / 60);
+                let mm = t % 60;
+                let timeStr = `${hh}:${mm === 0 ? '00' : mm}`;
+                let opt = document.createElement('option');
+                opt.value = timeStr;
+                opt.innerText = timeStr;
+                sel.appendChild(opt);
             }
         }
 
@@ -282,13 +291,19 @@
                 document.getElementById(`q-${i}`).value = ""; document.getElementById(`g-${i}`).value = ""; document.getElementById(`g-${i}`).style.height = "auto";
                 document.getElementById(`p-${i}`).value = ""; document.getElementById(`f-${i}`).checked = false; document.getElementById(`row-${i}`).classList.remove('row-is-gf');
             }
+            updateTimeSelect();
             updateRiepilogo();
         }
 
         function modificaOrdine(index) {
             let o = ordiniSalvati[index]; editIndex = index;
             document.getElementById('o-cognome').value = o.cog; document.getElementById('o-tel').value = o.tel; document.getElementById('o-indirizzo').value = o.ind;
-            document.getElementById('o-nota-cons').value = o.nota; document.getElementById('o-nota-rip').value = o.notaRip; document.getElementById('o-orario').value = o.ora; document.getElementById('o-resto').value = o.resto;
+            document.getElementById('o-nota-cons').value = o.nota; document.getElementById('o-nota-rip').value = o.notaRip; 
+            
+            updateTimeSelect();
+            document.getElementById('o-orario').value = o.ora; 
+            document.getElementById('o-resto').value = o.resto;
+            
             setCost(o.costoCons); setPay(o.pay);
             o.prodotti.forEach((p, i) => {
                 document.getElementById(`q-${i}`).value = p.q; document.getElementById(`g-${i}`).value = p.g; document.getElementById(`p-${i}`).value = p.v;
@@ -304,7 +319,9 @@
             }
         }
 
-        function toggleCardList(element) { element.classList.toggle('expanded'); }
+        function toggleCardList(element) {
+            element.classList.toggle('expanded');
+        }
 
         function renderConsegne() {
             const container = document.getElementById('consegne-lista');
@@ -325,7 +342,7 @@
                     </div>
                     <div class="card-list-wrapper" onclick="toggleCardList(this)">
                         <div class="card-list-text">
-                            ${o.prodotti.map(p => `<div class="${p.isGf ? 'card-gf-item' : ''}">${p.q} ${p.isGf ? '[GF] ' : ''}${p.g}</div>`).join('')}
+                            ${o.prodotti.map(p => `${p.q} ${p.isGf ? '[GF] ' : ''}${p.g}`).join(o.prodotti.length > 5 ? ' • ' : '<br>')}
                         </div>
                     </div>
                     <div class="card-footer-big">
