@@ -29,7 +29,6 @@
         .c-gusto { border-right: 2px solid var(--blu); }
         .c-prezzo { width: 90px; background: white; }
         
-        /* Nuovi Colori Testo */
         .tipo-polleria { color: var(--rosso) !important; }
         .tipo-bibite { color: var(--bibite) !important; }
         .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
@@ -68,8 +67,10 @@
         
         .card-list-wrapper { background: #f9f9f9; padding: 8px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; border: 1px solid #eee; }
         .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--ora); }
-        .card-list-text { font-size: 0.9rem; color: #555; }
-        .expanded .card-list-text { font-size: 1.5rem; color: var(--blu); line-height: 1.4; }
+        
+        /* MODIFICA: PRODOTTI SEMPRE INCOLONNATI */
+        .card-list-text { font-size: 0.9rem; color: #555; display: flex; flex-direction: column; gap: 3px; }
+        .expanded .card-list-text { font-size: 1.5rem; color: var(--blu); line-height: 1.4; gap: 6px; }
         
         .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
         .pay-label-big { font-size: 1.3rem; font-weight: 900; }
@@ -336,29 +337,27 @@
         function modificaOrdine(index) {
             let o = ordiniSalvati[index]; editIndex = index;
             
-            // 1. Reset campi
             resetForm();
 
-            // 2. Carica Dati Cliente
             document.getElementById('o-cognome').value = o.cog; 
             document.getElementById('o-tel').value = o.tel; 
             document.getElementById('o-indirizzo').value = o.ind;
             document.getElementById('o-nota-cons').value = o.nota; 
             document.getElementById('o-nota-rip').value = o.notaRip; 
             
-            // 3. Orario
             updateTimeSelect();
             let selOra = document.getElementById('o-orario');
             let hasTime = Array.from(selOra.options).some(opt => opt.value === o.ora);
-            if(!hasTime){ let opt = document.createElement('option'); opt.value = o.ora; opt.innerText = o.ora; selOra.appendChild(opt); }
+            if(!hasTime){ 
+                let opt = document.createElement('option'); opt.value = o.ora; opt.innerText = o.ora; 
+                selOra.appendChild(opt); 
+            }
             selOra.value = o.ora; 
             document.getElementById('o-resto').value = o.resto;
             
-            // 4. Costi/Pagamento
             setCost(o.costoCons); 
             setPay(o.pay);
 
-            // 5. Carica Prodotti - CARICAMENTO FORZATO
             o.prodotti.forEach((prod, i) => {
                 if(i < 25) {
                     let qInput = document.getElementById(`q-${i}`);
@@ -384,6 +383,7 @@
                     gInput.style.height = (gInput.scrollHeight > 0 ? gInput.scrollHeight : 50) + 'px';
                 }
             });
+
             showTab(1);
         }
 
@@ -417,7 +417,7 @@
                             ${o.prodotti.map(p => {
                                 let cClass = p.isGf ? 'var(--ver)' : (p.tipo === '1' ? 'var(--rosso)' : (p.tipo === '2' ? 'var(--bibite)' : 'inherit'));
                                 return `<span style="color:${cClass}">${p.q} ${p.isGf ? '[GF] ' : ''}${p.g}</span>`
-                            }).join(o.prodotti.length > 5 ? ' • ' : '<br>')}
+                            }).join('<br>')}
                         </div>
                     </div>
                     <div class="card-footer-big">
