@@ -46,7 +46,6 @@
         .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
         .rip-delivery-row { display: flex; width: 100%; justify-content: flex-end; margin-top: 5px; }
 
-        /* CARDS CONSEGNE AGGIORNATE */
         .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); transition: all 0.3s ease; }
         .card-header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
         .card-num-big { font-size: 1.8rem; color: var(--blu); }
@@ -55,13 +54,12 @@
         .act-btn-small { border: none; padding: 5px 10px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; color: white; }
         .btn-mod { background: var(--blu); }
         .btn-del { background: var(--rosso); }
-        
         .card-body-main { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
         .card-link-tel { color: var(--link); text-decoration: none; display: inline-block; }
         .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
         
         .card-list-wrapper { background: #f9f9f9; padding: 8px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; border: 1px solid #eee; }
-        .card-list-wrapper.expanded { background: var(--giallo); padding: 15px; }
+        .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--ora); }
         .card-list-text { font-size: 0.9rem; color: #555; }
         .expanded .card-list-text { font-size: 1.5rem; color: var(--blu); line-height: 1.4; }
         
@@ -187,21 +185,15 @@
         function updateTimeSelect() {
             let sel=document.getElementById('o-orario');
             sel.innerHTML = '<option value="">🕒 ORARIO CONSEGNA</option>';
-            
             let now = new Date();
             let currentMinutes = now.getHours() * 60 + now.getMinutes();
-            
-            // Start at 18:00 (1080 min) or the current time rounded up to 15 min, whichever is later
             let startMinutes = Math.max(1080, Math.ceil(currentMinutes / 15) * 15);
-            
-            // Max time is 22:30 (1350 min)
             for(let t = startMinutes; t <= 1350; t += 15) {
                 let hh = Math.floor(t / 60);
                 let mm = t % 60;
                 let timeStr = `${hh}:${mm === 0 ? '00' : mm}`;
                 let opt = document.createElement('option');
-                opt.value = timeStr;
-                opt.innerText = timeStr;
+                opt.value = timeStr; opt.innerText = timeStr;
                 sel.appendChild(opt);
             }
         }
@@ -212,8 +204,8 @@
         function goPrezzoNext(e, i) { if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`p-${i+1}`).focus(); } }
 
         function toggleGF(i){ let isChecked = document.getElementById(`f-${i}`).checked; document.getElementById(`row-${i}`).classList.toggle('row-is-gf', isChecked); updateRiepilogo(); }
-        function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
-        function setPay(t){ sPay=t; document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); let k = t === 'PAGATO' ? 'pag' : t === 'CONTANTI' ? 'cont' : 'pos'; document.getElementById('p-'+k).style.background='var(--ora)'; document.getElementById('resto-box').style.display = (t==='CONTANTI') ? 'block' : 'none'; updateRiepilogo(); }
+        function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); if(v>0) document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
+        function setPay(t){ sPay=t; document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); if(t){ let k = t === 'PAGATO' ? 'pag' : t === 'CONTANTI' ? 'cont' : 'pos'; document.getElementById('p-'+k).style.background='var(--ora)'; } document.getElementById('resto-box').style.display = (t==='CONTANTI') ? 'block' : 'none'; updateRiepilogo(); }
         function skipTel(){ document.getElementById('o-tel').value="INTERNO"; updateRiepilogo(); }
 
         function updateRiepilogo(){
@@ -226,7 +218,6 @@
             let nOrd = (editIndex !== -1) ? ordiniSalvati[editIndex].num : "#" + currentOrderNum.toString().padStart(2, '0');
             document.getElementById('header-tag').innerText = nOrd;
             document.getElementById('btn-invia').innerText = (editIndex !== -1) ? `AGGIORNA ORDINE ${nOrd}` : "INVIA ORDINE";
-
             let cog = document.getElementById('o-cognome').value.toUpperCase(); 
             let ind = document.getElementById('o-indirizzo').value.toUpperCase(); 
             let tel = document.getElementById('o-tel').value.toUpperCase();
@@ -234,13 +225,11 @@
             let nRi = document.getElementById('o-nota-rip').value.toUpperCase();
             let ora = document.getElementById('o-orario').value; 
             let res = document.getElementById('o-resto').value.toUpperCase();
-            
             let lHtml = items.map(item => `<div class="pizza-item ${item.isGf ? 'gf-text' : ''}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf ? 'GLUTEN FREE ' : ''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`).join('');
             let pL = ""; 
             if(sPay === 'CONTANTI' && res) { pL = `<div class="pay-note-big" style="color:var(--blu);">${res}</div>`; } 
             else if(sPay === 'POS') { pL = `<div class="pay-note-big" style="color:var(--rosso);">POS</div>`; } 
             else if(sPay === 'PAGATO') { pL = `<div class="pay-note-big" style="color:var(--ver);">PAGATO</div>`; }
-
             document.getElementById('riepilogo-box').innerHTML = `
                 <div class="rip-row-top"><span>🏷️ ${nOrd}</span> <span>🕒 ${ora||"--:--"}</span></div>
                 <div class="rip-row-client">👤 <b>${cog||"---"}</b><br>📍 <b>${ind||"---"}</b><br>${nCo ? `<small>📝 ${nCo}</small><br>` : ''}📞 <b>${tel||"---"}</b></div>
@@ -248,7 +237,6 @@
                 <div class="rip-delivery-row"><span style="width:80px; text-align:right; font-size:1.2rem;">🛵 <b>${sCost.toFixed(2)}€</b></span></div>
                 ${nRi ? `<div style="background:#fff9e5; padding:8px; border-left:4px solid var(--ora); margin-top:10px; font-size:0.9rem;">📝 ${nRi}</div>` : ''}
                 <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;"><div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div>${pL}</div>`;
-            
             let ok = cog && ind && ora && sCost>0 && pt>0 && sPay;
             document.getElementById('btn-invia').style.background = ok ? 'var(--ver)' : '#ccc'; document.getElementById('btn-invia').disabled = !ok;
         }
@@ -259,7 +247,6 @@
                 let v = parseFloat(document.getElementById(`p-${i}`).value)||0; let g = document.getElementById(`g-${i}`).value; let q = document.getElementById(`q-${i}`).value || "0"; let isGf = document.getElementById(`f-${i}`).checked;
                 if(v>0 || g.trim() !== "") items.push({q, g: g.toUpperCase(), v, isGf});
             }
-
             let ordine = {
                 num: (editIndex !== -1) ? ordiniSalvati[editIndex].num : "#" + currentOrderNum.toString().padStart(2, '0'),
                 ora: document.getElementById('o-orario').value,
@@ -269,18 +256,14 @@
                 nota: document.getElementById('o-nota-cons').value.toUpperCase(),
                 notaRip: document.getElementById('o-nota-rip').value.toUpperCase(),
                 tot: document.getElementById('main-total').innerText,
-                costoCons: sCost,
-                pay: sPay,
+                costoCons: sCost, pay: sPay,
                 resto: document.getElementById('o-resto').value.toUpperCase(),
                 prodotti: items
             };
-
             if(editIndex !== -1) { ordiniSalvati[editIndex] = ordine; editIndex = -1; } 
             else { ordiniSalvati.push(ordine); currentOrderNum++; }
-
             ordiniSalvati.sort((a,b) => a.ora.localeCompare(b.ora));
-            resetForm();
-            showTab(5);
+            resetForm(); showTab(5);
         }
 
         function resetForm() {
@@ -291,25 +274,32 @@
                 document.getElementById(`q-${i}`).value = ""; document.getElementById(`g-${i}`).value = ""; document.getElementById(`g-${i}`).style.height = "auto";
                 document.getElementById(`p-${i}`).value = ""; document.getElementById(`f-${i}`).checked = false; document.getElementById(`row-${i}`).classList.remove('row-is-gf');
             }
-            updateTimeSelect();
-            updateRiepilogo();
+            updateTimeSelect(); updateRiepilogo();
         }
 
         function modificaOrdine(index) {
             let o = ordiniSalvati[index]; editIndex = index;
             document.getElementById('o-cognome').value = o.cog; document.getElementById('o-tel').value = o.tel; document.getElementById('o-indirizzo').value = o.ind;
             document.getElementById('o-nota-cons').value = o.nota; document.getElementById('o-nota-rip').value = o.notaRip; 
-            
             updateTimeSelect();
+            let hasTime = Array.from(document.getElementById('o-orario').options).some(opt => opt.value === o.ora);
+            if(!hasTime){ let opt = document.createElement('option'); opt.value = o.ora; opt.innerText = o.ora; document.getElementById('o-orario').appendChild(opt); }
             document.getElementById('o-orario').value = o.ora; 
             document.getElementById('o-resto').value = o.resto;
-            
             setCost(o.costoCons); setPay(o.pay);
-            o.prodotti.forEach((p, i) => {
-                document.getElementById(`q-${i}`).value = p.q; document.getElementById(`g-${i}`).value = p.g; document.getElementById(`p-${i}`).value = p.v;
-                document.getElementById(`f-${i}`).checked = p.isGf; if(p.isGf) document.getElementById(`row-${i}`).classList.add('row-is-gf');
-                autoExpand(document.getElementById(`g-${i}`));
-            });
+            for(let i=0; i<25; i++) {
+                if(o.prodotti[i]) {
+                    document.getElementById(`q-${i}`).value = o.prodotti[i].q; 
+                    document.getElementById(`g-${i}`).value = o.prodotti[i].g;
+                    document.getElementById(`p-${i}`).value = o.prodotti[i].v;
+                    document.getElementById(`f-${i}`).checked = o.prodotti[i].isGf;
+                    if(o.prodotti[i].isGf) document.getElementById(`row-${i}`).classList.add('row-is-gf');
+                    autoExpand(document.getElementById(`g-${i}`));
+                } else {
+                    document.getElementById(`q-${i}`).value = ""; document.getElementById(`g-${i}`).value = ""; document.getElementById(`p-${i}`).value = "";
+                    document.getElementById(`f-${i}`).checked = false; document.getElementById(`row-${i}`).classList.remove('row-is-gf');
+                }
+            }
             showTab(1);
         }
 
@@ -319,9 +309,7 @@
             }
         }
 
-        function toggleCardList(element) {
-            element.classList.toggle('expanded');
-        }
+        function toggleCardList(element) { element.classList.toggle('expanded'); }
 
         function renderConsegne() {
             const container = document.getElementById('consegne-lista');
@@ -342,7 +330,7 @@
                     </div>
                     <div class="card-list-wrapper" onclick="toggleCardList(this)">
                         <div class="card-list-text">
-                            ${o.prodotti.map(p => `${p.q} ${p.isGf ? '[GF] ' : ''}${p.g}`).join(o.prodotti.length > 5 ? ' • ' : '<br>')}
+                            ${o.prodotti.map(p => `<span style="color:${p.isGf?'var(--ver)':'inherit'}">${p.q} ${p.isGf ? '[GF] ' : ''}${p.g}</span>`).join(o.prodotti.length > 5 ? ' • ' : '<br>')}
                         </div>
                     </div>
                     <div class="card-footer-big">
