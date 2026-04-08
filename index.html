@@ -279,48 +279,62 @@
 
         function modificaOrdine(index) {
             let o = ordiniSalvati[index]; editIndex = index;
-            // Carica Dati Cliente
+            
+            // 1. Reset campi attuali per sicurezza
+            for(let i=0; i<25; i++) {
+                document.getElementById(`q-${i}`).value = "";
+                document.getElementById(`g-${i}`).value = "";
+                document.getElementById(`p-${i}`).value = "";
+                document.getElementById(`f-${i}`).checked = false;
+                document.getElementById(`row-${i}`).classList.remove('row-is-gf');
+                document.getElementById(`g-${i}`).style.height = 'auto';
+            }
+
+            // 2. Carica Dati Cliente
             document.getElementById('o-cognome').value = o.cog; 
             document.getElementById('o-tel').value = o.tel; 
             document.getElementById('o-indirizzo').value = o.ind;
             document.getElementById('o-nota-cons').value = o.nota; 
             document.getElementById('o-nota-rip').value = o.notaRip; 
             
-            // Gestione Orario
+            // 3. Gestione Orario
             updateTimeSelect();
             let selOra = document.getElementById('o-orario');
             let hasTime = Array.from(selOra.options).some(opt => opt.value === o.ora);
-            if(!hasTime){ let opt = document.createElement('option'); opt.value = o.ora; opt.innerText = o.ora; selOra.appendChild(opt); }
+            if(!hasTime){ 
+                let opt = document.createElement('option'); opt.value = o.ora; opt.innerText = o.ora; 
+                selOra.appendChild(opt); 
+            }
             selOra.value = o.ora; 
             document.getElementById('o-resto').value = o.resto;
             
-            // Gestione Costi e Pagamento
+            // 4. Gestione Costi e Pagamento
             setCost(o.costoCons); 
             setPay(o.pay);
 
-            // Carica Prodotti - RESETTA PRIMA TUTTI
-            for(let i=0; i<25; i++) {
-                let qInput = document.getElementById(`q-${i}`);
-                let gInput = document.getElementById(`g-${i}`);
-                let pInput = document.getElementById(`p-${i}`);
-                let fCheck = document.getElementById(`f-${i}`);
-                let row = document.getElementById(`row-${i}`);
+            // 5. Carica Prodotti - CARICAMENTO FORZATO
+            o.prodotti.forEach((prod, i) => {
+                if(i < 25) {
+                    let qInput = document.getElementById(`q-${i}`);
+                    let gInput = document.getElementById(`g-${i}`);
+                    let pInput = document.getElementById(`p-${i}`);
+                    let fCheck = document.getElementById(`f-${i}`);
+                    let row = document.getElementById(`row-${i}`);
 
-                if(o.prodotti && o.prodotti[i]) {
-                    qInput.value = o.prodotti[i].q; 
-                    gInput.value = o.prodotti[i].g;
-                    pInput.value = o.prodotti[i].v;
-                    fCheck.checked = o.prodotti[i].isGf;
-                    if(o.prodotti[i].isGf) row.classList.add('row-is-gf'); else row.classList.remove('row-is-gf');
-                    // Forza l'altezza della textarea
+                    qInput.value = prod.q; 
+                    gInput.value = prod.g; // Qui inseriamo il testo del prodotto
+                    pInput.value = prod.v;
+                    fCheck.checked = prod.isGf;
+                    
+                    if(prod.isGf) row.classList.add('row-is-gf');
+                    
+                    // Forza l'altezza subito dopo l'inserimento
                     gInput.style.height = 'auto';
-                    gInput.style.height = gInput.scrollHeight + 'px';
-                } else {
-                    qInput.value = ""; gInput.value = ""; pInput.value = "";
-                    fCheck.checked = false; row.classList.remove('row-is-gf');
-                    gInput.style.height = 'auto';
+                    gInput.style.height = (gInput.scrollHeight > 0 ? gInput.scrollHeight : 50) + 'px';
                 }
-            }
+            });
+
+            // 6. Sposta sulla Tab Cliente
             showTab(1);
         }
 
