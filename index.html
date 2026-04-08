@@ -25,10 +25,10 @@
         .row-piz { display: table-row; border-bottom: 1px solid #F0E6BC; }
         .cell-piz { display: table-cell; vertical-align: middle; padding: 5px; min-height: 50px; }
         .c-gf { width: 35px; text-align: center; background: #eee; }
-        .c-tipo { width: 40px; text-align: center; background: #e5e5e5; border-left: 1px solid #ccc; }
+        .c-tipo { width: 28px; text-align: center; background: #e5e5e5; border-left: 1px solid #ccc; }
         .c-qty { width: 50px; border-left: 1px solid #F0E6BC; border-right: 1px solid #F0E6BC; }
         .c-gusto { border-right: 2px solid var(--blu); }
-        .c-prezzo { width: 90px; background: white; }
+        .c-prezzo { width: 65px; background: white; }
 
 ```
     .tipo-polleria { color: var(--rosso) !important; }
@@ -36,7 +36,7 @@
     .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
     .gf-text { color: var(--ver) !important; }
 
-    .btn-tipo-ciclo { width: 30px; height: 30px; border-radius: 5px; border: 2px solid #999; background: white; cursor: pointer; }
+    .btn-tipo-ciclo { width: 22px; height: 22px; border-radius: 4px; border: 2px solid #999; background: white; cursor: pointer; }
     .area-gusto { width: 100%; border: none; background: transparent; outline: none; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; color: inherit; resize: none; overflow: hidden; display: block; line-height: 1.2; }
     .input-piz { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: center; }
     .input-prezzo { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: right; }
@@ -284,9 +284,18 @@
     }
 
     function autoExpand(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; updateRiepilogo(); }
-    function goGusto(e, i) { if(e.key === ' ') { e.preventDefault(); document.getElementById(`g-${i}`).focus(); } }
-    function goNext(e, i) { if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`q-${i+1}`).focus(); } }
-    function goPrezzoNext(e, i) { if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`p-${i+1}`).focus(); } }
+    function goGusto(e, i) { 
+        if(e.key === ' ') { e.preventDefault(); document.getElementById(`g-${i}`).focus(); }
+        if(e.key === 'Backspace' && document.getElementById(`q-${i}`).value === '' && i > 0) { e.preventDefault(); document.getElementById(`g-${i-1}`).focus(); }
+    }
+    function goNext(e, i) { 
+        if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`q-${i+1}`).focus(); }
+        if(e.key === 'Backspace' && document.getElementById(`g-${i}`).value === '') { e.preventDefault(); document.getElementById(`q-${i}`).focus(); }
+    }
+    function goPrezzoNext(e, i) { 
+        if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`p-${i+1}`).focus(); }
+        if(e.key === 'Backspace' && document.getElementById(`p-${i}`).value === '' && i > 0) { e.preventDefault(); document.getElementById(`p-${i-1}`).focus(); }
+    }
 
     function toggleGF(i){ let isChecked = document.getElementById(`f-${i}`).checked; document.getElementById(`row-${i}`).classList.toggle('row-is-gf', isChecked); updateRiepilogo(); }
     function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); if(v>0) document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
