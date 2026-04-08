@@ -32,6 +32,7 @@
         .tipo-polleria { color: var(--rosso) !important; }
         .tipo-bibite { color: var(--bibite) !important; }
         .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
+        .gf-text { color: var(--ver) !important; }
 
         .btn-tipo-ciclo { width: 30px; height: 30px; border-radius: 5px; border: 2px solid #999; background: white; cursor: pointer; }
         .area-gusto { width: 100%; border: none; background: transparent; outline: none; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; color: inherit; resize: none; overflow: hidden; display: block; line-height: 1.2; }
@@ -43,11 +44,11 @@
         
         .rip-row-top { font-size: 1.6rem; color: var(--ora); margin-bottom: 10px; display: flex; gap: 20px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
         .rip-row-client { font-size: 1.3rem; color: var(--blu); margin-bottom: 15px; line-height: 1.4; }
-        .pizza-item { display: flex; align-items: flex-start; margin-bottom: 12px; font-size: 1.2rem; }
+        .pizza-item { display: flex; align-items: flex-start; margin-bottom: 6px; font-size: 1.2rem; }
         .pizza-qty { width: 40px; color: var(--blu); flex-shrink: 0; }
         .pizza-desc { flex-grow: 1; text-transform: uppercase; line-height: 1.1; }
         .pizza-price { width: 80px; text-align: right; color: #555; flex-shrink: 0; }
-        .gf-text { color: var(--ver) !important; }
+        
         .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
         .pay-note-big { font-size: 1.6rem; font-weight: 900; text-align: right; margin-top: 8px; text-transform: uppercase; }
         .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
@@ -68,17 +69,15 @@
         .card-list-wrapper { background: #f9f9f9; padding: 6px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 1px solid #eee; }
         .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--ora); }
         
-        /* RIGHE CARD: MASSIMA COMPATTEZZA */
-        .card-list-text { font-size: 0.9rem; color: #555; display: flex; flex-direction: column; gap: 0px; }
-        .card-prod-row { display: flex; justify-content: space-between; align-items: center; padding: 1px 0; border-bottom: 1px solid rgba(0,0,0,0.03); }
-        .card-prod-desc { flex-grow: 1; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-prod-val { width: 65px; text-align: right; color: #666; flex-shrink: 0; font-weight: 700; }
+        /* RIGHE CARD COMPATTE CON TESTO A CAPO */
+        .card-list-text { font-size: 0.9rem; color: #555; display: flex; flex-direction: column; gap: 2px; }
+        .card-prod-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 1px 0; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        .card-prod-desc { flex-grow: 1; text-transform: uppercase; white-space: normal; word-wrap: break-word; }
+        .card-prod-val { width: 65px; text-align: right; color: #666; flex-shrink: 0; font-weight: 700; margin-left: 5px; }
         
-        /* ZOOM: TESTO GIGANTE, NO PREZZI */
         .expanded .card-prod-val { display: none; }
         .expanded .card-list-text { font-size: 1.6rem; color: var(--blu); line-height: 1.2; gap: 5px; }
         .expanded .card-prod-row { border-bottom: 1px solid #eee; padding: 4px 0; }
-        .expanded .card-prod-desc { white-space: normal; }
 
         .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
         .pay-label-big { font-size: 1.3rem; font-weight: 900; }
@@ -205,10 +204,8 @@
         }
 
         function cicloTipo(i) {
-            let btn = document.getElementById(`bt-${i}`);
-            let row = document.getElementById(`row-${i}`);
-            let attuale = parseInt(btn.getAttribute('data-tipo'));
-            let prossimo = (attuale + 1) % 3;
+            let btn = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
+            let attuale = parseInt(btn.getAttribute('data-tipo')); let prossimo = (attuale + 1) % 3;
             btn.setAttribute('data-tipo', prossimo);
             row.classList.remove('tipo-polleria', 'tipo-bibite');
             btn.style.background = 'white';
@@ -218,18 +215,12 @@
         }
 
         function updateTimeSelect() {
-            let sel=document.getElementById('o-orario');
-            sel.innerHTML = '<option value="">🕒 ORARIO CONSEGNA</option>';
-            let now = new Date();
-            let currentMinutes = now.getHours() * 60 + now.getMinutes();
+            let sel=document.getElementById('o-orario'); sel.innerHTML = '<option value="">🕒 ORARIO CONSEGNA</option>';
+            let now = new Date(); let currentMinutes = now.getHours() * 60 + now.getMinutes();
             let startMinutes = Math.max(1080, Math.ceil(currentMinutes / 15) * 15);
             for(let t = startMinutes; t <= 1350; t += 15) {
-                let hh = Math.floor(t / 60);
-                let mm = t % 60;
-                let timeStr = `${hh}:${mm === 0 ? '00' : mm}`;
-                let opt = document.createElement('option');
-                opt.value = timeStr; opt.innerText = timeStr;
-                sel.appendChild(opt);
+                let hh = Math.floor(t / 60); let mm = t % 60; let timeStr = `${hh}:${mm === 0 ? '00' : mm}`;
+                let opt = document.createElement('option'); opt.value = timeStr; opt.innerText = timeStr; sel.appendChild(opt);
             }
         }
 
@@ -244,15 +235,18 @@
         function skipTel(){ document.getElementById('o-tel').value="INTERNO"; updateRiepilogo(); }
 
         function updateRiepilogo(){
-            let pt=0; let items = [];
+            let rawItems = [];
             for(let i=0; i<25; i++){
-                let v = parseFloat(document.getElementById(`p-${i}`).value)||0; 
-                let g = document.getElementById(`g-${i}`).value; 
-                let q = document.getElementById(`q-${i}`).value || "0"; 
-                let isGf = document.getElementById(`f-${i}`).checked;
+                let v = parseFloat(document.getElementById(`p-${i}`).value)||0; let g = document.getElementById(`g-${i}`).value; 
+                let q = document.getElementById(`q-${i}`).value || "0"; let isGf = document.getElementById(`f-${i}`).checked;
                 let tipo = document.getElementById(`bt-${i}`).getAttribute('data-tipo');
-                if(v>0 || g.trim() !== ""){ pt+=v; items.push({q, g: g.toUpperCase(), v, isGf, tipo}); }
+                if(v>0 || g.trim() !== "") rawItems.push({q, g: g.toUpperCase(), v, isGf, tipo});
             }
+            
+            // LOGICA RIORDINO: 0 (Pizzeria), 1 (Polleria), 2 (Bibite)
+            let items = rawItems.sort((a, b) => a.tipo - b.tipo);
+            let pt = rawItems.reduce((acc, curr) => acc + curr.v, 0);
+
             let tot = pt + sCost; document.getElementById('main-total').innerText = tot.toFixed(2).replace('.',',') + " €";
             let nOrd = (editIndex !== -1) ? ordiniSalvati[editIndex].num : "#" + currentOrderNum.toString().padStart(2, '0');
             document.getElementById('header-tag').innerText = nOrd;
@@ -260,23 +254,19 @@
             
             let cog = document.getElementById('o-cognome').value.toUpperCase(); 
             let ind = document.getElementById('o-indirizzo').value.toUpperCase(); 
-            let tel = document.getElementById('o-tel').value.toUpperCase();
-            let nCo = document.getElementById('o-nota-cons').value.toUpperCase();
-            let nRi = document.getElementById('o-nota-rip').value.toUpperCase();
             let ora = document.getElementById('o-orario').value; 
             let res = document.getElementById('o-resto').value.toUpperCase();
 
             let lHtml = items.map(item => {
-                let colorClass = item.tipo === '1' ? 'tipo-polleria' : (item.tipo === '2' ? 'tipo-bibite' : '');
-                return `<div class="pizza-item ${item.isGf ? 'gf-text' : colorClass}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf ? 'GLUTEN FREE ' : ''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`
+                let colorClass = item.isGf ? 'gf-text' : (item.tipo === '1' ? 'tipo-polleria' : (item.tipo === '2' ? 'tipo-bibite' : ''));
+                return `<div class="pizza-item ${colorClass}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf ? '[GF] ' : ''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`
             }).join('');
 
             document.getElementById('riepilogo-box').innerHTML = `
                 <div class="rip-row-top"><span>🏷️ ${nOrd}</span> <span>🕒 ${ora||"--:--"}</span></div>
-                <div class="rip-row-client">👤 <b>${cog||"---"}</b><br>📍 <b>${ind||"---"}</b><br>${nCo ? `<small>📝 ${nCo}</small><br>` : ''}📞 <b>${tel||"---"}</b></div>
+                <div class="rip-row-client">👤 <b>${cog||"---"}</b><br>📍 <b>${ind||"---"}</b></div>
                 <div style="margin-top:10px; border-top:2px solid #333; padding-top:10px;">${lHtml}</div>
                 <div class="rip-delivery-row"><span style="width:80px; text-align:right; font-size:1.2rem;">🛵 <b>${sCost.toFixed(2)}€</b></span></div>
-                ${nRi ? `<div style="background:#fff9e5; padding:8px; border-left:4px solid var(--ora); margin-top:10px; font-size:0.9rem;">📝 ${nRi}</div>` : ''}
                 <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;"><div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div></div>`;
             
             let ok = cog && ind && ora && sCost>0 && pt>0 && sPay;
@@ -284,15 +274,16 @@
         }
 
         function inviaOrdine() {
-            let items = [];
+            let rawItems = [];
             for(let i=0; i<25; i++){
-                let v = parseFloat(document.getElementById(`p-${i}`).value)||0; 
-                let g = document.getElementById(`g-${i}`).value; 
-                let q = document.getElementById(`q-${i}`).value || "0"; 
-                let isGf = document.getElementById(`f-${i}`).checked;
+                let v = parseFloat(document.getElementById(`p-${i}`).value)||0; let g = document.getElementById(`g-${i}`).value; 
+                let q = document.getElementById(`q-${i}`).value || "0"; let isGf = document.getElementById(`f-${i}`).checked;
                 let tipo = document.getElementById(`bt-${i}`).getAttribute('data-tipo');
-                if(v>0 || g.trim() !== "") items.push({q, g: g.toUpperCase(), v, isGf, tipo});
+                if(v>0 || g.trim() !== "") rawItems.push({q, g: g.toUpperCase(), v, isGf, tipo});
             }
+            // Salvataggio con riordino
+            let items = rawItems.sort((a, b) => a.tipo - b.tipo);
+
             let ordine = {
                 num: (editIndex !== -1) ? ordiniSalvati[editIndex].num : "#" + currentOrderNum.toString().padStart(2, '0'),
                 ora: document.getElementById('o-orario').value,
@@ -302,8 +293,7 @@
                 nota: document.getElementById('o-nota-cons').value.toUpperCase(),
                 notaRip: document.getElementById('o-nota-rip').value.toUpperCase(),
                 tot: document.getElementById('main-total').innerText,
-                costoCons: sCost, pay: sPay,
-                resto: document.getElementById('o-resto').value.toUpperCase(),
+                costoCons: sCost, pay: sPay, resto: document.getElementById('o-resto').value.toUpperCase(),
                 prodotti: items
             };
             if(editIndex !== -1) { ordiniSalvati[editIndex] = ordine; editIndex = -1; } 
@@ -319,27 +309,21 @@
             for(let i=0; i<25; i++) {
                 document.getElementById(`q-${i}`).value = ""; document.getElementById(`g-${i}`).value = ""; document.getElementById(`g-${i}`).style.height = "auto";
                 document.getElementById(`p-${i}`).value = ""; document.getElementById(`f-${i}`).checked = false; 
-                document.getElementById(`bt-${i}`).setAttribute('data-tipo', '0');
-                document.getElementById(`bt-${i}`).style.background = 'white';
+                document.getElementById(`bt-${i}`).setAttribute('data-tipo', '0'); document.getElementById(`bt-${i}`).style.background = 'white';
                 document.getElementById(`row-${i}`).classList.remove('row-is-gf', 'tipo-polleria', 'tipo-bibite');
             }
             updateTimeSelect(); updateRiepilogo();
         }
 
         function modificaOrdine(index) {
-            let o = ordiniSalvati[index]; editIndex = index;
-            resetForm();
-            document.getElementById('o-cognome').value = o.cog; 
-            document.getElementById('o-tel').value = o.tel; 
-            document.getElementById('o-indirizzo').value = o.ind;
-            document.getElementById('o-nota-cons').value = o.nota; 
-            document.getElementById('o-nota-rip').value = o.notaRip; 
+            let o = ordiniSalvati[index]; editIndex = index; resetForm();
+            document.getElementById('o-cognome').value = o.cog; document.getElementById('o-tel').value = o.tel; document.getElementById('o-indirizzo').value = o.ind;
+            document.getElementById('o-nota-cons').value = o.nota; document.getElementById('o-nota-rip').value = o.notaRip; 
             updateTimeSelect();
             let selOra = document.getElementById('o-orario');
             let hasTime = Array.from(selOra.options).some(opt => opt.value === o.ora);
             if(!hasTime){ let opt = document.createElement('option'); opt.value = o.ora; opt.innerText = o.ora; selOra.appendChild(opt); }
-            selOra.value = o.ora; 
-            document.getElementById('o-resto').value = o.resto;
+            selOra.value = o.ora; document.getElementById('o-resto').value = o.resto;
             setCost(o.costoCons); setPay(o.pay);
             o.prodotti.forEach((prod, i) => {
                 if(i < 25) {
@@ -382,7 +366,7 @@
                             ${o.prodotti.map(p => {
                                 let cClass = p.isGf ? 'var(--ver)' : (p.tipo === '1' ? 'var(--rosso)' : (p.tipo === '2' ? 'var(--bibite)' : 'inherit'));
                                 return `<div class="card-prod-row" style="color:${cClass}">
-                                    <span class="card-prod-desc">${p.q} ${p.isGf ? '[GF] ' : ''}${p.g}</span>
+                                    <span class="card-prod-desc">${p.isGf ? '[GF] ' : ''}${p.q} ${p.g}</span>
                                     <span class="card-prod-val">${p.v.toFixed(2)}€</span>
                                 </div>`
                             }).join('')}
