@@ -33,6 +33,7 @@
 ```
     .tipo-polleria { color: var(--rosso) !important; }
     .tipo-bibite { color: var(--bibite) !important; }
+    .tipo-banco { color: #8B6914 !important; }
     .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
     .gf-text { color: var(--ver) !important; }
 
@@ -114,6 +115,7 @@
     .orario-prod-tag.is-pollo { color: var(--rosso); border-color: var(--rosso); background: #fff0f0; }
     .orario-prod-tag.is-bibita { color: var(--bibite); border-color: var(--bibite); background: #f0f5ff; }
     .orario-prod-tag.is-gf { color: var(--ver); border-color: var(--ver); background: #f0fff5; }
+    .orario-prod-tag.is-banco { color: #8B6914; border-color: #8B6914; background: #fffbf0; }
 </style>
 ```
 
@@ -299,12 +301,13 @@
     // ── LOGICA ORDINE (identica a prima) ──────────────────────────
     function cicloTipo(i) {
         let btn = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
-        let attuale = parseInt(btn.getAttribute('data-tipo')); let prossimo = (attuale + 1) % 3;
+        let attuale = parseInt(btn.getAttribute('data-tipo')); let prossimo = (attuale + 1) % 4;
         btn.setAttribute('data-tipo', prossimo);
-        row.classList.remove('tipo-polleria', 'tipo-bibite');
+        row.classList.remove('tipo-polleria', 'tipo-bibite', 'tipo-banco');
         btn.style.background = 'white';
         if(prossimo === 1) { row.classList.add('tipo-polleria'); btn.style.background = 'var(--rosso)'; } 
         else if(prossimo === 2) { row.classList.add('tipo-bibite'); btn.style.background = 'var(--bibite)'; }
+        else if(prossimo === 3) { row.classList.add('tipo-banco'); btn.style.background = '#8B6914'; }
         updateRiepilogo();
     }
 
@@ -358,7 +361,7 @@
         let ora = document.getElementById('o-orario').value; 
 
         let lHtml = items.map(item => {
-            let colorClass = item.isGf ? 'gf-text' : (item.tipo === '1' ? 'tipo-polleria' : (item.tipo === '2' ? 'tipo-bibite' : ''));
+            let colorClass = item.isGf ? 'gf-text' : (item.tipo === '1' ? 'tipo-polleria' : (item.tipo === '2' ? 'tipo-bibite' : (item.tipo === '3' ? 'tipo-banco' : '')));
             return `<div class="pizza-item ${colorClass}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf ? '[GF] ' : ''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`
         }).join('');
 
@@ -399,8 +402,9 @@
 
         if(editKey !== null) {
             // AGGIORNA ordine esistente su Firebase
-            ordiniRef.child(editKey).set(ordine);
+            let keyToUpdate = editKey;
             editKey = null;
+            ordiniRef.child(keyToUpdate).set(ordine);
         } else {
             // NUOVO ordine: salva su Firebase e aggiorna contatore
             ordiniRef.push(ordine);
@@ -419,9 +423,8 @@
             document.getElementById(`q-${i}`).value = ""; document.getElementById(`g-${i}`).value = ""; document.getElementById(`g-${i}`).style.height = "auto";
             document.getElementById(`p-${i}`).value = ""; document.getElementById(`f-${i}`).checked = false; 
             document.getElementById(`bt-${i}`).setAttribute('data-tipo', '0'); document.getElementById(`bt-${i}`).style.background = 'white';
-            document.getElementById(`row-${i}`).classList.remove('row-is-gf', 'tipo-polleria', 'tipo-bibite');
+            document.getElementById(`row-${i}`).classList.remove('row-is-gf', 'tipo-polleria', 'tipo-bibite', 'tipo-banco');
         }
-        editKey = null;
         updateTimeSelect(); updateRiepilogo();
     }
 
@@ -485,7 +488,7 @@
                 <div class="card-list-wrapper" onclick="toggleCardList(this)">
                     <div class="card-list-text">
                         ${o.prodotti.map(p => {
-                            let cClass = p.isGf ? 'var(--ver)' : (p.tipo === '1' ? 'var(--rosso)' : (p.tipo === '2' ? 'var(--bibite)' : 'inherit'));
+                            let cClass = p.isGf ? 'var(--ver)' : (p.tipo === '1' ? 'var(--rosso)' : (p.tipo === '2' ? 'var(--bibite)' : (p.tipo === '3' ? '#8B6914' : 'inherit')));
                             return `<div class="card-prod-row" style="color:${cClass}">
                                 <span class="card-prod-desc">${p.isGf ? '[GF] ' : ''}${p.q} ${p.g}</span>
                                 <span class="card-prod-val">${p.v.toFixed(2)}€</span>
@@ -528,7 +531,7 @@
             let badgeClass = n >= 5 ? 'badge-rosso' : n >= 3 ? 'badge-giallo' : 'badge-verde';
             let dettagli = ordini.map(o => {
                 let prodTags = o.prodotti.map(p => {
-                    let cls = p.isGf ? 'is-gf' : p.tipo === '1' ? 'is-pollo' : p.tipo === '2' ? 'is-bibita' : '';
+                    let cls = p.isGf ? 'is-gf' : p.tipo === '1' ? 'is-pollo' : p.tipo === '2' ? 'is-bibita' : p.tipo === '3' ? 'is-banco' : '';
                     return `<span class="orario-prod-tag ${cls}">${p.q} ${p.g}</span>`;
                 }).join('');
                 return `<div class="orario-ordine">
