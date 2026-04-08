@@ -86,6 +86,34 @@
 
     /* Indicatore stato Firebase */
     #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; pointer-events: none; }
+
+    /* Tab ORARI */
+    .orario-block { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; border-left: 8px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+    .orario-block.carico-0 { border-left-color: var(--ver); }
+    .orario-block.carico-1 { border-left-color: var(--ver); }
+    .orario-block.carico-2 { border-left-color: var(--ver); }
+    .orario-block.carico-3 { border-left-color: #F5A623; }
+    .orario-block.carico-4 { border-left-color: #F5A623; }
+    .orario-block.carico-alto { border-left-color: var(--rosso); }
+    .orario-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; cursor: pointer; }
+    .orario-ora { font-size: 1.6rem; color: var(--blu); }
+    .orario-badge { font-size: 1.3rem; font-weight: 900; padding: 4px 14px; border-radius: 20px; color: white; }
+    .badge-verde { background: var(--ver); }
+    .badge-giallo { background: #F5A623; }
+    .badge-rosso { background: var(--rosso); }
+    .orario-detail { display: none; border-top: 2px solid #eee; padding: 10px 15px; }
+    .orario-detail.open { display: block; }
+    .orario-ordine { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .orario-ordine:last-child { border-bottom: none; }
+    .orario-ordine-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .orario-cliente { font-size: 1.1rem; color: var(--blu); }
+    .orario-num { font-size: 0.85rem; color: var(--ora); }
+    .orario-ind { font-size: 0.9rem; color: #888; margin-bottom: 4px; }
+    .orario-prodotti { display: flex; flex-wrap: wrap; gap: 4px; }
+    .orario-prod-tag { font-size: 0.78rem; padding: 2px 8px; border-radius: 10px; border: 1px solid #ddd; color: #555; background: #f9f9f9; text-transform: uppercase; }
+    .orario-prod-tag.is-pollo { color: var(--rosso); border-color: var(--rosso); background: #fff0f0; }
+    .orario-prod-tag.is-bibita { color: var(--bibite); border-color: var(--bibite); background: #f0f5ff; }
+    .orario-prod-tag.is-gf { color: var(--ver); border-color: var(--ver); background: #f0fff5; }
 </style>
 ```
 
@@ -120,6 +148,7 @@
         <button class="nav-btn" id="btn-t2" onclick="showTab(2)">ORDINE</button>
         <button class="nav-btn" id="btn-t4" onclick="showTab(4)">RIEPILOGO</button>
         <button class="nav-btn" id="btn-t5" onclick="showTab(5)">CONSEGNE</button>
+        <button class="nav-btn" id="btn-t6" onclick="showTab(6)">ORARI</button>
     </div>
     <div class="content-area">
         <div id="tab1" class="tab-content show">
@@ -164,6 +193,11 @@
         <div id="tab5" class="tab-content">
             <h2 style="color:var(--blu); margin-bottom:15px;">STATO CONSEGNE</h2>
             <div id="consegne-lista"></div>
+        </div>
+
+        <div id="tab6" class="tab-content">
+            <h2 style="color:var(--blu); margin-bottom:15px;">ORARI</h2>
+            <div id="orari-lista"></div>
         </div>
     </div>
 </div>
@@ -214,10 +248,11 @@
         document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); 
         document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); 
         document.getElementById('tab'+n).classList.add('show'); 
-        let btnId = n === 4 ? 'btn-t4' : n === 5 ? 'btn-t5' : 'btn-t'+n;
+        let btnId = n === 4 ? 'btn-t4' : n === 5 ? 'btn-t5' : n === 6 ? 'btn-t6' : 'btn-t'+n;
         document.getElementById(btnId).classList.add('active'); 
         updateRiepilogo();
         if(n===5) renderConsegne();
+        if(n===6) renderOrari();
     }
 
     // ── INIT APP ───────────────────────────────────────────────────
@@ -470,6 +505,52 @@
                 </div>
             </div>`).join('');
     }
+
+    function renderOrari() {
+        const container = document.getElementById('orari-lista');
+        if(ordiniSalvati.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:40px; color:#aaa; font-size:1.1rem;">Nessun ordine ancora</div>';
+            return;
+        }
+        // Raggruppa per orario
+        let fasce = {};
+        ordiniSalvati.forEach(o => {
+            if(!o.ora) return;
+            if(!fasce[o.ora]) fasce[o.ora] = [];
+            fasce[o.ora].push(o);
+        });
+        // Ordina orari
+        let orariOrdinati = Object.keys(fasce).sort();
+        container.innerHTML = orariOrdinati.map(ora => {
+            let ordini = fasce[ora];
+            let n = ordini.length;
+            let caricoClass = n >= 5 ? 'carico-alto' : `carico-${n}`;
+            let badgeClass = n >= 5 ? 'badge-rosso' : n >= 3 ? 'badge-giallo' : 'badge-verde';
+            let dettagli = ordini.map(o => {
+                let prodTags = o.prodotti.map(p => {
+                    let cls = p.isGf ? 'is-gf' : p.tipo === '1' ? 'is-pollo' : p.tipo === '2' ? 'is-bibita' : '';
+                    return `<span class="orario-prod-tag ${cls}">${p.q} ${p.g}</span>`;
+                }).join('');
+                return `<div class="orario-ordine">
+                    <div class="orario-ordine-top">
+                        <span class="orario-cliente">👤 ${o.cog}</span>
+                        <span class="orario-num">${o.num}</span>
+                    </div>
+                    <div class="orario-ind">📍 ${o.ind}</div>
+                    <div class="orario-prodotti">${prodTags}</div>
+                </div>`;
+            }).join('');
+            return `<div class="orario-block ${caricoClass}">
+                <div class="orario-header" onclick="toggleOrario(this)">
+                    <span class="orario-ora">🕒 ${ora}</span>
+                    <span class="orario-badge ${badgeClass}">${n} ${n === 1 ? 'ordine' : 'ordini'}</span>
+                </div>
+                <div class="orario-detail">${dettagli}</div>
+            </div>`;
+        }).join('');
+    }
+
+    function toggleOrario(header) { header.nextElementSibling.classList.toggle('open'); }
 
     function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
 </script>
