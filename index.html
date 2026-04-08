@@ -21,7 +21,7 @@
         .tab-content.show { display: block; }
         .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; text-transform: uppercase; color: var(--blu); background: white; font-weight: 900; }
         .comanda-paper { background: #FFF9E5; border: 2px solid var(--blu); border-radius: 10px; overflow: hidden; width: 100%; display: table; border-collapse: collapse; }
-        .row-piz { display: table-row; border-bottom: 1px solid #F0E6BC; transition: color 0.2s; }
+        .row-piz { display: table-row; border-bottom: 1px solid #F0E6BC; }
         .cell-piz { display: table-cell; vertical-align: middle; padding: 5px; min-height: 50px; }
         .c-gf { width: 35px; text-align: center; background: #eee; }
         .c-tipo { width: 40px; text-align: center; background: #e5e5e5; border-left: 1px solid #ccc; }
@@ -65,19 +65,21 @@
         .card-link-tel { color: var(--link); text-decoration: none; display: inline-block; }
         .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
         
-        .card-list-wrapper { background: #f9f9f9; padding: 8px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; border: 1px solid #eee; }
+        .card-list-wrapper { background: #f9f9f9; padding: 6px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 1px solid #eee; }
         .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--ora); }
         
-        /* RIGHE COMPATTE NELLA CARD */
-        .card-list-text { font-size: 0.9rem; color: #555; display: flex; flex-direction: column; gap: 2px; }
-        .card-prod-row { display: flex; justify-content: space-between; align-items: flex-start; }
-        .card-prod-desc { flex-grow: 1; }
-        .card-prod-val { width: 70px; text-align: right; color: #777; flex-shrink: 0; }
+        /* RIGHE CARD: MASSIMA COMPATTEZZA */
+        .card-list-text { font-size: 0.9rem; color: #555; display: flex; flex-direction: column; gap: 0px; }
+        .card-prod-row { display: flex; justify-content: space-between; align-items: center; padding: 1px 0; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        .card-prod-desc { flex-grow: 1; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-prod-val { width: 65px; text-align: right; color: #666; flex-shrink: 0; font-weight: 700; }
         
-        /* ZOOM: SPARISCONO I PREZZI, TESTO GIGANTE */
+        /* ZOOM: TESTO GIGANTE, NO PREZZI */
         .expanded .card-prod-val { display: none; }
-        .expanded .card-list-text { font-size: 1.5rem; color: var(--blu); line-height: 1.2; gap: 4px; }
-        
+        .expanded .card-list-text { font-size: 1.6rem; color: var(--blu); line-height: 1.2; gap: 5px; }
+        .expanded .card-prod-row { border-bottom: 1px solid #eee; padding: 4px 0; }
+        .expanded .card-prod-desc { white-space: normal; }
+
         .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
         .pay-label-big { font-size: 1.3rem; font-weight: 900; }
         .tot-label-big { font-size: 1.8rem; color: var(--ora); }
