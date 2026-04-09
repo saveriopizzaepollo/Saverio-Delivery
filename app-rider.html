@@ -13,12 +13,15 @@
 
 ```
     /* PAGINE */
-    .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; background: var(--blu); text-align: center; z-index: 100; overflow-y: auto; }
+    .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 20px 20px; background: var(--blu); text-align: center; z-index: 100; overflow-y: auto; }
     .page.show { display: flex; }
 
-    /* PIN */
-    .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; max-width: 240px; margin: 0 auto; }
-    .num-key { width: 100%; aspect-ratio: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; cursor: pointer; transition: background 0.15s; }
+    /* PIN OVERLAY */
+    .pin-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; }
+    .pin-overlay.show { display: flex; }
+    .pin-box { background: var(--blu); border: 3px solid var(--ora); border-radius: 20px; padding: 30px 25px; width: 90%; max-width: 320px; text-align: center; }
+    .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; max-width: 220px; margin: 0 auto; }
+    .num-key { width: 100%; aspect-ratio: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; cursor: pointer; transition: background 0.15s; }
     .num-key:active { background: rgba(255,255,255,0.25); }
     .dot-row { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; }
     .dot { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; transition: background 0.15s; }
@@ -90,24 +93,26 @@
 ```
 <!-- PAGINA SELEZIONE RIDER -->
 <div id="page-select" class="page show">
-    <h1 style="font-size:2.5rem; margin-bottom:10px;">SAVERIO DELIVERY</h1>
-    <p style="color:rgba(255,255,255,0.6); margin-bottom:30px; font-size:0.9rem;">AREA RIDER</p>
-    <div id="rider-list" style="width:100%; max-width:340px;"></div>
+    <h1 style="font-size:2.8rem; margin-bottom:6px; letter-spacing:1px;">SAVERIO DELIVERY</h1>
+    <p style="color:rgba(255,255,255,0.4); margin-bottom:35px; font-size:0.8rem; letter-spacing:2px;">AREA RIDER</p>
+    <div id="rider-list" style="width:100%; max-width:320px;"></div>
 </div>
 
-<!-- PAGINA PIN -->
-<div id="page-pin" class="page">
-    <h2 id="pin-title" style="margin-bottom:6px; font-size:1.8rem;"></h2>
-    <p style="color:rgba(255,255,255,0.5); font-size:0.8rem; margin-bottom:25px;">INSERISCI PIN</p>
-    <div class="dot-row">
-        <div class="dot" id="dot-0"></div>
-        <div class="dot" id="dot-1"></div>
-        <div class="dot" id="dot-2"></div>
-        <div class="dot" id="dot-3"></div>
+<!-- PIN OVERLAY -->
+<div id="pin-overlay" class="pin-overlay">
+    <div class="pin-box">
+        <h2 id="pin-title" style="font-size:1.6rem; margin-bottom:4px;"></h2>
+        <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-bottom:20px; letter-spacing:1px;">INSERISCI PIN</p>
+        <div class="dot-row">
+            <div class="dot" id="dot-0"></div>
+            <div class="dot" id="dot-1"></div>
+            <div class="dot" id="dot-2"></div>
+            <div class="dot" id="dot-3"></div>
+        </div>
+        <div class="grid-pin" id="numpad"></div>
+        <p id="pin-error" style="color:var(--rosso); margin-top:15px; font-size:0.9rem; display:none;">PIN ERRATO</p>
+        <button onclick="chiudiPin()" style="margin-top:18px; background:none; border:none; color:rgba(255,255,255,0.35); font-size:0.8rem; cursor:pointer; font-family:'Barlow',sans-serif;">← ANNULLA</button>
     </div>
-    <div class="grid-pin" id="numpad"></div>
-    <button onclick="backToSelect()" style="margin-top:25px; background:none; border:none; color:rgba(255,255,255,0.4); font-size:0.85rem; cursor:pointer;">← INDIETRO</button>
-    <p id="pin-error" style="color:var(--rosso); margin-top:15px; display:none;">PIN ERRATO</p>
 </div>
 
 <!-- APP RIDER -->
@@ -224,15 +229,19 @@
         ).join('');
     }
 
-    // ── SELEZIONE RIDER → PIN ──────────────────────────────────────
+    // ── SELEZIONE RIDER → PIN OVERLAY ─────────────────────────────
     function selezionaRider(id) {
         riderSelezionato = { id, ...riders[id] };
         document.getElementById('pin-title').textContent = riderSelezionato.nome;
         document.getElementById('pin-error').style.display = 'none';
         cPin = "";
         for(let i=0; i<4; i++) document.getElementById('dot-'+i).style.background = 'none';
-        document.getElementById('page-select').classList.remove('show');
-        document.getElementById('page-pin').classList.add('show');
+        document.getElementById('pin-overlay').classList.add('show');
+    }
+
+    function chiudiPin() {
+        document.getElementById('pin-overlay').classList.remove('show');
+        cPin = "";
     }
 
     // ── NUMPAD ─────────────────────────────────────────────────────
@@ -259,7 +268,8 @@
         if(cPin === pinCorretto) {
             sessionStorage.setItem('riderId', riderSelezionato.id);
             sessionRiderId = riderSelezionato.id;
-            document.getElementById('page-pin').classList.remove('show');
+            document.getElementById('pin-overlay').classList.remove('show');
+            document.getElementById('page-select').classList.remove('show');
             document.getElementById('app-rider').style.display = 'block';
             document.getElementById('rider-nome-header').textContent = riderSelezionato.nome;
             renderConsegne();
@@ -268,12 +278,6 @@
             cPin = "";
             for(let i=0; i<4; i++) document.getElementById('dot-'+i).style.background = 'none';
         }
-    }
-
-    function backToSelect() {
-        document.getElementById('page-pin').classList.remove('show');
-        document.getElementById('page-select').classList.add('show');
-        cPin = "";
     }
 
     function logout() {
