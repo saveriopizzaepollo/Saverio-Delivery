@@ -58,6 +58,15 @@
     .rip-delivery-row { display: flex; width: 100%; justify-content: flex-end; margin-top: 5px; }
 
     .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); transition: all 0.3s ease; }
+    .card-consegna.stato-pronto { border-left-color: #D4A017; }
+    .card-consegna.stato-assegnato { border-left-color: var(--ora); }
+    .card-consegna.stato-consegnato { border-left-color: var(--ver); opacity: 0.55; }
+    .stato-badge { font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 6px; }
+    .badge-attesa { background: #eee; color: #888; }
+    .badge-pronto { background: #FFF9C4; color: #8B6914; }
+    .badge-assegnato { background: #FEE5D4; color: var(--ora); }
+    .badge-consegnato { background: #D4EDDA; color: var(--ver); }
+    .rider-assegnato-tag { font-size: 1rem; color: var(--ora); margin-bottom: 6px; }
     .card-header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
     .card-num-big { font-size: 1.8rem; color: var(--blu); }
     .card-ora-big { font-size: 1.8rem; color: var(--ora); }
@@ -230,7 +239,8 @@
     // ── VARIABILI APP (identiche a prima) ─────────────────────────
     const PIN = "0508"; let cPin = ""; let sCost = 0; let sPay = ""; let currentOrderNum = 1;
     let ordiniSalvati = []; let editIndex = -1;
-    let editKey = null; // chiave Firebase dell'ordine in modifica
+    let editKey = null;
+    let riders = {};
 
     // ── PIN NUMPAD ─────────────────────────────────────────────────
     const pad = document.getElementById('numpad');
@@ -292,6 +302,8 @@
         contatoreRef.on('value', (snapshot) => {
             if(snapshot.val() !== null) currentOrderNum = snapshot.val() + 1;
         });
+
+        db.ref('riders').on('value', snap => { riders = snap.val() || {}; });
 
         db.ref('.info/connected').on('value', (snap) => {
             document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
@@ -465,11 +477,17 @@
 
     function toggleCardList(element) { element.classList.toggle('expanded'); }
 
-    // ── RENDER CONSEGNE (identico a prima, passa key invece di index) ──
+    // ── RENDER CONSEGNE ────────────────────────────────────────────
     function renderConsegne() {
         const container = document.getElementById('consegne-lista');
-        container.innerHTML = ordiniSalvati.map((o) => `
-            <div class="card-consegna">
+        container.innerHTML = ordiniSalvati.map((o) => {
+            let stato = o.stato || 'attesa';
+            let statoClass = stato==='pronto' ? 'stato-pronto' : stato==='assegnato' ? 'stato-assegnato' : stato==='consegnato' ? 'stato-consegnato' : '';
+            let badgeClass = stato==='pronto' ? 'badge-pronto' : stato==='assegnato' ? 'badge-assegnato' : stato==='consegnato' ? 'badge-consegnato' : 'badge-attesa';
+            let badgeLabel = stato==='pronto' ? '✅ PRONTO' : stato==='assegnato' ? '🛵 ASSEGNATO' : stato==='consegnato' ? '✔ CONSEGNATO' : '⏳ IN ATTESA';
+            let riderNome = o.riderId && riders[o.riderId] ? `<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>` : '';
+
+            return `<div class="card-consegna ${statoClass}">
                 <div class="card-header-main">
                     <span class="card-num-big">🏷️ ${o.num}</span>
                     <div class="card-actions-top">
@@ -478,6 +496,8 @@
                     </div>
                     <span class="card-ora-big">🕒 ${o.ora}</span>
                 </div>
+                <span class="stato-badge ${badgeClass}">${badgeLabel}</span>
+                ${riderNome}
                 <div class="card-body-main">
                     <b>👤 ${o.cog}</b><br>
                     <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
@@ -486,11 +506,11 @@
                 <div class="card-list-wrapper" onclick="toggleCardList(this)">
                     <div class="card-list-text">
                         ${o.prodotti.map(p => {
-                            let cClass = p.isGf ? 'var(--ver)' : (p.tipo === '1' ? 'var(--rosso)' : (p.tipo === '2' ? 'var(--bibite)' : (p.tipo === '3' ? '#8B6914' : 'inherit')));
+                            let cClass = p.isGf ? 'var(--ver)' : (p.tipo==='1' ? 'var(--rosso)' : (p.tipo==='2' ? 'var(--bibite)' : (p.tipo==='3' ? '#8B6914' : 'inherit')));
                             return `<div class="card-prod-row" style="color:${cClass}">
-                                <span class="card-prod-desc">${p.isGf ? '[GF] ' : ''}${p.q} ${p.g}</span>
+                                <span class="card-prod-desc">${p.isGf?'[GF] ':''}${p.q} ${p.g}</span>
                                 <span class="card-prod-val">${p.v.toFixed(2)}€</span>
-                            </div>`
+                            </div>`;
                         }).join('')}
                         <div class="card-prod-row" style="margin-top:2px; border-top:1px dashed #ddd; padding-top:2px;">
                             <span class="card-prod-desc">🛵 CONSEGNA</span>
@@ -500,11 +520,12 @@
                 </div>
                 <div class="card-footer-big">
                     <span class="pay-label-big" style="color:${o.pay==='POS'?'var(--rosso)':o.pay==='PAGATO'?'var(--ver)':'var(--blu)'}">
-                        ${o.pay} ${o.pay==='CONTANTI' && o.resto ? '('+o.resto+')' : ''}
+                        ${o.pay} ${o.pay==='CONTANTI'&&o.resto?'('+o.resto+')':''}
                     </span>
                     <b class="tot-label-big">${o.tot}</b>
                 </div>
-            </div>`).join('');
+            </div>`;
+        }).join('');
     }
 
     function renderOrari() {
