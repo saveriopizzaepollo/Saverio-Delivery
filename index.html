@@ -313,9 +313,7 @@
 
     function updateTimeSelect() {
         let sel=document.getElementById('o-orario'); sel.innerHTML = '<option value="">🕒 ORARIO CONSEGNA</option>';
-        let now = new Date(); let currentMinutes = now.getHours() * 60 + now.getMinutes();
-        let startMinutes = Math.max(1080, Math.ceil(currentMinutes / 15) * 15);
-        for(let t = startMinutes; t <= 1350; t += 15) {
+        for(let t = 1080; t <= 1350; t += 15) {
             let hh = Math.floor(t / 60); let mm = t % 60; let timeStr = `${hh}:${mm === 0 ? '00' : mm}`;
             let opt = document.createElement('option'); opt.value = timeStr; opt.innerText = timeStr; sel.appendChild(opt);
         }
