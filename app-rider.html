@@ -13,15 +13,15 @@
 
 ```
     /* PAGINE */
-    .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: var(--blu); text-align: center; }
+    .page { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; background: var(--blu); text-align: center; z-index: 100; overflow-y: auto; }
     .page.show { display: flex; }
 
     /* PIN */
-    .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; }
-    .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; transition: background 0.15s; }
+    .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; max-width: 240px; margin: 0 auto; }
+    .num-key { width: 100%; aspect-ratio: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; cursor: pointer; transition: background 0.15s; }
     .num-key:active { background: rgba(255,255,255,0.25); }
-    .dot-row { display: flex; gap: 15px; margin-bottom: 30px; justify-content: center; }
-    .dot { width: 18px; height: 18px; border: 2px solid white; border-radius: 50%; transition: background 0.15s; }
+    .dot-row { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; }
+    .dot { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; transition: background 0.15s; }
 
     /* HEADER APP */
     .header-main { position: fixed; top: 0; left: 0; right: 0; height: 75px; background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000; }
@@ -79,7 +79,7 @@
     #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; pointer-events: none; }
 
     /* SELEZIONE RIDER */
-    .rider-btn { width: 100%; padding: 18px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 15px; color: white; font-size: 1.3rem; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; }
+    .rider-btn { width: 100%; padding: 14px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; font-size: 1.1rem; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; }
     .rider-btn:active { background: rgba(255,255,255,0.2); }
 </style>
 ```
