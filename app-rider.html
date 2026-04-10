@@ -389,14 +389,16 @@
     }
 
     function segnaConsegnato(key) {
-        ordiniRef.child(key).update({ stato: 'consegnato', tsConsegnato: Date.now() });
-        // Controlla se è l'ultima consegna — avvia timer rientro
+        ordiniRef.child(key).update({ stato: 'consegnato', tsConsegnato: firebase.database.ServerValue.TIMESTAMP });
         setTimeout(() => {
             if(!riderSelezionato) return;
             let mie = ordiniTutti.filter(o => o.riderId === riderSelezionato.id);
             let rimanenti = mie.filter(o => o.stato !== 'consegnato' && o._key !== key);
             if(rimanenti.length === 0) {
-                ridersRef.child(riderSelezionato.id).update({ inRientro: true, tsRientro: Date.now() });
+                ridersRef.child(riderSelezionato.id).update({ 
+                    inRientro: true, 
+                    tsRientro: firebase.database.ServerValue.TIMESTAMP 
+                });
             }
         }, 500);
     }
