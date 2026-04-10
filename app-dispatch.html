@@ -597,6 +597,13 @@
             container.innerHTML = '<div class="empty-state"><div class="empty-icon">🛵</div><p>Nessun rider</p></div>';
             return;
         }
+
+        // Salvo quali tendine sono aperte prima del render
+        let aperte = new Set();
+        container.querySelectorAll('.rider-block-detail.open').forEach(el => {
+            if(el.dataset.riderId) aperte.add(el.dataset.riderId);
+        });
+
         container.innerHTML = Object.entries(riders).map(([id, r]) => {
             let miei = ordiniSalvati.filter(o => o.riderId === id && (o.stato === 'assegnato' || o.stato === 'consegnato'));
             let assegnati = miei.filter(o => o.stato === 'assegnato');
@@ -611,6 +618,7 @@
             let counterLabel = totale === 0 ? '—' : `${nCons}/${totale}`;
             let bollinoClass = inGiro ? 'bollino-rosso' : 'bollino-verde';
             let statoLabel = inGiro ? '🔴 IN GIRO' : inRientro ? '🟡 RIENTRANDO' : '🟢 DISPONIBILE';
+            let eraAperta = aperte.has(id) ? 'open' : '';
 
             // Timer rientro
             let timerHtml = '';
@@ -619,7 +627,7 @@
                 let remaining = Math.max(0, 300 - elapsed);
                 let mm = Math.floor(remaining / 60);
                 let ss = remaining % 60;
-                timerHtml = `<div style="background:#FFF9C4; border-radius:8px; padding:8px 12px; margin-top:8px; display:flex; align-items:center; justify-content:space-between;">
+                timerHtml = `<div style="background:#FFF9C4; border-radius:8px; padding:8px 12px; margin:8px 15px 0; display:flex; align-items:center; justify-content:space-between;">
                     <span style="font-size:0.9rem; color:#8B6914;">⏱ Rientro: ${mm}:${ss.toString().padStart(2,'0')}</span>
                     <button onclick="annullaTimer('${id}')" style="padding:5px 12px; background:var(--ver); color:white; border:none; border-radius:6px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.8rem; cursor:pointer;">✅ DISPONIBILE</button>
                 </div>`;
@@ -644,7 +652,7 @@
                     </div>
                     <span class="rider-counter ${counterClass}">${counterLabel}</span>
                 </div>
-                <div class="rider-block-detail">
+                <div class="rider-block-detail ${eraAperta}" data-rider-id="${id}">
                     ${timerHtml}
                     ${righe}
                 </div>
