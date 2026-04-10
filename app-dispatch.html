@@ -360,7 +360,19 @@
         document.getElementById('fb-status').textContent = '🟢 sync';
     });
 
-    ridersRef.on('value', snap => { riders = snap.val() || {}; });
+    ridersRef.on('value', snap => { 
+        riders = snap.val() || {};
+        // Auto-scadenza timer 5 minuti
+        Object.entries(riders).forEach(([id, r]) => {
+            if(r.inRientro && r.tsRientro) {
+                let elapsed = Date.now() - r.tsRientro;
+                if(elapsed >= 300000) { // 5 minuti
+                    db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
+                }
+            }
+        });
+        if(document.getElementById('tab3') && document.getElementById('tab3').classList.contains('show')) renderRider();
+    });
 
     db.ref('.info/connected').on('value', snap => {
         document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
@@ -588,12 +600,26 @@
             let totale = miei.length;
             let nCons = consegnati.length;
             let inGiro = assegnati.length > 0;
+            let inRientro = r.inRientro && !inGiro;
 
             let counterClass = totale === 0 ? 'counter-grigio' : nCons === totale ? 'counter-verde' : 'counter-ora';
-            let headerClass = inGiro ? 'in-corso' : totale > 0 && nCons === totale ? 'tutti-consegnati' : '';
+            let headerClass = inGiro ? 'in-corso' : '';
             let counterLabel = totale === 0 ? '—' : `${nCons}/${totale}`;
             let bollinoClass = inGiro ? 'bollino-rosso' : 'bollino-verde';
-            let statoLabel = inGiro ? '🔴 IN GIRO' : '🟢 DISPONIBILE';
+            let statoLabel = inGiro ? '🔴 IN GIRO' : inRientro ? '🟡 RIENTRANDO' : '🟢 DISPONIBILE';
+
+            // Timer rientro
+            let timerHtml = '';
+            if(inRientro && r.tsRientro) {
+                let elapsed = Math.floor((Date.now() - r.tsRientro) / 1000);
+                let remaining = Math.max(0, 300 - elapsed);
+                let mm = Math.floor(remaining / 60);
+                let ss = remaining % 60;
+                timerHtml = `<div style="background:#FFF9C4; border-radius:8px; padding:8px 12px; margin-top:8px; display:flex; align-items:center; justify-content:space-between;">
+                    <span style="font-size:0.9rem; color:#8B6914;">⏱ Rientro: ${mm}:${ss.toString().padStart(2,'0')}</span>
+                    <button onclick="annullaTimer('${id}')" style="padding:5px 12px; background:var(--ver); color:white; border:none; border-radius:6px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.8rem; cursor:pointer;">✅ DISPONIBILE</button>
+                </div>`;
+            }
 
             let righe = miei.map(o => {
                 let isConsegnata = o.stato === 'consegnato';
@@ -614,9 +640,20 @@
                     </div>
                     <span class="rider-counter ${counterClass}">${counterLabel}</span>
                 </div>
-                <div class="rider-block-detail">${righe}</div>
+                <div class="rider-block-detail">
+                    ${timerHtml}
+                    ${righe}
+                </div>
             </div>`;
         }).join('');
+
+        // Aggiorna timer ogni secondo se ci sono rider in rientro
+        let haTimer = Object.values(riders).some(r => r.inRientro);
+        if(haTimer) setTimeout(() => { if(document.getElementById('tab3').classList.contains('show')) renderRider(); }, 1000);
+    }
+
+    function annullaTimer(riderId) {
+        db.ref('riders').child(riderId).update({ inRientro: false, tsRientro: null });
     }
 
     // ── RENDER ORARI (identico admin) ──────────────────────────────
