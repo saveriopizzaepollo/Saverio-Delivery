@@ -170,29 +170,42 @@
     <div class="header-main">
         <span class="header-title">SAVERIO DELIVERY</span>
         <span class="header-sub">DISPATCH</span>
-        <button class="btn-logout" onclick="logout()">ESCI</button>
+        <div style="display:flex; gap:6px;">
+            <button class="btn-logout" onclick="apriCambioPIN()">PIN</button>
+            <button class="btn-logout" onclick="logout()">ESCI</button>
+        </div>
     </div>
     <div class="nav-bar">
-        <button class="nav-btn active" id="btn-t1" onclick="showTab(1)">CONSEGNE</button>
-        <button class="nav-btn" id="btn-t2" onclick="showTab(2)">ORARI</button>
-        <button class="nav-btn" id="btn-t3" onclick="showTab(3)">PIN</button>
+        <button class="nav-btn active" id="btn-t1" onclick="showTab(1)">ORDINI</button>
+        <button class="nav-btn" id="btn-t2" onclick="showTab(2)">ASSEGNATI</button>
+        <button class="nav-btn" id="btn-t3" onclick="showTab(3)">CONSEGNATI</button>
+        <button class="nav-btn" id="btn-t4" onclick="showTab(4)">CARICO</button>
     </div>
     <div class="content-area">
         <div id="tab1" class="tab-content show">
-            <div id="consegne-lista"></div>
+            <div id="ordini-lista"></div>
         </div>
         <div id="tab2" class="tab-content">
-            <div id="orari-lista"></div>
+            <div id="assegnati-lista"></div>
         </div>
         <div id="tab3" class="tab-content">
-            <div style="background:white; border-radius:15px; padding:20px; color:var(--blu);">
-                <h3 style="margin-bottom:20px; font-size:1.3rem;">CAMBIA IL TUO PIN</h3>
-                <input type="password" inputmode="numeric" maxlength="4" id="pin-nuovo" class="input-big" placeholder="NUOVO PIN">
-                <input type="password" inputmode="numeric" maxlength="4" id="pin-conferma" class="input-big" placeholder="CONFERMA PIN">
-                <button class="btn-main" onclick="cambiaPIN()">SALVA NUOVO PIN</button>
-                <p id="pin-msg" style="text-align:center; font-size:0.9rem; display:none;"></p>
-            </div>
+            <div id="consegnati-lista"></div>
         </div>
+        <div id="tab4" class="tab-content">
+            <div id="orari-lista"></div>
+        </div>
+    </div>
+</div>
+
+<!-- OVERLAY CAMBIO PIN -->
+<div id="pin-change-overlay" class="pin-overlay">
+    <div class="pin-box">
+        <h2 style="font-size:1.4rem; margin-bottom:15px;">CAMBIA PIN</h2>
+        <input type="password" inputmode="numeric" maxlength="4" id="pin-nuovo" class="input-big" placeholder="NUOVO PIN">
+        <input type="password" inputmode="numeric" maxlength="4" id="pin-conferma" class="input-big" placeholder="CONFERMA PIN">
+        <button class="btn-main" onclick="cambiaPIN()">SALVA</button>
+        <p id="pin-msg" style="text-align:center; font-size:0.9rem; display:none; margin-top:8px;"></p>
+        <button onclick="chiudiCambioPIN()" style="margin-top:10px; background:none; border:none; color:rgba(255,255,255,0.35); font-size:0.8rem; cursor:pointer; font-family:'Barlow',sans-serif;">← ANNULLA</button>
     </div>
 </div>
 
@@ -242,8 +255,10 @@
         });
         ordiniSalvati.sort((a,b) => a.ora.localeCompare(b.ora));
         if(loggedIn) {
-            if(document.getElementById('tab1').classList.contains('show')) renderConsegne();
-            if(document.getElementById('tab2').classList.contains('show')) renderOrari();
+            if(document.getElementById('tab1').classList.contains('show')) renderOrdini();
+            if(document.getElementById('tab2').classList.contains('show')) renderAssegnati();
+            if(document.getElementById('tab3').classList.contains('show')) renderConsegnati();
+            if(document.getElementById('tab4').classList.contains('show')) renderOrari();
         }
         document.getElementById('fb-status').textContent = '🟢 sync';
     });
@@ -320,18 +335,38 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('tab'+n).classList.add('show');
         document.getElementById('btn-t'+n).classList.add('active');
-        if(n===1) renderConsegne();
-        if(n===2) renderOrari();
+        if(n===1) renderOrdini();
+        if(n===2) renderAssegnati();
+        if(n===3) renderConsegnati();
+        if(n===4) renderOrari();
     }
 
-    // ── RENDER CONSEGNE ────────────────────────────────────────────
-    function renderConsegne() {
-        const container = document.getElementById('consegne-lista');
-        if(ordiniSalvati.length === 0) {
-            container.innerHTML = '<div class="empty-state"><div class="empty-icon">🛵</div><p>Nessun ordine ancora</p></div>';
+    // ── RENDER ORDINI (tutti) ──────────────────────────────────────
+    function renderOrdini() {
+        const lista = ordiniSalvati.filter(o => o.stato !== 'consegnato');
+        renderCardLista('ordini-lista', lista, true);
+    }
+
+    // ── RENDER ASSEGNATI ───────────────────────────────────────────
+    function renderAssegnati() {
+        const lista = ordiniSalvati.filter(o => o.stato === 'assegnato');
+        renderCardLista('assegnati-lista', lista, true);
+    }
+
+    // ── RENDER CONSEGNATI (compatte) ───────────────────────────────
+    function renderConsegnati() {
+        const lista = ordiniSalvati.filter(o => o.stato === 'consegnato');
+        renderCardLista('consegnati-lista', lista, false);
+    }
+
+    // ── RENDER GENERICA LISTA CARD ─────────────────────────────────
+    function renderCardLista(containerId, lista, mostraAzioni) {
+        const container = document.getElementById(containerId);
+        if(lista.length === 0) {
+            container.innerHTML = '<div class="empty-state"><div class="empty-icon">🛵</div><p>Nessun ordine</p></div>';
             return;
         }
-        container.innerHTML = ordiniSalvati.map(o => {
+        container.innerHTML = lista.map(o => {
             let stato = o.stato || 'attesa';
             let statoClass = stato==='pronto' ? 'stato-pronto' : stato==='assegnato' ? 'stato-assegnato' : stato==='consegnato' ? 'stato-consegnato' : '';
             let badgeClass = stato==='pronto' ? 'badge-pronto' : stato==='assegnato' ? 'badge-assegnato' : stato==='consegnato' ? 'badge-consegnato' : 'badge-attesa';
@@ -350,15 +385,18 @@
 
             let notaHtml = o.nota ? `<div style="font-size:0.8rem; color:var(--ora); margin-top:4px;">📝 ${o.nota}</div>` : '';
 
-            let btnPronto = stato==='attesa'
-                ? `<button class="btn-pronto" onclick="event.stopPropagation(); segnaPronte('${o._key}')">✅ PRONTO</button>`
-                : stato==='pronto'
-                ? `<button class="btn-pronto attivo" onclick="event.stopPropagation(); segnaPronte('${o._key}', true)">↩ TOGLI</button>`
-                : '';
-
-            let btnAssegna = (stato==='pronto' || stato==='assegnato')
-                ? `<button class="btn-assegna" onclick="event.stopPropagation(); apriAssegnazione('${o._key}')">${stato==='assegnato' ? '🔄 RIASSEGNA' : '🛵 ASSEGNA'}</button>`
-                : `<button class="btn-assegna" disabled>🛵 ASSEGNA</button>`;
+            let azioniHtml = '';
+            if(mostraAzioni) {
+                let btnPronto = stato==='attesa'
+                    ? `<button class="btn-pronto" onclick="event.stopPropagation(); segnaPronte('${o._key}')">✅ PRONTO</button>`
+                    : stato==='pronto'
+                    ? `<button class="btn-pronto attivo" onclick="event.stopPropagation(); segnaPronte('${o._key}', true)">↩ TOGLI</button>`
+                    : '';
+                let btnAssegna = (stato==='pronto' || stato==='assegnato')
+                    ? `<button class="btn-assegna" onclick="event.stopPropagation(); apriAssegnazione('${o._key}')">${stato==='assegnato' ? '🔄 RIASSEGNA' : '🛵 ASSEGNA'}</button>`
+                    : `<button class="btn-assegna" disabled>🛵 ASSEGNA</button>`;
+                azioniHtml = `<div class="dispatch-actions">${btnPronto}${btnAssegna}</div>`;
+            }
 
             return `<div class="card-consegna ${statoClass}" onclick="toggleEspansa(this)">
                 <div class="card-row-top">
@@ -392,10 +430,7 @@
                             <span class="card-prod-val">${o.costoCons.toFixed(2)}€</span>
                         </div>
                     </div>
-                    <div class="dispatch-actions">
-                        ${btnPronto}
-                        ${btnAssegna}
-                    </div>
+                    ${azioniHtml}
                 </div>
             </div>`;
         }).join('');
@@ -475,6 +510,17 @@
 
     function toggleOrario(header) { header.nextElementSibling.classList.toggle('open'); }
 
+    function apriCambioPIN() {
+        document.getElementById('pin-nuovo').value = '';
+        document.getElementById('pin-conferma').value = '';
+        document.getElementById('pin-msg').style.display = 'none';
+        document.getElementById('pin-change-overlay').classList.add('show');
+    }
+
+    function chiudiCambioPIN() {
+        document.getElementById('pin-change-overlay').classList.remove('show');
+    }
+
     // ── CAMBIO PIN ─────────────────────────────────────────────────
     function cambiaPIN() {
         let nuovo = document.getElementById('pin-nuovo').value.trim();
@@ -487,10 +533,8 @@
             msg.style.display='block'; msg.style.color='var(--rosso)'; msg.textContent='I PIN NON COINCIDONO'; return;
         }
         dispatchRef.set({ pin: nuovo });
-        document.getElementById('pin-nuovo').value='';
-        document.getElementById('pin-conferma').value='';
         msg.style.display='block'; msg.style.color='var(--ver)'; msg.textContent='✅ PIN AGGIORNATO!';
-        setTimeout(() => msg.style.display='none', 3000);
+        setTimeout(() => chiudiCambioPIN(), 1500);
     }
 </script>
 ```
