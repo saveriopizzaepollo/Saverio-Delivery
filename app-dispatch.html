@@ -623,12 +623,8 @@
             // Timer rientro
             let timerHtml = '';
             if(inRientro && r.tsRientro) {
-                let elapsed = Math.floor((Date.now() - r.tsRientro) / 1000);
-                let remaining = Math.max(0, 300 - elapsed);
-                let mm = Math.floor(remaining / 60);
-                let ss = remaining % 60;
                 timerHtml = `<div style="background:#FFF9C4; border-radius:8px; padding:8px 12px; margin:8px 15px 0; display:flex; align-items:center; justify-content:space-between;">
-                    <span style="font-size:0.9rem; color:#8B6914;">⏱ Rientro: ${mm}:${ss.toString().padStart(2,'0')}</span>
+                    <span style="font-size:0.9rem; color:#8B6914;">🛵 STA RIENTRANDO...</span>
                     <button onclick="annullaTimer('${id}')" style="padding:5px 12px; background:var(--ver); color:white; border:none; border-radius:6px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.8rem; cursor:pointer;">✅ DISPONIBILE</button>
                 </div>`;
             }
@@ -659,9 +655,7 @@
             </div>`;
         }).join('');
 
-        // Aggiorna timer ogni secondo se ci sono rider in rientro
-        let haTimer = Object.values(riders).some(r => r.inRientro);
-        if(haTimer) setTimeout(() => { if(document.getElementById('tab3').classList.contains('show')) renderRider(); }, 1000);
+        // Fine renderRider
     }
 
     function annullaTimer(riderId) {
