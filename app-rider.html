@@ -130,7 +130,14 @@
         <button class="nav-btn" id="btn-tb" onclick="showTab('b')">COMPLETATE</button>
         <button class="nav-btn" id="btn-tc" onclick="showTab('c')">PIN</button>
     </div>
-    <div class="content-area">
+
+    <!-- BANNER SONO DISPONIBILE -->
+    <div id="banner-disponibile" style="display:none; position:fixed; top:135px; left:0; right:0; background:var(--ver); padding:12px 20px; z-index:998; align-items:center; justify-content:space-between; gap:10px;">
+        <span style="font-size:0.9rem; color:white;">⏱ Stai rientrando...</span>
+        <button onclick="sonoDisponibile()" style="padding:8px 18px; background:white; color:var(--ver); border:none; border-radius:8px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.9rem; cursor:pointer;">✅ SONO DISPONIBILE</button>
+    </div>
+
+    <div class="content-area" id="content-area-rider">
         <div id="taba" class="tab-content show">
             <div id="lista-assegnate"></div>
         </div>
@@ -180,7 +187,6 @@
     ridersRef.on('value', (snap) => {
         riders = snap.val() || {};
         renderRiderList();
-        // Se c'è sessione attiva, aggiorna direttamente
         if(sessionRiderId && riders[sessionRiderId]) {
             riderSelezionato = { id: sessionRiderId, ...riders[sessionRiderId] };
             document.getElementById('rider-nome-header').textContent = riderSelezionato.nome;
@@ -311,6 +317,16 @@
         renderLista('lista-completate', completate, true);
 
         document.getElementById('btn-ta').textContent = assegnate.length > 0 ? `CONSEGNE (${assegnate.length})` : 'CONSEGNE';
+
+        // Mostra banner "SONO DISPONIBILE" se ha finito tutto
+        let banner = document.getElementById('banner-disponibile');
+        let riderData = riders[riderSelezionato.id];
+        let inRientro = riderData?.inRientro;
+        if(assegnate.length === 0 && completate.length > 0 && inRientro) {
+            banner.style.display = 'flex';
+        } else {
+            banner.style.display = 'none';
+        }
     }
 
     function renderLista(containerId, lista, isCompletate) {
@@ -367,8 +383,22 @@
     function toggleCardList(el) { el.classList.toggle('expanded'); }
 
     // ── SEGNA CONSEGNATO ───────────────────────────────────────────
+    function sonoDisponibile() {
+        if(!riderSelezionato) return;
+        ridersRef.child(riderSelezionato.id).update({ inRientro: false, tsRientro: null });
+    }
+
     function segnaConsegnato(key) {
         ordiniRef.child(key).update({ stato: 'consegnato', tsConsegnato: Date.now() });
+        // Controlla se è l'ultima consegna — avvia timer rientro
+        setTimeout(() => {
+            if(!riderSelezionato) return;
+            let mie = ordiniTutti.filter(o => o.riderId === riderSelezionato.id);
+            let rimanenti = mie.filter(o => o.stato !== 'consegnato' && o._key !== key);
+            if(rimanenti.length === 0) {
+                ridersRef.child(riderSelezionato.id).update({ inRientro: true, tsRientro: Date.now() });
+            }
+        }, 500);
     }
 
     // ── CAMBIO PIN ─────────────────────────────────────────────────
