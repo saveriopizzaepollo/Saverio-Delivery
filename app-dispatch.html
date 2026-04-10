@@ -197,8 +197,8 @@
     <div class="nav-bar">
         <button class="nav-btn active" id="btn-t1" onclick="showTab(1)">ORDINI</button>
         <button class="nav-btn" id="btn-t2" onclick="showTab(2)">ASSEGNATI</button>
-        <button class="nav-btn" id="btn-t3" onclick="showTab(3)">CONSEGNATI</button>
-        <button class="nav-btn" id="btn-t4" onclick="showTab(4)">RIDER</button>
+        <button class="nav-btn" id="btn-t3" onclick="showTab(3)">RIDER</button>
+        <button class="nav-btn" id="btn-t4" onclick="showTab(4)">CONSEGNATI</button>
         <button class="nav-btn" id="btn-t5" onclick="showTab(5)">CARICO</button>
     </div>
     <div class="content-area">
@@ -209,10 +209,10 @@
             <div id="assegnati-lista"></div>
         </div>
         <div id="tab3" class="tab-content">
-            <div id="consegnati-lista"></div>
+            <div id="rider-lista"></div>
         </div>
         <div id="tab4" class="tab-content">
-            <div id="rider-lista"></div>
+            <div id="consegnati-lista"></div>
         </div>
         <div id="tab5" class="tab-content">
             <div id="orari-lista"></div>
@@ -280,8 +280,8 @@
         if(loggedIn) {
             if(document.getElementById('tab1').classList.contains('show')) renderOrdini();
             if(document.getElementById('tab2').classList.contains('show')) renderAssegnati();
-            if(document.getElementById('tab3').classList.contains('show')) renderConsegnati();
-            if(document.getElementById('tab4').classList.contains('show')) renderRider();
+            if(document.getElementById('tab3').classList.contains('show')) renderRider();
+            if(document.getElementById('tab4').classList.contains('show')) renderConsegnati();
             if(document.getElementById('tab5').classList.contains('show')) renderOrari();
         }
         document.getElementById('fb-status').textContent = '🟢 sync';
@@ -361,14 +361,14 @@
         document.getElementById('btn-t'+n).classList.add('active');
         if(n===1) renderOrdini();
         if(n===2) renderAssegnati();
-        if(n===3) renderConsegnati();
-        if(n===4) renderRider();
+        if(n===3) renderRider();
+        if(n===4) renderConsegnati();
         if(n===5) renderOrari();
     }
 
-    // ── RENDER ORDINI (tutti) ──────────────────────────────────────
+    // ── RENDER ORDINI (solo attesa e pronto) ──────────────────────
     function renderOrdini() {
-        const lista = ordiniSalvati.filter(o => o.stato !== 'consegnato');
+        const lista = ordiniSalvati.filter(o => !o.stato || o.stato === 'attesa' || o.stato === 'pronto');
         renderCardLista('ordini-lista', lista, true);
     }
 
