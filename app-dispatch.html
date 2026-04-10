@@ -631,9 +631,15 @@
 
             let righe = miei.map(o => {
                 let isConsegnata = o.stato === 'consegnato';
+                let btnRestituisci = !isConsegnata 
+                    ? `<button onclick="restituisciOrdine('${o._key}')" style="padding:4px 10px; background:var(--rosso); color:white; border:none; border-radius:6px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.75rem; cursor:pointer; flex-shrink:0;">↩ RESTITUISCI</button>`
+                    : '';
                 return `<div class="rider-cons-row ${isConsegnata ? 'consegnata' : ''}">
                     <span class="rider-cons-ind">📍 ${o.ind}<br><small style="color:#aaa;">👤 ${o.cog} · 🕒 ${o.ora}</small></span>
-                    <span class="rider-cons-stato ${isConsegnata ? 'ok' : 'pending'}">${isConsegnata ? '✔ CONS.' : '🛵 IN CORSO'}</span>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span class="rider-cons-stato ${isConsegnata ? 'ok' : 'pending'}">${isConsegnata ? '✔ CONS.' : '🛵 IN CORSO'}</span>
+                        ${btnRestituisci}
+                    </div>
                 </div>`;
             }).join('');
 
@@ -660,6 +666,10 @@
 
     function annullaTimer(riderId) {
         db.ref('riders').child(riderId).update({ inRientro: false, tsRientro: null });
+    }
+
+    function restituisciOrdine(key) {
+        ordiniRef.child(key).update({ stato: 'pronto', riderId: null, tsAssegnato: null });
     }
 
     // ── RENDER ORARI (identico admin) ──────────────────────────────
