@@ -131,6 +131,25 @@
     .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
     .empty-icon { font-size: 3rem; margin-bottom: 12px; }
 
+    /* RIDER TAB */
+    .rider-block { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+    .rider-block-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; cursor: pointer; border-left: 6px solid var(--blu); }
+    .rider-block-header.tutti-consegnati { border-left-color: var(--ver); }
+    .rider-block-header.in-corso { border-left-color: var(--ora); }
+    .rider-nome-big { font-size: 1.3rem; color: var(--blu); }
+    .rider-counter { font-size: 1.6rem; font-weight: 900; }
+    .counter-verde { color: var(--ver); }
+    .counter-ora { color: var(--ora); }
+    .counter-grigio { color: #ccc; }
+    .rider-block-detail { display: none; border-top: 1px solid #eee; }
+    .rider-block-detail.open { display: block; }
+    .rider-cons-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; border-bottom: 1px solid #f5f5f5; font-size: 0.9rem; color: var(--blu); }
+    .rider-cons-row.consegnata { color: #aaa; }
+    .rider-cons-ind { flex: 1; }
+    .rider-cons-stato { font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; }
+    .rider-cons-stato.ok { background: #D4EDDA; color: var(--ver); }
+    .rider-cons-stato.pending { background: #FEE5D4; color: var(--ora); }
+
     #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; pointer-events: none; }
 </style>
 ```
@@ -179,7 +198,8 @@
         <button class="nav-btn active" id="btn-t1" onclick="showTab(1)">ORDINI</button>
         <button class="nav-btn" id="btn-t2" onclick="showTab(2)">ASSEGNATI</button>
         <button class="nav-btn" id="btn-t3" onclick="showTab(3)">CONSEGNATI</button>
-        <button class="nav-btn" id="btn-t4" onclick="showTab(4)">CARICO</button>
+        <button class="nav-btn" id="btn-t4" onclick="showTab(4)">RIDER</button>
+        <button class="nav-btn" id="btn-t5" onclick="showTab(5)">CARICO</button>
     </div>
     <div class="content-area">
         <div id="tab1" class="tab-content show">
@@ -192,6 +212,9 @@
             <div id="consegnati-lista"></div>
         </div>
         <div id="tab4" class="tab-content">
+            <div id="rider-lista"></div>
+        </div>
+        <div id="tab5" class="tab-content">
             <div id="orari-lista"></div>
         </div>
     </div>
@@ -258,7 +281,8 @@
             if(document.getElementById('tab1').classList.contains('show')) renderOrdini();
             if(document.getElementById('tab2').classList.contains('show')) renderAssegnati();
             if(document.getElementById('tab3').classList.contains('show')) renderConsegnati();
-            if(document.getElementById('tab4').classList.contains('show')) renderOrari();
+            if(document.getElementById('tab4').classList.contains('show')) renderRider();
+            if(document.getElementById('tab5').classList.contains('show')) renderOrari();
         }
         document.getElementById('fb-status').textContent = '🟢 sync';
     });
@@ -338,7 +362,8 @@
         if(n===1) renderOrdini();
         if(n===2) renderAssegnati();
         if(n===3) renderConsegnati();
-        if(n===4) renderOrari();
+        if(n===4) renderRider();
+        if(n===5) renderOrari();
     }
 
     // ── RENDER ORDINI (tutti) ──────────────────────────────────────
@@ -460,8 +485,50 @@
 
     function assegnaRider(riderId) {
         if(!keyDaAssegnare) return;
-        ordiniRef.child(keyDaAssegnare).update({ stato: 'assegnato', riderId });
+        ordiniRef.child(keyDaAssegnare).update({ 
+            stato: 'assegnato', 
+            riderId,
+            tsAssegnato: Date.now()
+        });
         chiudiRiderOverlay();
+    }
+
+    // ── RENDER RIDER ───────────────────────────────────────────────
+    function renderRider() {
+        const container = document.getElementById('rider-lista');
+        if(Object.keys(riders).length === 0) {
+            container.innerHTML = '<div class="empty-state"><div class="empty-icon">🛵</div><p>Nessun rider</p></div>';
+            return;
+        }
+        container.innerHTML = Object.entries(riders).map(([id, r]) => {
+            let miei = ordiniSalvati.filter(o => o.riderId === id && (o.stato === 'assegnato' || o.stato === 'consegnato'));
+            let assegnati = miei.filter(o => o.stato === 'assegnato');
+            let consegnati = miei.filter(o => o.stato === 'consegnato');
+            let totale = miei.length;
+            let nCons = consegnati.length;
+
+            let counterClass = totale === 0 ? 'counter-grigio' : nCons === totale ? 'counter-verde' : 'counter-ora';
+            let headerClass = totale === 0 ? '' : nCons === totale ? 'tutti-consegnati' : 'in-corso';
+            let counterLabel = totale === 0 ? '—' : `${nCons}/${totale}`;
+
+            let righe = miei.map(o => {
+                let isConsegnata = o.stato === 'consegnato';
+                return `<div class="rider-cons-row ${isConsegnata ? 'consegnata' : ''}">
+                    <span class="rider-cons-ind">📍 ${o.ind}<br><small style="color:#aaa;">👤 ${o.cog} · 🕒 ${o.ora}</small></span>
+                    <span class="rider-cons-stato ${isConsegnata ? 'ok' : 'pending'}">${isConsegnata ? '✔ CONS.' : '🛵 IN CORSO'}</span>
+                </div>`;
+            }).join('');
+
+            if(totale === 0) righe = `<div style="padding:10px 15px; font-size:0.85rem; color:#aaa;">Nessuna consegna assegnata</div>`;
+
+            return `<div class="rider-block">
+                <div class="rider-block-header ${headerClass}" onclick="this.nextElementSibling.classList.toggle('open')">
+                    <span class="rider-nome-big">🛵 ${r.nome}</span>
+                    <span class="rider-counter ${counterClass}">${counterLabel}</span>
+                </div>
+                <div class="rider-block-detail">${righe}</div>
+            </div>`;
+        }).join('');
     }
 
     // ── RENDER ORARI (identico admin) ──────────────────────────────
