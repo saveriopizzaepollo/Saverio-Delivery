@@ -362,14 +362,18 @@
 
     ridersRef.on('value', snap => { 
         riders = snap.val() || {};
-        // Auto-scadenza timer 5 minuti
-        Object.entries(riders).forEach(([id, r]) => {
-            if(r.inRientro && r.tsRientro) {
-                let elapsed = Date.now() - r.tsRientro;
-                if(elapsed >= 300000) { // 5 minuti
-                    db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
+        // Auto-scadenza timer 5 minuti — usa serverTime per evitare differenze di orologio
+        db.ref('/.info/serverTimeOffset').once('value', offsetSnap => {
+            let offset = offsetSnap.val() || 0;
+            let serverNow = Date.now() + offset;
+            Object.entries(riders).forEach(([id, r]) => {
+                if(r.inRientro && r.tsRientro) {
+                    let elapsed = serverNow - r.tsRientro;
+                    if(elapsed >= 300000) {
+                        db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
+                    }
                 }
-            }
+            });
         });
         if(document.getElementById('tab3') && document.getElementById('tab3').classList.contains('show')) renderRider();
     });
