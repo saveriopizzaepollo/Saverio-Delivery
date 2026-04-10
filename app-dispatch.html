@@ -669,7 +669,10 @@
     }
 
     function restituisciOrdine(key) {
-        ordiniRef.child(key).update({ stato: 'pronto', riderId: null, tsAssegnato: null });
+        let ref = ordiniRef.child(key);
+        ref.update({ stato: 'pronto' });
+        ref.child('riderId').remove();
+        ref.child('tsAssegnato').remove();
     }
 
     // ── RENDER ORARI (identico admin) ──────────────────────────────
