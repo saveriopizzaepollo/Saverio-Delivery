@@ -368,7 +368,7 @@
 
     // ── SEGNA CONSEGNATO ───────────────────────────────────────────
     function segnaConsegnato(key) {
-        ordiniRef.child(key).update({ stato: 'consegnato' });
+        ordiniRef.child(key).update({ stato: 'consegnato', tsConsegnato: Date.now() });
     }
 
     // ── CAMBIO PIN ─────────────────────────────────────────────────
