@@ -127,9 +127,21 @@
     .orario-prod-tag.is-gf { color: var(--ver); border-color: var(--ver); background: #f0fff5; }
     .orario-prod-tag.is-banco { color: #8B6914; border-color: #8B6914; background: #fffbf0; }
 
-    /* EMPTY */
-    .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
-    .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+    /* SELEZIONE MULTIPLA */
+    .card-consegna.selezionata { border: 2px solid var(--ora); background: #fffbf5; }
+    .card-check { width: 24px; height: 24px; border-radius: 6px; border: 2px solid var(--bor); background: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px; font-size: 1rem; cursor: pointer; }
+    .card-check.checked { background: var(--ora); border-color: var(--ora); color: white; }
+    .barra-assegna { position: fixed; bottom: 0; left: 0; right: 0; background: var(--blu); padding: 12px 15px; display: none; align-items: center; justify-content: space-between; z-index: 500; border-top: 3px solid var(--ora); }
+    .barra-assegna.show { display: flex; }
+    .barra-count { color: var(--giallo); font-size: 1rem; }
+    .btn-assegna-sel { padding: 10px 20px; background: var(--ora); color: white; border: none; border-radius: 10px; font-size: 1rem; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; }
+    .btn-annulla-sel { padding: 10px 15px; background: none; border: 2px solid rgba(255,255,255,0.3); color: white; border-radius: 10px; font-size: 0.9rem; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; }
+
+    /* BOLLINO RIDER */
+    .rider-bollino { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-right: 8px; }
+    .bollino-verde { background: var(--ver); }
+    .bollino-rosso { background: var(--rosso); }
+    .rider-option.non-disponibile { opacity: 0.4; pointer-events: none; }
 
     /* RIDER TAB */
     .rider-block { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
@@ -232,6 +244,13 @@
     </div>
 </div>
 
+<!-- BARRA ASSEGNA SELEZIONATI -->
+<div id="barra-assegna" class="barra-assegna">
+    <button class="btn-annulla-sel" onclick="annullaSeluzione()">✕ ANNULLA</button>
+    <span class="barra-count" id="barra-count">0 selezionati</span>
+    <button class="btn-assegna-sel" onclick="apriAssegnazioneMultipla()">🛵 ASSEGNA</button>
+</div>
+
 <!-- OVERLAY SELEZIONE RIDER -->
 <div id="rider-overlay" class="rider-overlay">
     <div class="rider-sheet">
@@ -266,7 +285,61 @@
     let cPin = '';
     let ordiniSalvati = [];
     let riders = {};
-    let keyDaAssegnare = null;
+    let selezionati = new Set();
+
+    function toggleSelezione(key, event) {
+        event.stopPropagation();
+        if(selezionati.has(key)) selezionati.delete(key);
+        else selezionati.add(key);
+        aggiornaBarraAssegna();
+        renderOrdini();
+    }
+
+    function aggiornaBarraAssegna() {
+        const barra = document.getElementById('barra-assegna');
+        const count = document.getElementById('barra-count');
+        if(selezionati.size > 0) {
+            barra.classList.add('show');
+            count.textContent = selezionati.size + (selezionati.size === 1 ? ' selezionato' : ' selezionati');
+        } else {
+            barra.classList.remove('show');
+        }
+    }
+
+    function annullaSeluzione() {
+        selezionati.clear();
+        aggiornaBarraAssegna();
+        renderOrdini();
+    }
+
+    function apriAssegnazioneMultipla() {
+        if(selezionati.size === 0) return;
+        keyDaAssegnare = null; // multipla
+        const opts = document.getElementById('rider-options');
+        opts.innerHTML = Object.entries(riders).map(([id, r]) => {
+            let inGiro = isRiderInGiro(id);
+            return `<button class="rider-option ${inGiro ? 'non-disponibile' : ''}" onclick="assegnaRiderMultiplo('${id}')">
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${inGiro ? 'var(--rosso)' : 'var(--ver)'}; margin-right:8px;"></span>
+                ${r.nome} ${inGiro ? '🔴 IN GIRO' : '🟢 DISPONIBILE'}
+            </button>`;
+        }).join('');
+        document.getElementById('rider-overlay').classList.add('show');
+    }
+
+    function assegnaRiderMultiplo(riderId) {
+        let ts = Date.now();
+        selezionati.forEach(key => {
+            ordiniRef.child(key).update({ stato: 'assegnato', riderId, tsAssegnato: ts });
+        });
+        selezionati.clear();
+        aggiornaBarraAssegna();
+        chiudiRiderOverlay();
+        renderOrdini();
+    }
+
+    function isRiderInGiro(riderId) {
+        return ordiniSalvati.some(o => o.riderId === riderId && o.stato === 'assegnato');
+    }
     let loggedIn = sessionStorage.getItem('dispatchLogin') === 'true';
 
     // ── FIREBASE LISTENERS ─────────────────────────────────────────
@@ -423,9 +496,13 @@
                 azioniHtml = `<div class="dispatch-actions">${btnPronto}${btnAssegna}</div>`;
             }
 
-            return `<div class="card-consegna ${statoClass}" onclick="toggleEspansa(this)">
+            let checkHtml = mostraAzioni && (stato === 'pronto') ? 
+                `<div class="card-check ${selezionati.has(o._key) ? 'checked' : ''}" onclick="toggleSelezione('${o._key}', event)">${selezionati.has(o._key) ? '✓' : ''}</div>` : '';
+
+            return `<div class="card-consegna ${statoClass} ${selezionati.has(o._key) ? 'selezionata' : ''}" onclick="toggleEspansa(this)">
                 <div class="card-row-top">
-                    <div class="card-col-left">
+                    ${checkHtml}
+                    <div class="card-col-left" style="flex:1;">
                         <div style="display:flex; align-items:center; gap:6px;">
                             <span class="stato-badge ${badgeClass}">${badgeLabel}</span>
                             <span style="font-size:0.72rem; color:#aaa;">${o.num}</span>
@@ -472,9 +549,13 @@
     function apriAssegnazione(key) {
         keyDaAssegnare = key;
         const opts = document.getElementById('rider-options');
-        opts.innerHTML = Object.entries(riders).map(([id, r]) =>
-            `<button class="rider-option" onclick="assegnaRider('${id}')">${r.nome}</button>`
-        ).join('');
+        opts.innerHTML = Object.entries(riders).map(([id, r]) => {
+            let inGiro = isRiderInGiro(id);
+            return `<button class="rider-option ${inGiro ? 'non-disponibile' : ''}" onclick="assegnaRider('${id}')">
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${inGiro ? 'var(--rosso)' : 'var(--ver)'}; margin-right:8px;"></span>
+                ${r.nome} ${inGiro ? '🔴 IN GIRO' : '🟢 DISPONIBILE'}
+            </button>`;
+        }).join('');
         document.getElementById('rider-overlay').classList.add('show');
     }
 
@@ -506,10 +587,13 @@
             let consegnati = miei.filter(o => o.stato === 'consegnato');
             let totale = miei.length;
             let nCons = consegnati.length;
+            let inGiro = assegnati.length > 0;
 
             let counterClass = totale === 0 ? 'counter-grigio' : nCons === totale ? 'counter-verde' : 'counter-ora';
-            let headerClass = totale === 0 ? '' : nCons === totale ? 'tutti-consegnati' : 'in-corso';
+            let headerClass = inGiro ? 'in-corso' : totale > 0 && nCons === totale ? 'tutti-consegnati' : '';
             let counterLabel = totale === 0 ? '—' : `${nCons}/${totale}`;
+            let bollinoClass = inGiro ? 'bollino-rosso' : 'bollino-verde';
+            let statoLabel = inGiro ? '🔴 IN GIRO' : '🟢 DISPONIBILE';
 
             let righe = miei.map(o => {
                 let isConsegnata = o.stato === 'consegnato';
@@ -523,7 +607,11 @@
 
             return `<div class="rider-block">
                 <div class="rider-block-header ${headerClass}" onclick="this.nextElementSibling.classList.toggle('open')">
-                    <span class="rider-nome-big">🛵 ${r.nome}</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div class="rider-bollino ${bollinoClass}"></div>
+                        <span class="rider-nome-big">${r.nome}</span>
+                        <span style="font-size:0.7rem; color:#888;">${statoLabel}</span>
+                    </div>
                     <span class="rider-counter ${counterClass}">${counterLabel}</span>
                 </div>
                 <div class="rider-block-detail">${righe}</div>
