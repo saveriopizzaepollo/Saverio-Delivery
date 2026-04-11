@@ -628,10 +628,14 @@
 
     function renderStat() {
         const container = document.getElementById('stat-box');
+        if(!container) { console.error('stat-box non trovato'); return; }
+        
         if(ordiniSalvati.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:40px; color:#aaa;">Nessun ordine ancora</div>';
+            container.innerHTML = '<div style="text-align:center; padding:40px; color:#888; font-size:1.1rem;">Nessun ordine presente</div>';
             return;
         }
+
+        try {
 
         // ── CALCOLI ────────────────────────────────────────────────
         let totaleConConsegna = 0, totaleProdotti = 0, totaleConsegne = 0;
@@ -787,6 +791,10 @@
                 <h3>🛵 RIDER</h3>
                 ${riderHtml}
             </div>`;
+        } catch(err) {
+            container.innerHTML = `<div style="padding:20px; color:var(--rosso);">Errore: ${err.message}</div>`;
+            console.error('renderStat error:', err);
+        }
     }
 
     function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
