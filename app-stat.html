@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SAVERIO DELIVERY — STATISTICHE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; --link: #007AFF; --bibite: #007AFF; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; font-weight: 900; }
+        body { background: #f4f7f9; color: var(--blu); min-height: 100vh; }
+
+```
+    .header-main { background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 75px; border-bottom: 4px solid var(--ora); position: sticky; top: 0; z-index: 100; }
+    .header-title { font-size: 0.8rem; color: white; }
+    .header-sub { font-size: 1rem; color: var(--giallo); }
+
+    .content { padding: 15px; }
+
+    /* SEZIONI */
+    .stat-sezione { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
+    .stat-sezione h3 { font-size: 0.85rem; color: var(--blu); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #eee; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* RIGHE */
+    .stat-riga { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #f5f5f5; font-size: 1rem; }
+    .stat-riga:last-child { border-bottom: none; }
+    .stat-label { color: #555; font-size: 0.95rem; }
+    .stat-val { font-size: 1.2rem; font-weight: 900; }
+    .arancio { color: var(--ora); }
+    .verde { color: var(--ver); }
+    .rosso { color: var(--rosso); }
+    .blu { color: var(--blu); }
+    .giallo { color: #8B6914; }
+    .grigio { color: #888; }
+
+    /* GRID PAGAMENTI */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-card-mini { background: #f4f7f9; border-radius: 8px; padding: 10px 12px; }
+    .stat-card-mini .label { font-size: 0.72rem; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card-mini .valore { font-size: 1.3rem; font-weight: 900; }
+
+    /* RIDER */
+    .stat-rider-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+    .stat-rider-row:last-child { border-bottom: none; }
+    .stat-rider-nome { font-size: 1.1rem; color: var(--blu); }
+    .stat-rider-dati { text-align: right; }
+    .stat-rider-num { font-size: 1.3rem; color: var(--ora); }
+    .stat-rider-tempo { font-size: 0.8rem; color: #888; margin-top: 2px; }
+
+    /* TOTALE IN EVIDENZA */
+    .stat-totale-big { background: var(--blu); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .stat-totale-label { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+    .stat-totale-val { color: var(--giallo); font-size: 2rem; }
+
+    /* EMPTY */
+    .empty-state { text-align: center; padding: 80px 20px; color: #aaa; }
+    .empty-icon { font-size: 3rem; margin-bottom: 15px; }
+
+    #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: #aaa; pointer-events: none; }
+</style>
+```
+
+</head>
+<body>
+
+```
+<div class="header-main">
+    <span class="header-title">SAVERIO DELIVERY</span>
+    <span class="header-sub">STATISTICHE</span>
+    <span id="data-oggi" style="font-size:0.75rem; color:rgba(255,255,255,0.5);"></span>
+</div>
+
+<div class="content" id="main-content">
+    <div class="empty-state">
+        <div class="empty-icon">⏳</div>
+        <p>Caricamento dati...</p>
+    </div>
+</div>
+
+<div id="fb-status">⚪ connecting...</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvQVRAkkyO00yttmQuoZiAohM2P44gY1Y",
+        authDomain: "saverio-delivery-29387.firebaseapp.com",
+        databaseURL: "https://saverio-delivery-29387-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "saverio-delivery-29387",
+        storageBucket: "saverio-delivery-29387.firebasestorage.app",
+        messagingSenderId: "1023327240106",
+        appId: "1:1023327240106:web:203ace4347a69a038ab5d3"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let ordiniSalvati = [];
+    let riders = {};
+
+    // Data di oggi
+    document.getElementById('data-oggi').textContent = new Date().toLocaleDateString('it-IT', {day:'numeric', month:'long'});
+
+    // Listeners
+    db.ref('riders').on('value', snap => {
+        riders = snap.val() || {};
+    });
+
+    db.ref('ordini').on('value', snap => {
+        ordiniSalvati = [];
+        snap.forEach(child => {
+            let o = child.val(); o._key = child.key;
+            ordiniSalvati.push(o);
+        });
+        renderStat();
+        document.getElementById('fb-status').textContent = '🟢 sync';
+    });
+
+    db.ref('.info/connected').on('value', snap => {
+        document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
+    });
+
+    function renderStat() {
+        const container = document.getElementById('main-content');
+
+        if(ordiniSalvati.length === 0) {
+            container.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div><p>Nessun ordine oggi</p></div>`;
+            return;
+        }
+
+        // ── CALCOLI ────────────────────────────────────────────────
+        let totaleConConsegna = 0, totaleProdotti = 0, totaleConsegne = 0;
+        let totContanti = 0, totPOS = 0, totPagati = 0;
+        let qPizza = 0, ePizza = 0, qPizzaGF = 0, ePizzaGF = 0;
+        let qPollo = 0, ePollo = 0, qPolloGF = 0, ePolloGF = 0;
+        let qBibite = 0, eBibite = 0, qBanco = 0, eBanco = 0;
+        let riderStats = {};
+
+        ordiniSalvati.forEach(o => {
+            let totStr = (o.tot || '0').toString().replace(/[€\s]/g,'').replace(',','.');
+            let totOrdine = parseFloat(totStr) || 0;
+            let costoC = parseFloat(o.costoCons) || 0;
+            let prodotti = totOrdine - costoC;
+
+            totaleConConsegna += totOrdine;
+            totaleProdotti += prodotti;
+            totaleConsegne += costoC;
+
+            if(o.pay === 'CONTANTI') totContanti += prodotti;
+            else if(o.pay === 'POS') totPOS += prodotti;
+            else if(o.pay === 'PAGATO') totPagati += prodotti;
+
+            (o.prodotti || []).forEach(p => {
+                let v = parseFloat(p.v) || 0;
+                let q = parseInt(p.q) || 1;
+                let tipo = p.tipo || '0';
+                if(tipo === '0') {
+                    if(p.isGf) { qPizzaGF += q; ePizzaGF += v; }
+                    else { qPizza += q; ePizza += v; }
+                } else if(tipo === '1') {
+                    if(p.isGf) { qPolloGF += q; ePolloGF += v; }
+                    else { qPollo += q; ePollo += v; }
+                } else if(tipo === '2') { qBibite += q; eBibite += v; }
+                else if(tipo === '3') { qBanco += q; eBanco += v; }
+            });
+
+            if(o.riderId && o.stato === 'consegnato') {
+                if(!riderStats[o.riderId]) riderStats[o.riderId] = { cons: 0, tempi: [] };
+                riderStats[o.riderId].cons++;
+                if(o.tsAssegnato && o.tsConsegnato) {
+                    let min = Math.round((o.tsConsegnato - o.tsAssegnato) / 60000);
+                    if(min > 0 && min < 120) riderStats[o.riderId].tempi.push(min);
+                }
+            }
+        });
+
+        let nOrdini = ordiniSalvati.length;
+        let nConsegnati = ordiniSalvati.filter(o => o.stato === 'consegnato').length;
+        let fmt = v => v.toFixed(2).replace('.',',') + ' €';
+
+        // ── RIDER HTML ─────────────────────────────────────────────
+        let riderHtml = Object.keys(riderStats).length === 0
+            ? '<div style="color:#aaa; font-size:0.9rem; padding:8px 0;">Nessuna consegna completata</div>'
+            : Object.entries(riderStats).map(([id, s]) => {
+                let nome = riders[id]?.nome || 'Rider';
+                let tempoMedio = s.tempi.length > 0 ? Math.round(s.tempi.reduce((a,b)=>a+b,0)/s.tempi.length) : null;
+                return `<div class="stat-rider-row">
+                    <span class="stat-rider-nome">🛵 ${nome}</span>
+                    <div class="stat-rider-dati">
+                        <div class="stat-rider-num">${s.cons} cons.</div>
+                        ${tempoMedio ? `<div class="stat-rider-tempo">⏱ ~${tempoMedio} min/cons.</div>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+
+        container.innerHTML = `
+            <div class="stat-totale-big">
+                <div>
+                    <div class="stat-totale-label">TOTALE GIORNALIERO</div>
+                    <div class="stat-totale-val">${fmt(totaleConConsegna)}</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="color:rgba(255,255,255,0.6); font-size:0.8rem;">${nOrdini} ordini</div>
+                    <div style="color:var(--ver); font-size:1rem;">${nConsegnati} consegnati</div>
+                </div>
+            </div>
+
+            <div class="stat-sezione">
+                <h3>💰 INCASSI</h3>
+                <div class="stat-riga">
+                    <span class="stat-label">Totale prodotti</span>
+                    <span class="stat-val blu">${fmt(totaleProdotti)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🛵 Costo consegne</span>
+                    <span class="stat-val grigio">${fmt(totaleConsegne)}</span>
+                </div>
+            </div>
+
+            <div class="stat-sezione">
+                <h3>💳 PAGAMENTI</h3>
+                <div class="stat-grid">
+                    <div class="stat-card-mini">
+                        <div class="label">Contanti</div>
+                        <div class="valore blu">${fmt(totContanti)}</div>
+                    </div>
+                    <div class="stat-card-mini">
+                        <div class="label">POS</div>
+                        <div class="valore rosso">${fmt(totPOS)}</div>
+                    </div>
+                    <div class="stat-card-mini" style="grid-column:1/-1;">
+                        <div class="label">Pagati anticipati</div>
+                        <div class="valore verde">${fmt(totPagati)}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-sezione">
+                <h3>🍕 PRODOTTI</h3>
+                <div class="stat-riga">
+                    <span class="stat-label">🍕 Pizze</span>
+                    <span class="stat-val arancio">${qPizza} pz &nbsp; ${fmt(ePizza)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🍕 Pizze GF</span>
+                    <span class="stat-val verde">${qPizzaGF} pz &nbsp; ${fmt(ePizzaGF)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🍗 Pollo</span>
+                    <span class="stat-val rosso">${qPollo} pz &nbsp; ${fmt(ePollo)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🍗 Pollo GF</span>
+                    <span class="stat-val verde">${qPolloGF} pz &nbsp; ${fmt(ePolloGF)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🥤 Bibite</span>
+                    <span class="stat-val blu">${qBibite} pz &nbsp; ${fmt(eBibite)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🏪 Banco</span>
+                    <span class="stat-val giallo">${qBanco} pz &nbsp; ${fmt(eBanco)}</span>
+                </div>
+            </div>
+
+            <div class="stat-sezione">
+                <h3>🛵 RIDER</h3>
+                ${riderHtml}
+            </div>`;
+    }
+</script>
+```
+
+</body>
+</html>
