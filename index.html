@@ -173,10 +173,7 @@
     <div class="header-main">
         <span style="font-size:0.8rem;">SAVERIO DELIVERY</span>
         <div id="main-total">0,00 €</div>
-        <div style="display:flex; gap:6px; align-items:center;">
-            <button onclick="apriStat()" style="background:none; border:2px solid rgba(255,255,255,0.3); color:white; border-radius:8px; padding:6px 10px; font-size:0.75rem; cursor:pointer; font-family:'Barlow',sans-serif; font-weight:900;">STAT</button>
-            <div class="order-tag" id="header-tag">#01</div>
-        </div>
+        <div class="order-tag" id="header-tag">#01</div>
     </div>
     <div class="nav-bar">
         <button class="nav-btn active" id="btn-t1" onclick="showTab(1)">CLIENTE</button>
@@ -245,10 +242,10 @@
 <div id="fb-status">⚪ connecting...</div>
 
 <!-- OVERLAY STATISTICHE -->
-<div id="stat-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:2000; overflow-y:auto;">
-    <div style="background:#f4f7f9; min-height:100vh; padding:15px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h2 style="color:var(--blu); font-size:1.3rem;">STATISTICHE</h2>
+<div id="stat-overlay" style="visibility:hidden; position:fixed; inset:0; background:#f4f7f9; z-index:2000; overflow-y:auto;">
+    <div style="padding:15px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:var(--blu); margin:-15px -15px 15px -15px; padding:15px 20px; border-bottom:4px solid var(--ora);">
+            <h2 style="color:white; font-size:1.3rem;">STATISTICHE</h2>
             <button onclick="chiudiStat()" style="background:var(--rosso); color:white; border:none; border-radius:8px; padding:8px 16px; font-family:'Barlow',sans-serif; font-weight:900; cursor:pointer;">✕ CHIUDI</button>
         </div>
         <div id="stat-box"></div>
@@ -307,12 +304,12 @@
     }
 
     function apriStat() {
-        document.getElementById('stat-overlay').style.display = 'block';
-        setTimeout(() => renderStat(), 50);
+        renderStat();
+        document.getElementById('stat-overlay').style.visibility = 'visible';
     }
 
     function chiudiStat() {
-        document.getElementById('stat-overlay').style.display = 'none';
+        document.getElementById('stat-overlay').style.visibility = 'hidden';
     }
 
     // ── INIT APP ───────────────────────────────────────────────────
