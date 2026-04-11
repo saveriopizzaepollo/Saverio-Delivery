@@ -268,7 +268,62 @@
             <div class="stat-sezione">
                 <h3>🛵 RIDER</h3>
                 ${riderHtml}
+            </div>
+
+            <div class="stat-sezione" style="border: 2px solid #eee;">
+                <h3>⚙️ GESTIONE GIORNATA</h3>
+                <button onclick="azzeraConSalvataggio()" style="width:100%; padding:14px; background:var(--ver); color:white; border:none; border-radius:10px; font-family:'Barlow',sans-serif; font-weight:900; font-size:1rem; cursor:pointer; margin-bottom:8px;">📦 AZZERA E SALVA STORICO</button>
+                <button onclick="azzeraSenzaSalvare()" style="width:100%; padding:14px; background:var(--ora); color:white; border:none; border-radius:10px; font-family:'Barlow',sans-serif; font-weight:900; font-size:1rem; cursor:pointer; margin-bottom:8px;">🗑 AZZERA SENZA SALVARE</button>
+                <button onclick="resetCompleto()" style="width:100%; padding:14px; background:var(--rosso); color:white; border:none; border-radius:10px; font-family:'Barlow',sans-serif; font-weight:900; font-size:1rem; cursor:pointer;">⚠️ RESET COMPLETO</button>
             </div>`;
+    }
+
+    // ── AZZERA E SALVA STORICO ─────────────────────────────────────
+    function azzeraConSalvataggio() {
+        if(!confirm('Salvare i dati di oggi nello storico e azzerare la lista?')) return;
+        let oggi = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'});
+        let snapshot = {
+            data: oggi,
+            timestamp: Date.now(),
+            ordini: ordiniSalvati
+        };
+        db.ref('storico').push(snapshot).then(() => {
+            return db.ref('ordini').remove();
+        }).then(() => {
+            return db.ref('contatore').remove();
+        }).then(() => {
+            // Reset stati rider
+            Object.keys(riders).forEach(id => {
+                db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
+            });
+            alert('✅ Dati salvati nello storico! Lista azzerata.');
+        });
+    }
+
+    // ── AZZERA SENZA SALVARE ───────────────────────────────────────
+    function azzeraSenzaSalvare() {
+        if(!confirm('Azzerare tutti gli ordini senza salvare? I dati andranno persi.')) return;
+        db.ref('ordini').remove().then(() => {
+            return db.ref('contatore').remove();
+        }).then(() => {
+            Object.keys(riders).forEach(id => {
+                db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
+            });
+            alert('✅ Lista azzerata.');
+        });
+    }
+
+    // ── RESET COMPLETO ─────────────────────────────────────────────
+    function resetCompleto() {
+        if(!confirm('RESET COMPLETO: cancella ordini, contatore e stati rider. Usare solo per prove. Continuare?')) return;
+        if(!confirm('Sei sicuro? Questa operazione non può essere annullata.')) return;
+        db.ref('ordini').remove();
+        db.ref('contatore').remove();
+        // Reset tutti gli stati rider ma mantieni nomi e PIN
+        Object.keys(riders).forEach(id => {
+            db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
+        });
+        alert('✅ Reset completato.');
     }
 </script>
 ```
