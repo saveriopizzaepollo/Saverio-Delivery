@@ -642,7 +642,11 @@
         let riderStats = {};
 
         ordiniSalvati.forEach(o => {
-            let totOrdine = parseFloat(o.tot.replace('€','').replace(',','.').trim()) || 0;
+            // Parsing robusto del totale
+            let totOrdine = 0;
+            if(o.tot) {
+                totOrdine = parseFloat(o.tot.toString().replace(/[€\s]/g,'').replace(',','.')) || 0;
+            }
             let costoC = parseFloat(o.costoCons) || 0;
             let prodotti = totOrdine - costoC;
 
