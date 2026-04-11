@@ -307,8 +307,8 @@
     }
 
     function apriStat() {
-        renderStat();
         document.getElementById('stat-overlay').style.display = 'block';
+        setTimeout(() => renderStat(), 50);
     }
 
     function chiudiStat() {
