@@ -628,10 +628,15 @@
 
     function renderStat() {
         const container = document.getElementById('stat-box');
-        if(!container) { console.error('stat-box non trovato'); return; }
+        if(!container) return;
         
+        // Debug — mostra sempre qualcosa
+        container.innerHTML = `<div style="padding:15px; background:white; border-radius:10px; color:var(--blu); margin-bottom:10px;">
+            <b>DEBUG:</b> ordini caricati: ${ordiniSalvati.length} | riders: ${Object.keys(riders).length}
+        </div>`;
+
         if(ordiniSalvati.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:40px; color:#888; font-size:1.1rem;">Nessun ordine presente</div>';
+            container.innerHTML += '<div style="text-align:center; padding:40px; color:#888; font-size:1.1rem;">Nessun ordine presente</div>';
             return;
         }
 
