@@ -338,7 +338,9 @@
     }
 
     function isRiderInGiro(riderId) {
-        return ordiniSalvati.some(o => o.riderId === riderId && o.stato === 'assegnato');
+        let haConsegneAssegnate = ordiniSalvati.some(o => o.riderId === riderId && o.stato === 'assegnato');
+        let inRientro = riders[riderId]?.inRientro;
+        return haConsegneAssegnate || inRientro;
     }
     let loggedIn = sessionStorage.getItem('dispatchLogin') === 'true';
 
