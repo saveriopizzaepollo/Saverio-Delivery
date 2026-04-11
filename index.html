@@ -487,11 +487,15 @@
             let badgeLabel = stato==='pronto' ? '✅ PRONTO' : stato==='assegnato' ? '🛵 ASSEGNATO' : stato==='consegnato' ? '✔ CONSEGNATO' : '⏳ IN ATTESA';
             let riderNome = o.riderId && riders[o.riderId] ? `<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>` : '';
 
+            let btnMod = stato === 'consegnato' 
+                ? `<button class="act-btn-small btn-mod" style="opacity:0.3; cursor:default;">✏️</button>`
+                : `<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
+
             return `<div class="card-consegna ${statoClass}">
                 <div class="card-header-main">
                     <span class="card-num-big">🏷️ ${o.num}</span>
                     <div class="card-actions-top">
-                        <button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>
+                        ${btnMod}
                         <button class="act-btn-small btn-del" onclick="eliminaOrdine('${o._key}')">🗑️</button>
                     </div>
                     <span class="card-ora-big">🕒 ${o.ora}</span>
