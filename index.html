@@ -125,6 +125,27 @@
     .orario-prod-tag.is-bibita { color: var(--bibite); border-color: var(--bibite); background: #f0f5ff; }
     .orario-prod-tag.is-gf { color: var(--ver); border-color: var(--ver); background: #f0fff5; }
     .orario-prod-tag.is-banco { color: #8B6914; border-color: #8B6914; background: #fffbf0; }
+
+    /* STATISTICHE */
+    .stat-sezione { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; color: var(--blu); }
+    .stat-sezione h3 { font-size: 1rem; color: var(--blu); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #eee; text-transform: uppercase; letter-spacing: 1px; }
+    .stat-riga { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #f5f5f5; font-size: 1rem; }
+    .stat-riga:last-child { border-bottom: none; }
+    .stat-label { color: #555; }
+    .stat-val { font-size: 1.2rem; font-weight: 900; }
+    .stat-val.arancio { color: var(--ora); }
+    .stat-val.verde { color: var(--ver); }
+    .stat-val.rosso { color: var(--rosso); }
+    .stat-val.blu { color: var(--blu); }
+    .stat-val.giallo { color: #8B6914; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-card-mini { background: #f4f7f9; border-radius: 8px; padding: 10px 12px; }
+    .stat-card-mini .label { font-size: 0.75rem; color: #888; margin-bottom: 4px; text-transform: uppercase; }
+    .stat-card-mini .valore { font-size: 1.3rem; font-weight: 900; }
+    .stat-rider-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
+    .stat-rider-row:last-child { border-bottom: none; }
+    .stat-rider-nome { font-size: 1rem; color: var(--blu); }
+    .stat-rider-dati { text-align: right; font-size: 0.85rem; color: #888; }
 </style>
 ```
 
@@ -160,6 +181,7 @@
         <button class="nav-btn" id="btn-t4" onclick="showTab(4)">RIEPILOGO</button>
         <button class="nav-btn" id="btn-t5" onclick="showTab(5)">CONSEGNE</button>
         <button class="nav-btn" id="btn-t6" onclick="showTab(6)">ORARI</button>
+        <button class="nav-btn" id="btn-t7" onclick="showTab(7)">STAT</button>
     </div>
     <div class="content-area">
         <div id="tab1" class="tab-content show">
@@ -209,6 +231,10 @@
         <div id="tab6" class="tab-content">
             <h2 style="color:var(--blu); margin-bottom:15px;">ORARI</h2>
             <div id="orari-lista"></div>
+        </div>
+
+        <div id="tab7" class="tab-content">
+            <div id="stat-box"></div>
         </div>
     </div>
 </div>
@@ -260,11 +286,12 @@
         document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); 
         document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); 
         document.getElementById('tab'+n).classList.add('show'); 
-        let btnId = n === 4 ? 'btn-t4' : n === 5 ? 'btn-t5' : n === 6 ? 'btn-t6' : 'btn-t'+n;
+        let btnId = n === 4 ? 'btn-t4' : n === 5 ? 'btn-t5' : n === 6 ? 'btn-t6' : n === 7 ? 'btn-t7' : 'btn-t'+n;
         document.getElementById(btnId).classList.add('active'); 
         updateRiepilogo();
         if(n===5) renderConsegne();
         if(n===6) renderOrari();
+        if(n===7) renderStat();
     }
 
     // ── INIT APP ───────────────────────────────────────────────────
@@ -577,6 +604,165 @@
     }
 
     function toggleOrario(header) { header.nextElementSibling.classList.toggle('open'); }
+
+    function renderStat() {
+        const container = document.getElementById('stat-box');
+        if(ordiniSalvati.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:40px; color:#aaa;">Nessun ordine ancora</div>';
+            return;
+        }
+
+        // ── CALCOLI ────────────────────────────────────────────────
+        let totaleConConsegna = 0, totaleProdotti = 0, totaleConsegne = 0;
+        let totContanti = 0, totPOS = 0, totPagati = 0;
+        let qPizza = 0, ePizza = 0, qPizzaGF = 0, ePizzaGF = 0;
+        let qPollo = 0, ePollo = 0, qPolloGF = 0, ePolloGF = 0;
+        let qBibite = 0, eBibite = 0, qBanco = 0, eBanco = 0;
+        let riderStats = {};
+
+        ordiniSalvati.forEach(o => {
+            let totOrdine = parseFloat(o.tot.replace('€','').replace(',','.').trim()) || 0;
+            let costoC = parseFloat(o.costoCons) || 0;
+            let prodotti = totOrdine - costoC;
+
+            totaleConConsegna += totOrdine;
+            totaleProdotti += prodotti;
+            totaleConsegne += costoC;
+
+            if(o.pay === 'CONTANTI') totContanti += prodotti;
+            else if(o.pay === 'POS') totPOS += prodotti;
+            else if(o.pay === 'PAGATO') totPagati += prodotti;
+
+            // Prodotti
+            (o.prodotti || []).forEach(p => {
+                let v = parseFloat(p.v) || 0;
+                let q = parseInt(p.q) || 1;
+                if(p.tipo === '0' || !p.tipo) {
+                    if(p.isGf) { qPizzaGF += q; ePizzaGF += v; }
+                    else { qPizza += q; ePizza += v; }
+                } else if(p.tipo === '1') {
+                    if(p.isGf) { qPolloGF += q; ePolloGF += v; }
+                    else { qPollo += q; ePollo += v; }
+                } else if(p.tipo === '2') { qBibite += q; eBibite += v; }
+                else if(p.tipo === '3') { qBanco += q; eBanco += v; }
+            });
+
+            // Rider stats
+            if(o.riderId && o.stato === 'consegnato') {
+                if(!riderStats[o.riderId]) riderStats[o.riderId] = { cons: 0, tempi: [] };
+                riderStats[o.riderId].cons++;
+                if(o.tsAssegnato && o.tsConsegnato) {
+                    let minuti = Math.round((o.tsConsegnato - o.tsAssegnato) / 60000);
+                    if(minuti > 0 && minuti < 120) riderStats[o.riderId].tempi.push(minuti);
+                }
+            }
+        });
+
+        let nOrdini = ordiniSalvati.length;
+        let fmt = v => v.toFixed(2).replace('.',',') + ' €';
+
+        // ── RIDER HTML ─────────────────────────────────────────────
+        let riderHtml = Object.entries(riderStats).map(([id, s]) => {
+            let nome = riders[id]?.nome || id;
+            let tempoMedio = s.tempi.length > 0 ? Math.round(s.tempi.reduce((a,b)=>a+b,0)/s.tempi.length) : null;
+            return `<div class="stat-rider-row">
+                <span class="stat-rider-nome">🛵 ${nome}</span>
+                <div class="stat-rider-dati">
+                    <div><b>${s.cons}</b> consegne</div>
+                    ${tempoMedio ? `<div>⏱ ~${tempoMedio} min/cons.</div>` : ''}
+                </div>
+            </div>`;
+        }).join('') || '<div style="color:#aaa; font-size:0.9rem;">Nessuna consegna completata</div>';
+
+        container.innerHTML = `
+            <!-- INCASSI -->
+            <div class="stat-sezione">
+                <h3>💰 INCASSI</h3>
+                <div class="stat-riga">
+                    <span class="stat-label">Totale giornaliero</span>
+                    <span class="stat-val arancio">${fmt(totaleConConsegna)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">Totale prodotti</span>
+                    <span class="stat-val blu">${fmt(totaleProdotti)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🛵 Costo consegne (rider)</span>
+                    <span class="stat-val" style="color:#888;">${fmt(totaleConsegne)}</span>
+                </div>
+            </div>
+
+            <!-- PAGAMENTI -->
+            <div class="stat-sezione">
+                <h3>💳 PAGAMENTI</h3>
+                <div class="stat-grid">
+                    <div class="stat-card-mini">
+                        <div class="label">Contanti</div>
+                        <div class="valore" style="color:var(--blu);">${fmt(totContanti)}</div>
+                    </div>
+                    <div class="stat-card-mini">
+                        <div class="label">POS</div>
+                        <div class="valore" style="color:var(--rosso);">${fmt(totPOS)}</div>
+                    </div>
+                    <div class="stat-card-mini" style="grid-column:1/-1;">
+                        <div class="label">Pagati anticipati</div>
+                        <div class="valore" style="color:var(--ver);">${fmt(totPagati)}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODOTTI -->
+            <div class="stat-sezione">
+                <h3>🍕 PRODOTTI</h3>
+                <div class="stat-riga">
+                    <span class="stat-label">🍕 Pizze</span>
+                    <span class="stat-val arancio">${qPizza} pz — ${fmt(ePizza)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🍕 Pizze GF</span>
+                    <span class="stat-val verde">${qPizzaGF} pz — ${fmt(ePizzaGF)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🍗 Pollo</span>
+                    <span class="stat-val rosso">${qPollo} pz — ${fmt(ePollo)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🍗 Pollo GF</span>
+                    <span class="stat-val verde">${qPolloGF} pz — ${fmt(ePolloGF)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🥤 Bibite</span>
+                    <span class="stat-val blu">${qBibite} pz — ${fmt(eBibite)}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">🏪 Banco</span>
+                    <span class="stat-val giallo">${qBanco} pz — ${fmt(eBanco)}</span>
+                </div>
+            </div>
+
+            <!-- ORDINI -->
+            <div class="stat-sezione">
+                <h3>📦 ORDINI</h3>
+                <div class="stat-riga">
+                    <span class="stat-label">Totale ordini</span>
+                    <span class="stat-val arancio">${nOrdini}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">Consegnati</span>
+                    <span class="stat-val verde">${ordiniSalvati.filter(o=>o.stato==='consegnato').length}</span>
+                </div>
+                <div class="stat-riga">
+                    <span class="stat-label">In attesa / In giro</span>
+                    <span class="stat-val" style="color:#888;">${ordiniSalvati.filter(o=>o.stato!=='consegnato').length}</span>
+                </div>
+            </div>
+
+            <!-- RIDER -->
+            <div class="stat-sezione">
+                <h3>🛵 RIDER</h3>
+                ${riderHtml}
+            </div>`;
+    }
 
     function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
 </script>
