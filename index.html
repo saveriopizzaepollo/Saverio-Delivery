@@ -475,6 +475,9 @@
             document.getElementById(`row-${i}`).classList.remove('row-is-gf', 'tipo-polleria', 'tipo-bibite', 'tipo-banco');
         }
         updateTimeSelect(); updateRiepilogo();
+        // Reset pulsante verifica posizione
+        document.getElementById('btn-maps').style.background = '#4285F4';
+        document.getElementById('btn-maps').innerText = '📍 VERIFICA POSIZIONE';
     }
 
     // ── MODIFICA ORDINE ────────────────────────────────────────────
@@ -840,7 +843,13 @@
         }
     }
 
-    function verifyMaps(){ let a=document.getElementById('o-indirizzo').value; if(!a) return alert("METTI INDIRIZZO"); window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`); document.getElementById('btn-maps').style.background="var(--ver)"; document.getElementById('btn-maps').innerText="📍 POSIZIONE VERIFICATA"; }
+    function verifyMaps() {
+        let a = document.getElementById('o-indirizzo').value;
+        if(!a) return alert("METTI INDIRIZZO");
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`);
+        document.getElementById('btn-maps').style.background = 'var(--ver)';
+        document.getElementById('btn-maps').innerText = '✅ POSIZIONE VERIFICATA';
+    }
 </script>
 ```
 
