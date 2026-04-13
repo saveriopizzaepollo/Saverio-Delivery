@@ -94,8 +94,17 @@
     .pay-label-big { font-size: 1.3rem; font-weight: 900; }
     .tot-label-big { font-size: 1.8rem; color: var(--ora); }
 
-    /* Indicatore stato Firebase */
-    #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; pointer-events: none; }
+    /* Autocomplete clienti */
+    .autocomplete-wrap { position: relative; margin-bottom: 12px; }
+    .autocomplete-wrap .input-big { margin-bottom: 0; }
+    .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--ora); border-radius: 0 0 10px 10px; z-index: 500; max-height: 200px; overflow-y: auto; }
+    .autocomplete-item { padding: 10px 12px; font-size: 1rem; color: var(--blu); cursor: pointer; border-bottom: 1px solid #eee; }
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:active { background: #fff5f0; }
+    /* Barra ricerca consegne */
+    .search-bar { display: flex; gap: 8px; margin-bottom: 12px; }
+    .search-input { flex: 1; padding: 10px 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1rem; outline: none; color: var(--blu); background: white; font-family: 'Barlow', sans-serif; font-weight: 900; text-transform: uppercase; }
+    .search-input:focus { border-color: var(--ora); }
 
     /* Tab ORARI */
     .orario-block { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; border-left: 8px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
@@ -153,23 +162,7 @@
 <body>
 
 ```
-<div id="page-start" class="page-init show">
-    <h1 style="font-size:3.5rem; margin-bottom:40px;">SAVERIO DELIVERY</h1>
-    <button onclick="showPin()" style="padding:20px 40px; background:var(--ora); color:white; border:none; border-radius:15px; font-size:1.5rem;">ADMIN LOGIN</button>
-</div>
-
-<div id="page-pin" class="page-init">
-    <h2 style="margin-bottom:20px;">INSERISCI PIN</h2>
-    <div id="pin-dots" style="display:flex; gap:15px; margin-bottom:30px;">
-        <div style="width:18px; height:18px; border:2px solid white; border-radius:50%;" id="dot-0"></div>
-        <div style="width:18px; height:18px; border:2px solid white; border-radius:50%;" id="dot-1"></div>
-        <div style="width:18px; height:18px; border:2px solid white; border-radius:50%;" id="dot-2"></div>
-        <div style="width:18px; height:18px; border:2px solid white; border-radius:50%;" id="dot-3"></div>
-    </div>
-    <div class="grid-pin" id="numpad"></div>
-</div>
-
-<div id="app-admin" style="display:none;">
+<div id="app-admin" style="display:block;">
     <div class="header-main">
         <span style="font-size:0.8rem;">SAVERIO DELIVERY</span>
         <div id="main-total">0,00 €</div>
@@ -184,7 +177,10 @@
     </div>
     <div class="content-area">
         <div id="tab1" class="tab-content show">
-            <input type="text" id="o-cognome" class="input-big" placeholder="👤 COGNOME" oninput="updateRiepilogo()">
+            <div class="autocomplete-wrap">
+                <input type="text" id="o-cognome" class="input-big" placeholder="👤 COGNOME" oninput="onCognomeInput()" autocomplete="off">
+                <div id="autocomplete-list" class="autocomplete-list" style="display:none;"></div>
+            </div>
             <div style="display:flex; gap:5px; margin-bottom:12px;">
                 <input type="text" id="o-tel" class="input-big" style="flex:1; margin-bottom:0;" placeholder="📞 TELEFONO">
                 <button style="width:50px; background:var(--rosso); color:white; border:none; border-radius:10px;" onclick="skipTel()">X</button>
@@ -223,7 +219,10 @@
         </div>
 
         <div id="tab5" class="tab-content">
-            <h2 style="color:var(--blu); margin-bottom:15px;">STATO CONSEGNE</h2>
+            <h2 style="color:var(--blu); margin-bottom:10px;">STATO CONSEGNE</h2>
+            <div class="search-bar">
+                <input type="text" id="search-consegne" class="search-input" placeholder="🔍 CERCA COGNOME O INDIRIZZO" oninput="renderConsegne()">
+            </div>
             <div id="consegne-lista"></div>
         </div>
 
@@ -272,25 +271,16 @@
     const ordiniRef = db.ref('ordini');
     const contatoreRef = db.ref('contatore');
 
-    // ── VARIABILI APP (identiche a prima) ─────────────────────────
-    const PIN = "0508"; let cPin = ""; let sCost = 0; let sPay = ""; let currentOrderNum = 1;
-    let ordiniSalvati = []; let editIndex = -1;
-    let editKey = null;
+    // ── VARIABILI APP ──────────────────────────────────────────────
+    let sCost = 0; let sPay = ""; let currentOrderNum = 1;
+    let ordiniSalvati = []; let editKey = null;
     let riders = {};
-
-    // ── PIN NUMPAD ─────────────────────────────────────────────────
-    const pad = document.getElementById('numpad');
-    for(let i=1; i<=9; i++){ let b=document.createElement('div'); b.className='num-key'; b.innerText=i; b.onclick=()=>pressPin(i); pad.appendChild(b); }
-    let z=document.createElement('div'); z.className='num-key'; z.innerText="0"; z.style.gridColumnStart="2"; z.onclick=()=>pressPin(0); pad.appendChild(z);
-
-    function showPin(){ document.getElementById('page-start').classList.remove('show'); document.getElementById('page-pin').classList.add('show'); }
-    function pressPin(n){
-        if(cPin.length<4){ cPin+=n; document.getElementById('dot-'+(cPin.length-1)).style.background="var(--ora)";
-        if(cPin===PIN){ document.getElementById('page-pin').classList.remove('show'); document.getElementById('app-admin').style.display='block'; initApp(); }
-        else if(cPin.length===4){ alert("PIN ERRATO"); resetPin(); } }
-    }
-    function resetPin(){ cPin=""; for(let i=0; i<4; i++) document.getElementById('dot-'+i).style.background="none"; }
+    let clienti = {};
+    const clientiRef = db.ref('clienti');
     
+    // ── AVVIO AUTOMATICO SENZA PIN ─────────────────────────────────
+    window.addEventListener('load', () => initApp());
+
     // ── TAB ────────────────────────────────────────────────────────
     function showTab(n){ 
         document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); 
@@ -349,6 +339,8 @@
         });
 
         db.ref('riders').on('value', snap => { riders = snap.val() || {}; });
+
+        clientiRef.on('value', snap => { clienti = snap.val() || {}; });
 
         db.ref('.info/connected').on('value', (snap) => {
             document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
@@ -464,6 +456,8 @@
             // NUOVO ordine: salva su Firebase e aggiorna contatore
             ordiniRef.push(ordine);
             contatoreRef.set(currentOrderNum);
+            // Salva cliente automaticamente
+            salvaCliente(ordine.cog, ordine.tel, ordine.ind, ordine.nota);
         }
 
         resetForm(); showTab(5);
@@ -525,13 +519,23 @@
     // ── RENDER CONSEGNE ────────────────────────────────────────────
     function renderConsegne() {
         const container = document.getElementById('consegne-lista');
-        container.innerHTML = ordiniSalvati.map((o) => {
+        let searchEl = document.getElementById('search-consegne');
+        let search = searchEl ? searchEl.value.trim().toUpperCase() : '';
+        let lista = search
+            ? ordiniSalvati.filter(o => (o.cog||'').includes(search) || (o.ind||'').includes(search) || (o.num||'').includes(search))
+            : ordiniSalvati;
+
+        if(lista.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine trovato</div>';
+            return;
+        }
+
+        container.innerHTML = lista.map((o) => {
             let stato = o.stato || 'attesa';
             let statoClass = stato==='pronto' ? 'stato-pronto' : stato==='assegnato' ? 'stato-assegnato' : stato==='consegnato' ? 'stato-consegnato' : '';
             let badgeClass = stato==='pronto' ? 'badge-pronto' : stato==='assegnato' ? 'badge-assegnato' : stato==='consegnato' ? 'badge-consegnato' : 'badge-attesa';
             let badgeLabel = stato==='pronto' ? '✅ PRONTO' : stato==='assegnato' ? '🛵 ASSEGNATO' : stato==='consegnato' ? '✔ CONSEGNATO' : '⏳ IN ATTESA';
             let riderNome = o.riderId && riders[o.riderId] ? `<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>` : '';
-
             let btnMod = stato === 'consegnato' 
                 ? `<button class="act-btn-small btn-mod" style="opacity:0.3; cursor:default;">✏️</button>`
                 : `<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
@@ -796,6 +800,43 @@
         } catch(err) {
             container.innerHTML = `<div style="padding:20px; color:var(--rosso);">Errore: ${err.message}</div>`;
             console.error('renderStat error:', err);
+        }
+    }
+
+    // ── AUTOCOMPLETE CLIENTI ───────────────────────────────────────
+    function onCognomeInput() {
+        updateRiepilogo();
+        let val = document.getElementById('o-cognome').value.trim().toUpperCase();
+        let list = document.getElementById('autocomplete-list');
+        if(val.length < 2) { list.style.display = 'none'; return; }
+        let matches = Object.values(clienti).filter(c => c.cog.startsWith(val));
+        if(matches.length === 0) { list.style.display = 'none'; return; }
+        list.innerHTML = matches.slice(0,5).map(c =>
+            `<div class="autocomplete-item" onclick="selezionaCliente(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+                <b>${c.cog}</b> — ${c.ind}<br>
+                <small style="color:#888;">${c.tel || ''}</small>
+            </div>`
+        ).join('');
+        list.style.display = 'block';
+    }
+
+    function selezionaCliente(c) {
+        document.getElementById('o-cognome').value = c.cog;
+        document.getElementById('o-tel').value = c.tel || '';
+        document.getElementById('o-indirizzo').value = c.ind || '';
+        document.getElementById('o-nota-cons').value = c.nota || '';
+        document.getElementById('autocomplete-list').style.display = 'none';
+        updateRiepilogo();
+    }
+
+    function salvaCliente(cog, tel, ind, nota) {
+        if(!cog || !ind) return;
+        // Cerca se esiste già per cognome+indirizzo
+        let esistente = Object.entries(clienti).find(([k,c]) => c.cog === cog && c.ind === ind);
+        if(esistente) {
+            clientiRef.child(esistente[0]).update({ cog, tel, ind, nota });
+        } else {
+            clientiRef.push({ cog, tel, ind, nota });
         }
     }
 
