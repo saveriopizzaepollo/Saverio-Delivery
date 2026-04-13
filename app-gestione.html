@@ -7,133 +7,88 @@
     <title>SAVERIO DELIVERY — GESTIONE</title>
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; --link: #007AFF; --bibite: #007AFF; }
+        :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; font-weight: 900; }
-        body { background: #f4f7f9; color: #1A3A5C; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
-
-```
-    /* HEADER */
-    .header-main { background: #1A3A5C; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 75px; border-bottom: 4px solid #E8600A; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
-
-    /* NAV */
-    .nav-bar { position: fixed; top: 75px; left: 0; right: 0; background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 99; height: 60px; }
-    .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: #1A3A5C; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-family: 'Barlow', sans-serif; font-weight: 900; padding: 10px 5px; }
-    .nav-btn.active { background: #E8600A; color: white; }
-
-    /* CONTENT */
-    .content { padding: 15px; padding-top: 150px; min-height: 100vh; }
-
-    /* SEZIONI */
-    .sezione { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
-    .sezione h3 { font-size: 0.85rem; color: var(--blu); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #eee; text-transform: uppercase; letter-spacing: 1px; }
-
-    /* STAT RIGHE */
-    .stat-riga { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #f5f5f5; }
-    .stat-riga:last-child { border-bottom: none; }
-    .stat-label { color: #555; font-size: 0.95rem; }
-    .stat-val { font-size: 1.2rem; font-weight: 900; }
-    .arancio { color: var(--ora); }
-    .verde { color: var(--ver); }
-    .rosso { color: var(--rosso); }
-    .blu { color: var(--blu); }
-    .giallo { color: #8B6914; }
-    .grigio { color: #888; }
-
-    /* GRID PAGAMENTI */
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .stat-card-mini { background: #f4f7f9; border-radius: 8px; padding: 10px 12px; }
-    .stat-card-mini .label { font-size: 0.72rem; color: #888; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-card-mini .valore { font-size: 1.3rem; font-weight: 900; }
-
-    /* TOTALE BIG */
-    .stat-totale-big { background: var(--blu); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .stat-totale-label { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
-    .stat-totale-val { color: var(--giallo); font-size: 2rem; }
-
-    /* RIDER STAT */
-    .stat-rider-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
-    .stat-rider-row:last-child { border-bottom: none; }
-    .stat-rider-nome { font-size: 1.1rem; color: var(--blu); }
-    .stat-rider-dati { text-align: right; }
-    .stat-rider-num { font-size: 1.3rem; color: var(--ora); }
-    .stat-rider-tempo { font-size: 0.8rem; color: #888; margin-top: 2px; }
-
-    /* GESTIONE RIDER */
-    .rider-card { background: white; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; border-left: 6px solid var(--blu); box-shadow: 0 2px 4px rgba(0,0,0,0.07); display: flex; align-items: center; justify-content: space-between; }
-    .rider-card-nome { font-size: 1.2rem; color: var(--blu); }
-    .rider-card-actions { display: flex; gap: 8px; }
-    .btn-reset-pin { padding: 7px 12px; background: var(--ora); color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 0.82rem; cursor: pointer; }
-    .btn-rimuovi { padding: 7px 12px; background: var(--rosso); color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 0.82rem; cursor: pointer; }
-
-    /* INPUT */
-    .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 10px; outline: none; color: var(--blu); background: white; font-weight: 900; font-family: 'Barlow', sans-serif; text-transform: uppercase; }
-    .input-big:focus { border-color: var(--ora); }
-    .btn-main { width: 100%; padding: 14px; background: var(--ver); color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 1rem; cursor: pointer; margin-bottom: 8px; }
-    .btn-main:active { opacity: 0.85; }
-
-    /* BOTTONI GESTIONE */
-    .btn-azzera { width: 100%; padding: 14px; color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 1rem; cursor: pointer; margin-bottom: 8px; }
-
-    /* EMPTY */
-    .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
-    .empty-icon { font-size: 3rem; margin-bottom: 12px; }
-
-    #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.6rem; color: rgba(0,0,0,0.2); pointer-events: none; }
-</style>
-```
-
+        body { background: var(--blu); color: white; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
+        .header-main { position: fixed; top: 0; left: 0; right: 0; height: 75px; background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000; }
+        .nav-bar { position: fixed; top: 75px; left: 0; right: 0; height: 60px; background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 999; }
+        .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: var(--blu); font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-family: 'Barlow', sans-serif; font-weight: 900; }
+        .nav-btn.active { background: var(--ora); color: white; }
+        .content-area { position: absolute; top: 135px; bottom: 0; left: 0; right: 0; overflow-y: auto; background: #f4f7f9; color: var(--blu); padding: 15px; }
+        .tab-content { display: none; }
+        .tab-content.show { display: block; }
+        .sezione { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
+        .sezione h3 { font-size: 0.85rem; color: var(--blu); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #eee; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-riga { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #f5f5f5; }
+        .stat-riga:last-child { border-bottom: none; }
+        .stat-label { color: #555; font-size: 0.95rem; }
+        .stat-val { font-size: 1.2rem; font-weight: 900; }
+        .arancio { color: var(--ora); } .verde { color: var(--ver); } .rosso { color: var(--rosso); } .blu { color: var(--blu); } .giallo { color: #8B6914; } .grigio { color: #888; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .stat-card-mini { background: #f4f7f9; border-radius: 8px; padding: 10px 12px; }
+        .stat-card-mini .label { font-size: 0.72rem; color: #888; margin-bottom: 4px; text-transform: uppercase; }
+        .stat-card-mini .valore { font-size: 1.3rem; font-weight: 900; }
+        .stat-totale-big { background: var(--blu); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .stat-totale-label { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+        .stat-totale-val { color: var(--giallo); font-size: 2rem; }
+        .stat-rider-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+        .stat-rider-row:last-child { border-bottom: none; }
+        .rider-card { background: white; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; border-left: 6px solid var(--blu); box-shadow: 0 2px 4px rgba(0,0,0,0.07); display: flex; align-items: center; justify-content: space-between; }
+        .btn-small { padding: 7px 12px; color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 0.82rem; cursor: pointer; }
+        .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 10px; outline: none; color: var(--blu); background: white; font-weight: 900; font-family: 'Barlow', sans-serif; text-transform: uppercase; }
+        .input-big:focus { border-color: var(--ora); }
+        .btn-full { width: 100%; padding: 14px; color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 900; font-size: 1rem; cursor: pointer; margin-bottom: 8px; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
+        .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+        #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; pointer-events: none; }
+    </style>
 </head>
 <body>
 
 ```
-<div style="background:#1A3A5C; display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:75px; border-bottom:4px solid #E8600A; position:fixed; top:0; left:0; right:0; z-index:100;">
-    <span style="font-size:0.8rem; color:white; letter-spacing:1px; font-family:'Barlow',sans-serif; font-weight:900;">SAVERIO DELIVERY</span>
-    <span style="font-size:1rem; color:white; letter-spacing:1px; font-family:'Barlow',sans-serif; font-weight:900;">GESTIONE</span>
-    <span style="font-size:0.75rem; color:rgba(255,255,255,0.5); font-family:'Barlow',sans-serif;" id="data-oggi"></span>
+<div class="header-main">
+    <span style="font-size:0.8rem;">SAVERIO DELIVERY</span>
+    <span style="font-size:1rem; color:var(--giallo);">GESTIONE</span>
+    <span style="font-size:0.75rem; color:rgba(255,255,255,0.5);" id="data-oggi"></span>
 </div>
 
-<div style="position:fixed; top:75px; left:0; right:0; height:60px; background:#f4f7f9; display:flex; padding:5px; gap:5px; z-index:99;">
-    <button id="btn-t1" onclick="showTab(1)" style="flex:1; border:none; border-radius:8px; background:#E8600A; color:white; font-size:0.75rem; cursor:pointer; text-transform:uppercase; font-family:'Barlow',sans-serif; font-weight:900;">STATISTICHE</button>
-    <button id="btn-t2" onclick="showTab(2)" style="flex:1; border:none; border-radius:8px; background:#D0DCE8; color:#1A3A5C; font-size:0.75rem; cursor:pointer; text-transform:uppercase; font-family:'Barlow',sans-serif; font-weight:900;">RIDER</button>
-    <button id="btn-t3" onclick="showTab(3)" style="flex:1; border:none; border-radius:8px; background:#D0DCE8; color:#1A3A5C; font-size:0.75rem; cursor:pointer; text-transform:uppercase; font-family:'Barlow',sans-serif; font-weight:900;">GIORNATA</button>
+<div class="nav-bar">
+    <button class="nav-btn active" id="btn-t1" onclick="showTab(1)">STATISTICHE</button>
+    <button class="nav-btn" id="btn-t2" onclick="showTab(2)">RIDER</button>
+    <button class="nav-btn" id="btn-t3" onclick="showTab(3)">GIORNATA</button>
 </div>
 
-<div style="position:absolute; top:135px; bottom:0; left:0; right:0; overflow-y:auto; padding:15px;">
+<div class="content-area">
 
-    <!-- TAB 1: STATISTICHE -->
-    <div id="tab1" style="display:block;">
+    <div id="tab1" class="tab-content show">
         <div id="stat-content">
             <div class="empty-state"><div class="empty-icon">⏳</div><p>Caricamento...</p></div>
         </div>
     </div>
 
-    <!-- TAB 2: GESTIONE RIDER -->
-    <div id="tab2" style="display:none;">
+    <div id="tab2" class="tab-content">
         <div class="sezione">
             <h3>➕ AGGIUNGI RIDER</h3>
             <input type="text" id="nuovo-rider-nome" class="input-big" placeholder="NOME RIDER">
-            <button class="btn-main" onclick="aggiungiRider()">➕ AGGIUNGI</button>
+            <button class="btn-full" style="background:var(--ver);" onclick="aggiungiRider()">➕ AGGIUNGI</button>
             <p id="msg-rider" style="text-align:center; font-size:0.9rem; display:none; margin-top:5px;"></p>
         </div>
-        <div id="rider-lista-gestione">
-            <div class="empty-state"><div class="empty-icon">⏳</div><p>Caricamento rider...</p></div>
-        </div>
+        <div id="rider-lista-gestione"></div>
     </div>
 
-    <!-- TAB 3: GESTIONE GIORNATA -->
-    <div id="tab3" style="display:none;">
+    <div id="tab3" class="tab-content">
         <div class="sezione">
             <h3>⚙️ GESTIONE GIORNATA</h3>
             <p style="font-size:0.85rem; color:#888; margin-bottom:15px; font-weight:400;">Scegli come vuoi gestire i dati della giornata corrente.</p>
-            <button class="btn-azzera" style="background:#1B8A4A;" onclick="azzeraConSalvataggio()">📦 AZZERA E SALVA STORICO</button>
-            <button class="btn-azzera" style="background:#E8600A;" onclick="azzeraSenzaSalvare()">🗑 AZZERA SENZA SALVARE</button>
-            <button class="btn-azzera" style="background:#FF4444;" onclick="resetCompleto()">⚠️ RESET COMPLETO</button>
+            <button class="btn-full" style="background:var(--ver);" onclick="azzeraConSalvataggio()">📦 AZZERA E SALVA STORICO</button>
+            <button class="btn-full" style="background:var(--ora);" onclick="azzeraSenzaSalvare()">🗑 AZZERA SENZA SALVARE</button>
+            <button class="btn-full" style="background:var(--rosso);" onclick="resetCompleto()">⚠️ RESET COMPLETO</button>
         </div>
     </div>
 
 </div>
 
-<div id="fb-status">⚪</div>
+<div id="fb-status">⚪ connecting...</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -156,120 +111,94 @@
 
     document.getElementById('data-oggi').textContent = new Date().toLocaleDateString('it-IT', {day:'numeric', month:'long'});
 
-    // ── LISTENERS ─────────────────────────────────────────────────
     db.ref('riders').on('value', snap => {
         riders = snap.val() || {};
-        renderRiderGestione();
+        if(document.getElementById('tab2').classList.contains('show')) renderRiderGestione();
     });
 
     db.ref('ordini').on('value', snap => {
         ordiniSalvati = [];
-        snap.forEach(child => {
-            let o = child.val(); o._key = child.key;
-            ordiniSalvati.push(o);
-        });
+        snap.forEach(child => { let o = child.val(); o._key = child.key; ordiniSalvati.push(o); });
         if(document.getElementById('tab1').classList.contains('show')) renderStat();
-        document.getElementById('fb-status').textContent = '🟢';
+        document.getElementById('fb-status').textContent = '🟢 sync';
     });
 
     db.ref('.info/connected').on('value', snap => {
-        document.getElementById('fb-status').textContent = snap.val() ? '🟢' : '🔴';
+        document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
     });
 
-    // ── TAB ────────────────────────────────────────────────────────
     function showTab(n) {
-        ['tab1','tab2','tab3'].forEach(id => document.getElementById(id).style.display = 'none');
-        ['btn-t1','btn-t2','btn-t3'].forEach(id => {
-            document.getElementById(id).style.background = '#D0DCE8';
-            document.getElementById(id).style.color = '#1A3A5C';
-        });
-        document.getElementById('tab'+n).style.display = 'block';
-        document.getElementById('btn-t'+n).style.background = '#E8600A';
-        document.getElementById('btn-t'+n).style.color = 'white';
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('show'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab'+n).classList.add('show');
+        document.getElementById('btn-t'+n).classList.add('active');
         if(n===1) renderStat();
         if(n===2) renderRiderGestione();
     }
 
-    // ── STATISTICHE ────────────────────────────────────────────────
     function renderStat() {
         const container = document.getElementById('stat-content');
         if(ordiniSalvati.length === 0) {
             container.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>Nessun ordine oggi</p></div>';
             return;
         }
-
-        let totaleConConsegna = 0, totaleProdotti = 0, totaleConsegne = 0;
-        let totContanti = 0, totPOS = 0, totPagati = 0;
-        let qPizza = 0, ePizza = 0, qPizzaGF = 0, ePizzaGF = 0;
-        let qPollo = 0, ePollo = 0, qPolloGF = 0, ePolloGF = 0;
-        let qBibite = 0, eBibite = 0, qBanco = 0, eBanco = 0;
-        let riderStats = {};
+        let totaleConConsegna=0,totaleProdotti=0,totaleConsegne=0;
+        let totContanti=0,totPOS=0,totPagati=0;
+        let qPizza=0,ePizza=0,qPizzaGF=0,ePizzaGF=0;
+        let qPollo=0,ePollo=0,qPolloGF=0,ePolloGF=0;
+        let qBibite=0,eBibite=0,qBanco=0,eBanco=0;
+        let riderStats={};
 
         ordiniSalvati.forEach(o => {
-            let totStr = (o.tot || '0').toString().replace(/[€\s]/g,'').replace(',','.');
-            let totOrdine = parseFloat(totStr) || 0;
-            let costoC = parseFloat(o.costoCons) || 0;
-            let prodotti = totOrdine - costoC;
-
-            totaleConConsegna += totOrdine;
-            totaleProdotti += prodotti;
-            totaleConsegne += costoC;
-
-            if(o.pay === 'CONTANTI') totContanti += prodotti;
-            else if(o.pay === 'POS') totPOS += prodotti;
-            else if(o.pay === 'PAGATO') totPagati += prodotti;
-
-            (o.prodotti || []).forEach(p => {
-                let v = parseFloat(p.v) || 0;
-                let q = parseInt(p.q) || 1;
-                let tipo = p.tipo || '0';
-                if(tipo === '0') {
-                    if(p.isGf) { qPizzaGF += q; ePizzaGF += v; }
-                    else { qPizza += q; ePizza += v; }
-                } else if(tipo === '1') {
-                    if(p.isGf) { qPolloGF += q; ePolloGF += v; }
-                    else { qPollo += q; ePollo += v; }
-                } else if(tipo === '2') { qBibite += q; eBibite += v; }
-                else if(tipo === '3') { qBanco += q; eBanco += v; }
+            let totStr=(o.tot||'0').toString().replace(/[€\s]/g,'').replace(',','.');
+            let totOrdine=parseFloat(totStr)||0;
+            let costoC=parseFloat(o.costoCons)||0;
+            let prodotti=totOrdine-costoC;
+            totaleConConsegna+=totOrdine; totaleProdotti+=prodotti; totaleConsegne+=costoC;
+            if(o.pay==='CONTANTI') totContanti+=prodotti;
+            else if(o.pay==='POS') totPOS+=prodotti;
+            else if(o.pay==='PAGATO') totPagati+=prodotti;
+            (o.prodotti||[]).forEach(p => {
+                let v=parseFloat(p.v)||0,q=parseInt(p.q)||1,tipo=p.tipo||'0';
+                if(tipo==='0'){if(p.isGf){qPizzaGF+=q;ePizzaGF+=v;}else{qPizza+=q;ePizza+=v;}}
+                else if(tipo==='1'){if(p.isGf){qPolloGF+=q;ePolloGF+=v;}else{qPollo+=q;ePollo+=v;}}
+                else if(tipo==='2'){qBibite+=q;eBibite+=v;}
+                else if(tipo==='3'){qBanco+=q;eBanco+=v;}
             });
-
-            if(o.riderId && o.stato === 'consegnato') {
-                if(!riderStats[o.riderId]) riderStats[o.riderId] = { cons: 0, tempi: [] };
+            if(o.riderId&&o.stato==='consegnato'){
+                if(!riderStats[o.riderId]) riderStats[o.riderId]={cons:0,tempi:[]};
                 riderStats[o.riderId].cons++;
-                if(o.tsAssegnato && o.tsConsegnato) {
-                    let min = Math.round((o.tsConsegnato - o.tsAssegnato) / 60000);
-                    if(min > 0 && min < 120) riderStats[o.riderId].tempi.push(min);
+                if(o.tsAssegnato&&o.tsConsegnato){
+                    let min=Math.round((o.tsConsegnato-o.tsAssegnato)/60000);
+                    if(min>0&&min<120) riderStats[o.riderId].tempi.push(min);
                 }
             }
         });
 
-        let nOrdini = ordiniSalvati.length;
-        let nConsegnati = ordiniSalvati.filter(o => o.stato === 'consegnato').length;
-        let fmt = v => v.toFixed(2).replace('.',',') + ' €';
+        let nOrdini=ordiniSalvati.length;
+        let nCons=ordiniSalvati.filter(o=>o.stato==='consegnato').length;
+        let fmt=v=>v.toFixed(2).replace('.',',')+'€';
 
-        let riderHtml = Object.keys(riderStats).length === 0
-            ? '<div style="color:#aaa; font-size:0.9rem; padding:8px 0;">Nessuna consegna completata</div>'
-            : Object.entries(riderStats).map(([id, s]) => {
-                let nome = riders[id]?.nome || 'Rider';
-                let tempoMedio = s.tempi.length > 0 ? Math.round(s.tempi.reduce((a,b)=>a+b,0)/s.tempi.length) : null;
+        let riderHtml=Object.keys(riderStats).length===0
+            ?'<div style="color:#aaa;font-size:0.9rem;padding:8px 0;">Nessuna consegna completata</div>'
+            :Object.entries(riderStats).map(([id,s])=>{
+                let nome=riders[id]?.nome||'Rider';
+                let tm=s.tempi.length>0?Math.round(s.tempi.reduce((a,b)=>a+b,0)/s.tempi.length):null;
                 return `<div class="stat-rider-row">
-                    <span class="stat-rider-nome">🛵 ${nome}</span>
-                    <div class="stat-rider-dati">
-                        <div class="stat-rider-num">${s.cons} cons.</div>
-                        ${tempoMedio ? `<div class="stat-rider-tempo">⏱ ~${tempoMedio} min/cons.</div>` : ''}
+                    <span style="font-size:1.1rem;color:var(--blu);">🛵 ${nome}</span>
+                    <div style="text-align:right;">
+                        <div style="font-size:1.3rem;color:var(--ora);">${s.cons} cons.</div>
+                        ${tm?`<div style="font-size:0.8rem;color:#888;">⏱ ~${tm} min/cons.</div>`:''}
                     </div>
                 </div>`;
             }).join('');
 
-        container.innerHTML = `
+        container.innerHTML=`
             <div class="stat-totale-big">
-                <div>
-                    <div class="stat-totale-label">TOTALE GIORNALIERO</div>
-                    <div class="stat-totale-val">${fmt(totaleConConsegna)}</div>
-                </div>
+                <div><div class="stat-totale-label">TOTALE GIORNALIERO</div><div class="stat-totale-val">${fmt(totaleConConsegna)}</div></div>
                 <div style="text-align:right;">
-                    <div style="color:rgba(255,255,255,0.6); font-size:0.8rem;">${nOrdini} ordini</div>
-                    <div style="color:var(--ver); font-size:1rem;">${nConsegnati} consegnati</div>
+                    <div style="color:rgba(255,255,255,0.6);font-size:0.8rem;">${nOrdini} ordini</div>
+                    <div style="color:#1B8A4A;font-size:1rem;">${nCons} consegnati</div>
                 </div>
             </div>
             <div class="sezione">
@@ -294,89 +223,74 @@
                 <div class="stat-riga"><span class="stat-label">🥤 Bibite</span><span class="stat-val blu">${qBibite} pz &nbsp; ${fmt(eBibite)}</span></div>
                 <div class="stat-riga"><span class="stat-label">🏪 Banco</span><span class="stat-val giallo">${qBanco} pz &nbsp; ${fmt(eBanco)}</span></div>
             </div>
-            <div class="sezione">
-                <h3>🛵 RIDER</h3>
-                ${riderHtml}
-            </div>`;
+            <div class="sezione"><h3>🛵 RIDER</h3>${riderHtml}</div>`;
     }
 
-    // ── GESTIONE RIDER ─────────────────────────────────────────────
     function renderRiderGestione() {
         const container = document.getElementById('rider-lista-gestione');
-        if(Object.keys(riders).length === 0) {
-            container.innerHTML = '<div class="empty-state"><div class="empty-icon">🛵</div><p>Nessun rider</p></div>';
+        if(Object.keys(riders).length===0){
+            container.innerHTML='<div class="empty-state"><div class="empty-icon">🛵</div><p>Nessun rider</p></div>';
             return;
         }
-        container.innerHTML = Object.entries(riders).map(([id, r]) => `
+        container.innerHTML=Object.entries(riders).map(([id,r])=>`
             <div class="rider-card">
-                <span class="rider-card-nome">🛵 ${r.nome}</span>
-                <div class="rider-card-actions">
-                    <button class="btn-reset-pin" onclick="resetPinRider('${id}', '${r.nome}')">🔑 RESET PIN</button>
-                    <button class="btn-rimuovi" onclick="rimuoviRider('${id}', '${r.nome}')">🗑</button>
+                <span style="font-size:1.2rem;color:var(--blu);">🛵 ${r.nome}</span>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn-small" style="background:var(--ora);" onclick="resetPinRider('${id}','${r.nome}')">🔑 PIN</button>
+                    <button class="btn-small" style="background:var(--rosso);" onclick="rimuoviRider('${id}','${r.nome}')">🗑</button>
                 </div>
             </div>`).join('');
     }
 
-    function aggiungiRider() {
-        let nome = document.getElementById('nuovo-rider-nome').value.trim().toUpperCase();
-        let msg = document.getElementById('msg-rider');
-        if(!nome) { msg.style.display='block'; msg.style.color='var(--rosso)'; msg.textContent='Inserisci il nome'; return; }
-        db.ref('riders').push({ nome, pin: '0000' }).then(() => {
-            document.getElementById('nuovo-rider-nome').value = '';
-            msg.style.display='block'; msg.style.color='var(--ver)'; msg.textContent=`✅ ${nome} aggiunto con PIN 0000`;
-            setTimeout(() => msg.style.display='none', 3000);
+    function aggiungiRider(){
+        let nome=document.getElementById('nuovo-rider-nome').value.trim().toUpperCase();
+        let msg=document.getElementById('msg-rider');
+        if(!nome){msg.style.display='block';msg.style.color='var(--rosso)';msg.textContent='Inserisci il nome';return;}
+        db.ref('riders').push({nome,pin:'0000'}).then(()=>{
+            document.getElementById('nuovo-rider-nome').value='';
+            msg.style.display='block';msg.style.color='var(--ver)';msg.textContent=`✅ ${nome} aggiunto (PIN: 0000)`;
+            setTimeout(()=>msg.style.display='none',3000);
         });
     }
 
-    function resetPinRider(id, nome) {
+    function resetPinRider(id,nome){
         if(!confirm(`Resettare il PIN di ${nome} a 0000?`)) return;
-        db.ref('riders').child(id).update({ pin: '0000' }).then(() => {
-            alert(`✅ PIN di ${nome} resettato a 0000`);
-        });
+        db.ref('riders').child(id).update({pin:'0000'}).then(()=>alert(`✅ PIN di ${nome} resettato a 0000`));
     }
 
-    function rimuoviRider(id, nome) {
-        if(!confirm(`Rimuovere ${nome} dalla lista rider?`)) return;
+    function rimuoviRider(id,nome){
+        if(!confirm(`Rimuovere ${nome}?`)) return;
         db.ref('riders').child(id).remove();
     }
 
-    // ── GESTIONE GIORNATA ──────────────────────────────────────────
-    function azzeraConSalvataggio() {
-        if(!confirm('Salvare i dati di oggi nello storico e azzerare la lista?')) return;
-        let oggi = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'2-digit', year:'numeric'});
-        let snapshot = { data: oggi, timestamp: Date.now(), ordini: ordiniSalvati };
-        db.ref('storico').push(snapshot).then(() => {
-            return db.ref('ordini').remove();
-        }).then(() => {
-            return db.ref('contatore').remove();
-        }).then(() => {
-            Object.keys(riders).forEach(id => {
-                db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
+    function azzeraConSalvataggio(){
+        if(!confirm('Salvare i dati di oggi nello storico e azzerare?')) return;
+        let oggi=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+        db.ref('storico').push({data:oggi,timestamp:Date.now(),ordini:ordiniSalvati})
+            .then(()=>db.ref('ordini').remove())
+            .then(()=>db.ref('contatore').remove())
+            .then(()=>{
+                Object.keys(riders).forEach(id=>db.ref('riders').child(id).update({inRientro:false,tsRientro:null}));
+                alert('✅ Salvato nello storico e azzerato!');
             });
-            alert('✅ Dati salvati nello storico! Lista azzerata.');
-        });
     }
 
-    function azzeraSenzaSalvare() {
-        if(!confirm('Azzerare tutti gli ordini senza salvare? I dati andranno persi.')) return;
-        db.ref('ordini').remove().then(() => {
-            return db.ref('contatore').remove();
-        }).then(() => {
-            Object.keys(riders).forEach(id => {
-                db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
+    function azzeraSenzaSalvare(){
+        if(!confirm('Azzerare senza salvare? I dati andranno persi.')) return;
+        db.ref('ordini').remove()
+            .then(()=>db.ref('contatore').remove())
+            .then(()=>{
+                Object.keys(riders).forEach(id=>db.ref('riders').child(id).update({inRientro:false,tsRientro:null}));
+                alert('✅ Lista azzerata.');
             });
-            alert('✅ Lista azzerata.');
-        });
     }
 
-    function resetCompleto() {
-        if(!confirm('RESET COMPLETO: cancella ordini, contatore e stati rider. Continuare?')) return;
-        if(!confirm('Sei sicuro? Questa operazione non può essere annullata.')) return;
+    function resetCompleto(){
+        if(!confirm('RESET COMPLETO: cancella tutto. Continuare?')) return;
+        if(!confirm('Sicuro? Operazione irreversibile.')) return;
         db.ref('ordini').remove();
         db.ref('contatore').remove();
-        Object.keys(riders).forEach(id => {
-            db.ref('riders').child(id).update({ inRientro: false, tsRientro: null });
-        });
+        Object.keys(riders).forEach(id=>db.ref('riders').child(id).update({inRientro:false,tsRientro:null}));
         alert('✅ Reset completato.');
     }
 </script>
