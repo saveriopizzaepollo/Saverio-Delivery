@@ -216,9 +216,30 @@
         let totaleConConsegna=0,totaleProdotti=0,totaleConsegne=0;
         let totContanti=0,totPOS=0,totPagati=0;
         let qPizza=0,ePizza=0,qPizzaGF=0,ePizzaGF=0;
-        let qPollo=0,ePollo=0,qPolloGF=0,ePolloGF=0;
+        let qPolloNum=0,ePollo=0; // qPolloNum in mezzi (es. 1/2=0.5, 1=1)
+        let qCosce=0,eCosce=0;
         let qBibite=0,eBibite=0,qBanco=0,eBanco=0;
         let riderStats={};
+
+        // Funzione per parsare quantità frazioni
+        function parseQta(q) {
+            let s = (q||'1').toString().trim();
+            if(s.includes('/')) {
+                let parts = s.split('/');
+                return parseFloat(parts[0]) / parseFloat(parts[1]);
+            }
+            return parseFloat(s) || 1;
+        }
+
+        // Funzione per formattare mezzi polli
+        function fmtPollo(n) {
+            let interi = Math.floor(n);
+            let resto = n - interi;
+            if(resto === 0) return interi.toString();
+            if(resto === 0.5) return interi > 0 ? `${interi}½` : '½';
+            if(resto === 0.25) return interi > 0 ? `${interi}¼` : '¼';
+            return n.toFixed(1);
+        }
 
         ordiniSalvati.forEach(o => {
             let totStr=(o.tot||'0').toString().replace(/[€\s]/g,'').replace(',','.');
@@ -230,11 +251,23 @@
             else if(o.pay==='POS') totPOS+=prodotti;
             else if(o.pay==='PAGATO') totPagati+=prodotti;
             (o.prodotti||[]).forEach(p => {
-                let v=parseFloat(p.v)||0,q=parseInt(p.q)||1,tipo=p.tipo||'0';
-                if(tipo==='0'){if(p.isGf){qPizzaGF+=q;ePizzaGF+=v;}else{qPizza+=q;ePizza+=v;}}
-                else if(tipo==='1'){if(p.isGf){qPolloGF+=q;ePolloGF+=v;}else{qPollo+=q;ePollo+=v;}}
-                else if(tipo==='2'){qBibite+=q;eBibite+=v;}
-                else if(tipo==='3'){qBanco+=q;eBanco+=v;}
+                let v=parseFloat(p.v)||0;
+                let tipo=p.tipo||'0';
+                let nomeProd=(p.g||'').toUpperCase();
+                let isCosce = nomeProd.includes('COSCIA') || nomeProd.includes('COSCE');
+                if(tipo==='0'){
+                    let q=parseInt(p.q)||1;
+                    if(p.isGf){qPizzaGF+=q;ePizzaGF+=v;}else{qPizza+=q;ePizza+=v;}
+                } else if(tipo==='1'){
+                    if(isCosce) {
+                        let q=parseInt(p.q)||1;
+                        qCosce+=q; eCosce+=v;
+                    } else {
+                        let q=parseQta(p.q);
+                        qPolloNum+=q; ePollo+=v;
+                    }
+                } else if(tipo==='2'){qBibite+=parseInt(p.q)||1;eBibite+=v;}
+                else if(tipo==='3'){qBanco+=parseInt(p.q)||1;eBanco+=v;}
             });
             if(o.riderId&&o.stato==='consegnato'){
                 if(!riderStats[o.riderId]) riderStats[o.riderId]={cons:0,tempi:[]};
@@ -289,8 +322,8 @@
                 <h3>🍕 PRODOTTI</h3>
                 <div class="stat-riga"><span class="stat-label">🍕 Pizze</span><span class="stat-val arancio">${qPizza} pz &nbsp; ${fmt(ePizza)}</span></div>
                 <div class="stat-riga"><span class="stat-label">🍕 Pizze GF</span><span class="stat-val verde">${qPizzaGF} pz &nbsp; ${fmt(ePizzaGF)}</span></div>
-                <div class="stat-riga"><span class="stat-label">🍗 Pollo</span><span class="stat-val rosso">${qPollo} pz &nbsp; ${fmt(ePollo)}</span></div>
-                <div class="stat-riga"><span class="stat-label">🍗 Pollo GF</span><span class="stat-val verde">${qPolloGF} pz &nbsp; ${fmt(ePolloGF)}</span></div>
+                <div class="stat-riga"><span class="stat-label">🍗 Pollo</span><span class="stat-val rosso">${fmtPollo(qPolloNum)} polli &nbsp; ${fmt(ePollo)}</span></div>
+                <div class="stat-riga"><span class="stat-label">🍗 Cosce</span><span class="stat-val rosso">${qCosce} pz &nbsp; ${fmt(eCosce)}</span></div>
                 <div class="stat-riga"><span class="stat-label">🥤 Bibite</span><span class="stat-val blu">${qBibite} pz &nbsp; ${fmt(eBibite)}</span></div>
                 <div class="stat-riga"><span class="stat-label">🏪 Banco</span><span class="stat-val giallo">${qBanco} pz &nbsp; ${fmt(eBanco)}</span></div>
             </div>
