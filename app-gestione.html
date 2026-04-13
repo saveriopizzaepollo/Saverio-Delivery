@@ -88,6 +88,10 @@
     </div>
 
     <div id="tab4" class="tab-content">
+        <div class="sezione" style="margin-bottom:12px;">
+            <h3>🔍 FILTRA</h3>
+            <input type="text" id="filtro-data" class="input-big" placeholder="ES: 11/04 OPPURE APRILE" oninput="renderStorico()" style="margin-bottom:0;">
+        </div>
         <div id="storico-lista"></div>
     </div>
 
@@ -145,6 +149,11 @@
     function renderStorico() {
         const container = document.getElementById('storico-lista');
         container.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Caricamento...</p></div>';
+        let filtro = (document.getElementById('filtro-data')?.value || '').trim().toUpperCase();
+
+        // Mappa mesi italiani
+        let mesi = {'GENNAIO':'01','FEBBRAIO':'02','MARZO':'03','APRILE':'04','MAGGIO':'05','GIUGNO':'06','LUGLIO':'07','AGOSTO':'08','SETTEMBRE':'09','OTTOBRE':'10','NOVEMBRE':'11','DICEMBRE':'12'};
+
         db.ref('storico').orderByChild('timestamp').once('value', snap => {
             if(!snap.val()) {
                 container.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><p>Nessuna giornata salvata</p></div>';
@@ -152,17 +161,69 @@
             }
             let giorni = [];
             snap.forEach(child => { let g = child.val(); g._key = child.key; giorni.push(g); });
-            giorni.reverse(); // più recente prima
+            giorni.reverse();
+
+            // Filtro
+            if(filtro) {
+                let filtroMese = mesi[filtro] || null;
+                giorni = giorni.filter(g => {
+                    if(filtroMese) return g.data && g.data.includes('/' + filtroMese + '/') || g.data.includes('/' + filtroMese);
+                    return g.data && g.data.includes(filtro);
+                });
+            }
+
+            if(giorni.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>Nessuna giornata trovata</p></div>';
+                return;
+            }
 
             container.innerHTML = giorni.map(g => {
                 let ordini = g.ordini || [];
                 let nOrdini = ordini.length;
-                let totale = ordini.reduce((acc, o) => {
-                    let t = parseFloat((o.tot||'0').toString().replace(/[€\s]/g,'').replace(',','.')) || 0;
-                    return acc + t;
-                }, 0);
                 let nCons = ordini.filter(o => o.stato === 'consegnato').length;
                 let fmt = v => v.toFixed(2).replace('.',',') + '€';
+
+                // Calcola statistiche complete
+                let totaleConConsegna=0,totaleProdotti=0,totaleConsegne=0;
+                let totContanti=0,totPOS=0,totPagati=0;
+                let qPizza=0,ePizza=0,qPizzaGF=0,ePizzaGF=0;
+                let qPollo=0,ePollo=0,qCosce=0,eCosce=0;
+                let qBibite=0,eBibite=0,qBanco=0,eBanco=0;
+
+                function parseQta(q) {
+                    let s=(q||'1').toString().trim();
+                    if(s.includes('/')) { let p=s.split('/'); return parseFloat(p[0])/parseFloat(p[1]); }
+                    return parseFloat(s)||1;
+                }
+                function fmtPollo(n) {
+                    let i=Math.floor(n), r=n-i;
+                    if(r===0) return i.toString();
+                    if(r===0.5) return i>0?`${i}½`:'½';
+                    return n.toFixed(1);
+                }
+
+                ordini.forEach(o => {
+                    let totStr=(o.tot||'0').toString().replace(/[€\s]/g,'').replace(',','.');
+                    let totOrdine=parseFloat(totStr)||0;
+                    let costoC=parseFloat(o.costoCons)||0;
+                    let prod=totOrdine-costoC;
+                    totaleConConsegna+=totOrdine; totaleProdotti+=prod; totaleConsegne+=costoC;
+                    if(o.pay==='CONTANTI') totContanti+=prod;
+                    else if(o.pay==='POS') totPOS+=prod;
+                    else if(o.pay==='PAGATO') totPagati+=prod;
+                    (o.prodotti||[]).forEach(p => {
+                        let v=parseFloat(p.v)||0, tipo=p.tipo||'0';
+                        let nome=(p.g||'').toUpperCase();
+                        let isCosce=nome.includes('COSCIA')||nome.includes('COSCE');
+                        if(tipo==='0'){let q=parseInt(p.q)||1; if(p.isGf){qPizzaGF+=q;ePizzaGF+=v;}else{qPizza+=q;ePizza+=v;}}
+                        else if(tipo==='1'){
+                            if(isCosce){qCosce+=parseInt(p.q)||1;eCosce+=v;}
+                            else{qPollo+=parseQta(p.q);ePollo+=v;}
+                        }
+                        else if(tipo==='2'){qBibite+=parseInt(p.q)||1;eBibite+=v;}
+                        else if(tipo==='3'){qBanco+=parseInt(p.q)||1;eBanco+=v;}
+                    });
+                });
 
                 let dettagliOrdini = ordini.map(o => `
                     <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f5f5f5; font-size:0.85rem;">
@@ -177,11 +238,33 @@
                             <div style="font-size:0.85rem; color:#888;">${nOrdini} ordini · ${nCons} consegnati</div>
                         </div>
                         <div style="text-align:right;">
-                            <div style="font-size:1.4rem; color:var(--ora); font-weight:900;">${fmt(totale)}</div>
+                            <div style="font-size:1.4rem; color:var(--ora); font-weight:900;">${fmt(totaleConConsegna)}</div>
                             <div style="font-size:0.75rem; color:#aaa;">▼ dettagli</div>
                         </div>
                     </div>
                     <div class="storico-detail" style="display:none; border-top:2px solid #eee; padding-top:10px;">
+
+                        <!-- STATISTICHE COMPLETE -->
+                        <div style="background:#f4f7f9; border-radius:8px; padding:10px; margin-bottom:10px;">
+                            <div style="font-size:0.75rem; color:#888; text-transform:uppercase; margin-bottom:8px;">💰 INCASSI</div>
+                            <div class="stat-riga"><span class="stat-label">Totale prodotti</span><span class="stat-val blu">${fmt(totaleProdotti)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">🛵 Costo consegne</span><span class="stat-val grigio">${fmt(totaleConsegne)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">Contanti</span><span class="stat-val blu">${fmt(totContanti)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">POS</span><span class="stat-val rosso">${fmt(totPOS)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">Pagati anticipati</span><span class="stat-val verde">${fmt(totPagati)}</span></div>
+                        </div>
+                        <div style="background:#f4f7f9; border-radius:8px; padding:10px; margin-bottom:10px;">
+                            <div style="font-size:0.75rem; color:#888; text-transform:uppercase; margin-bottom:8px;">🍕 PRODOTTI</div>
+                            <div class="stat-riga"><span class="stat-label">🍕 Pizze</span><span class="stat-val arancio">${qPizza} pz ${fmt(ePizza)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">🍕 Pizze GF</span><span class="stat-val verde">${qPizzaGF} pz ${fmt(ePizzaGF)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">🍗 Pollo</span><span class="stat-val rosso">${fmtPollo(qPollo)} ${fmt(ePollo)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">🍗 Cosce</span><span class="stat-val rosso">${qCosce} pz ${fmt(eCosce)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">🥤 Bibite</span><span class="stat-val blu">${qBibite} pz ${fmt(eBibite)}</span></div>
+                            <div class="stat-riga"><span class="stat-label">🏪 Banco</span><span class="stat-val giallo">${qBanco} pz ${fmt(eBanco)}</span></div>
+                        </div>
+
+                        <!-- LISTA ORDINI -->
+                        <div style="font-size:0.75rem; color:#888; text-transform:uppercase; margin-bottom:6px;">📋 ORDINI</div>
                         ${dettagliOrdini}
                         <button onclick="eliminaStorico('${g._key}')" style="margin-top:10px; width:100%; padding:10px; background:var(--rosso); color:white; border:none; border-radius:8px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.85rem; cursor:pointer;">🗑 ELIMINA QUESTA GIORNATA</button>
                     </div>
