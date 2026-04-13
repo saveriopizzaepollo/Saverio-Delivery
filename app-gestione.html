@@ -101,14 +101,14 @@
 <div style="padding:15px; padding-top:150px; min-height:100vh;">
 
     <!-- TAB 1: STATISTICHE -->
-    <div id="tab1" class="tab-content show">
+    <div id="tab1" style="display:block;">
         <div id="stat-content">
             <div class="empty-state"><div class="empty-icon">⏳</div><p>Caricamento...</p></div>
         </div>
     </div>
 
     <!-- TAB 2: GESTIONE RIDER -->
-    <div id="tab2" class="tab-content">
+    <div id="tab2" style="display:none;">
         <div class="sezione">
             <h3>➕ AGGIUNGI RIDER</h3>
             <input type="text" id="nuovo-rider-nome" class="input-big" placeholder="NOME RIDER">
@@ -121,13 +121,13 @@
     </div>
 
     <!-- TAB 3: GESTIONE GIORNATA -->
-    <div id="tab3" class="tab-content">
+    <div id="tab3" style="display:none;">
         <div class="sezione">
             <h3>⚙️ GESTIONE GIORNATA</h3>
             <p style="font-size:0.85rem; color:#888; margin-bottom:15px; font-weight:400;">Scegli come vuoi gestire i dati della giornata corrente.</p>
-            <button class="btn-azzera" style="background:var(--ver);" onclick="azzeraConSalvataggio()">📦 AZZERA E SALVA STORICO</button>
-            <button class="btn-azzera" style="background:var(--ora);" onclick="azzeraSenzaSalvare()">🗑 AZZERA SENZA SALVARE</button>
-            <button class="btn-azzera" style="background:var(--rosso);" onclick="resetCompleto()">⚠️ RESET COMPLETO</button>
+            <button class="btn-azzera" style="background:#1B8A4A;" onclick="azzeraConSalvataggio()">📦 AZZERA E SALVA STORICO</button>
+            <button class="btn-azzera" style="background:#E8600A;" onclick="azzeraSenzaSalvare()">🗑 AZZERA SENZA SALVARE</button>
+            <button class="btn-azzera" style="background:#FF4444;" onclick="resetCompleto()">⚠️ RESET COMPLETO</button>
         </div>
     </div>
 
@@ -178,12 +178,12 @@
 
     // ── TAB ────────────────────────────────────────────────────────
     function showTab(n) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('show'));
+        ['tab1','tab2','tab3'].forEach(id => document.getElementById(id).style.display = 'none');
         ['btn-t1','btn-t2','btn-t3'].forEach(id => {
             document.getElementById(id).style.background = '#D0DCE8';
             document.getElementById(id).style.color = '#1A3A5C';
         });
-        document.getElementById('tab'+n).classList.add('show');
+        document.getElementById('tab'+n).style.display = 'block';
         document.getElementById('btn-t'+n).style.background = '#E8600A';
         document.getElementById('btn-t'+n).style.color = 'white';
         if(n===1) renderStat();
