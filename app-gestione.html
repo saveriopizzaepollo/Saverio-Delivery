@@ -9,16 +9,16 @@
     <style>
         :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; --link: #007AFF; --bibite: #007AFF; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; font-weight: 900; }
-        body { background: #f4f7f9; color: var(--blu); min-height: 100vh; }
+        body { background: #f4f7f9; color: var(--blu); min-height: 100vh; overflow-x: hidden; }
 
 ```
     /* HEADER */
-    .header-main { background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 75px; border-bottom: 4px solid var(--ora); position: sticky; top: 0; z-index: 100; }
+    .header-main { background: #1A3A5C; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 75px; border-bottom: 4px solid #E8600A; position: sticky; top: 0; z-index: 100; }
 
     /* NAV */
-    .nav-bar { position: sticky; top: 75px; background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 99; border-bottom: 1px solid #ddd; }
-    .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: var(--blu); font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-family: 'Barlow', sans-serif; font-weight: 900; padding: 10px 5px; }
-    .nav-btn.active { background: var(--ora); color: white; }
+    .nav-bar { position: sticky; top: 75px; background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 99; border-bottom: 1px solid #ddd; height: 60px; }
+    .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: #1A3A5C; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-family: 'Barlow', sans-serif; font-weight: 900; padding: 10px 5px; }
+    .nav-btn.active { background: #E8600A; color: white; }
 
     /* CONTENT */
     .content { padding: 15px; }
