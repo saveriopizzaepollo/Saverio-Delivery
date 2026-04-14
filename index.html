@@ -34,6 +34,7 @@
     .tipo-polleria { color: var(--rosso) !important; }
     .tipo-bibite { color: var(--bibite) !important; }
     .tipo-banco { color: #8B6914 !important; }
+    .tipo-coscia { color: #CC5500 !important; }
     .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
     .gf-text { color: var(--ver) !important; }
 
@@ -310,13 +311,18 @@
             let row = document.createElement('div'); row.className = 'row-piz'; row.id = `row-${i}`;
             row.innerHTML = `
                 <div class="cell-piz c-gf"><input type="checkbox" class="check-gf" id="f-${i}" onchange="toggleGF(${i})"></div>
-                <div class="cell-piz c-tipo"><button class="btn-tipo-ciclo" id="bt-${i}" onclick="cicloTipo(${i})" data-tipo="0"></button></div>
-                <div class="cell-piz c-qty"><input type="text" class="input-piz" id="q-${i}" onkeydown="goGusto(event, ${i})"></div>
-                <div class="cell-piz c-gusto"><textarea class="area-gusto" id="g-${i}" rows="1" oninput="autoExpand(this)" onkeydown="goNext(event, ${i})"></textarea></div>
-                <div class="cell-piz c-prezzo"><input type="number" class="input-prezzo" id="p-${i}" oninput="updateRiepilogo()" onkeydown="goPrezzoNext(event, ${i})"></div>`;
+                <div class="cell-piz c-tipo" style="cursor:pointer;" onclick="cicloTipo(${i})" title="Tocca per cambiare tipo"><div id="bt-${i}" data-tipo="0" style="width:10px; height:10px; border-radius:50%; background:#ccc; margin:auto;"></div></div>
+                <div class="cell-piz c-qty"><input type="text" class="input-piz" id="q-${i}" onkeydown="goGusto(event, ${i})" oninput="onQtaInput(${i})"></div>
+                <div class="cell-piz c-gusto"><textarea class="area-gusto" id="g-${i}" rows="1" oninput="autoExpand(this); onGustoInput(${i})" onkeydown="goNext(event, ${i})"></textarea></div>
+                <div class="cell-piz c-prezzo"><input type="number" class="input-prezzo" id="p-${i}" oninput="updateRiepilogo()" onkeydown="goPrezzoNext(event, ${i})"></div>
+                <div id="sug-${i}" style="display:none; position:absolute; left:0; right:0; background:white; border:2px solid var(--ora); border-radius:0 0 8px 8px; z-index:500; max-height:150px; overflow-y:auto;"></div>`;
+            row.style.position = 'relative';
             root.appendChild(row);
         }
         updateTimeSelect();
+
+        // ── LISTENER LISTINO ──────────────────────────────────────
+        db.ref('listino').on('value', snap => { listino = snap.val() || {}; });
 
         // ── LISTENER FIREBASE: sincronizza ordini in tempo reale ──
         ordiniRef.on('value', (snapshot) => {
@@ -348,15 +354,82 @@
     }
 
     // ── LOGICA ORDINE (identica a prima) ──────────────────────────
+    let listino = {};
+    const coloriTipo = {'0':'#E8600A','1':'#FF4444','2':'#007AFF','3':'#8B6914','4':'#CC5500'};
+    const classiTipo = {'0':'','1':'tipo-polleria','2':'tipo-bibite','3':'tipo-banco','4':'tipo-coscia'};
+
     function cicloTipo(i) {
-        let btn = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
-        let attuale = parseInt(btn.getAttribute('data-tipo')); let prossimo = (attuale + 1) % 4;
-        btn.setAttribute('data-tipo', prossimo);
-        row.classList.remove('tipo-polleria', 'tipo-bibite', 'tipo-banco');
-        btn.style.background = 'white';
-        if(prossimo === 1) { row.classList.add('tipo-polleria'); btn.style.background = 'var(--rosso)'; } 
-        else if(prossimo === 2) { row.classList.add('tipo-bibite'); btn.style.background = 'var(--bibite)'; }
-        else if(prossimo === 3) { row.classList.add('tipo-banco'); btn.style.background = '#8B6914'; }
+        let dot = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
+        let attuale = parseInt(dot.getAttribute('data-tipo')); let prossimo = (attuale + 1) % 5;
+        setTipo(i, prossimo.toString());
+        updateRiepilogo();
+    }
+
+    function setTipo(i, tipo) {
+        let dot = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
+        dot.setAttribute('data-tipo', tipo);
+        row.classList.remove('tipo-polleria','tipo-bibite','tipo-banco','tipo-coscia');
+        if(classiTipo[tipo]) row.classList.add(classiTipo[tipo]);
+        dot.style.background = coloriTipo[tipo] || '#ccc';
+    }
+
+    // ── SUGGERIMENTI PRODOTTO ──────────────────────────────────────
+    function onGustoInput(i) {
+        autoExpand(document.getElementById(`g-${i}`));
+        updateRiepilogo();
+        let val = document.getElementById(`g-${i}`).value.trim().toUpperCase();
+        let sug = document.getElementById(`sug-${i}`);
+        if(val.length < 2 || !listino) { sug.style.display='none'; return; }
+        let matches = Object.entries(listino).filter(([k,p]) => p.nome.includes(val));
+        if(matches.length === 0) { sug.style.display='none'; return; }
+        sug.innerHTML = matches.slice(0,5).map(([k,p]) => {
+            let priceLabel = p.modalita==='qta' ? '(prezzo da qtà)' : p.modalita==='kg' ? `${p.prezzo.toFixed(2).replace('.',',')}€/kg` : `${p.prezzo.toFixed(2).replace('.',',')}€`;
+            return `<div style="padding:8px 10px; font-size:0.9rem; color:var(--blu); cursor:pointer; border-bottom:1px solid #eee;" 
+                onclick="selezionaProdotto(${i},'${p.nome}','${p.tipo}',${p.prezzo},'${p.modalita}')">
+                <span style="color:${coloriTipo[p.tipo]||'inherit'};">●</span> ${p.nome} <span style="color:#aaa; font-size:0.8rem;">${priceLabel}</span>
+            </div>`;
+        }).join('');
+        sug.style.display = 'block';
+    }
+
+    function selezionaProdotto(i, nome, tipo, prezzo, modalita) {
+        document.getElementById(`g-${i}`).value = nome;
+        setTipo(i, tipo);
+        let qta = document.getElementById(`q-${i}`).value.trim();
+        if(modalita === 'fisso') {
+            document.getElementById(`p-${i}`).value = prezzo;
+        } else if(modalita === 'kg') {
+            // Calcola prezzo da quantità es. "1", "1/2", "2"
+            let q = parseQtaKg(qta);
+            if(q > 0) document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2);
+        } else if(modalita === 'qta') {
+            // Prezzo dalla quantità scritta
+            let q = parseFloat(qta.replace(',','.'));
+            if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2);
+        }
+        document.getElementById(`sug-${i}`).style.display = 'none';
+        updateRiepilogo();
+    }
+
+    function parseQtaKg(q) {
+        let s = (q||'').toString().trim().replace(',','.');
+        if(s.includes('/')) { let p=s.split('/'); return parseFloat(p[0])/parseFloat(p[1]); }
+        return parseFloat(s) || 0;
+    }
+
+    function onQtaInput(i) {
+        // Se il prezzo viene dalla quantità, aggiornalo
+        let nome = document.getElementById(`g-${i}`).value.trim().toUpperCase();
+        let match = Object.values(listino||{}).find(p => p.nome === nome);
+        if(!match) return;
+        let qta = document.getElementById(`q-${i}`).value.trim();
+        if(match.modalita === 'kg') {
+            let q = parseQtaKg(qta);
+            if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2);
+        } else if(match.modalita === 'qta') {
+            let q = parseFloat(qta.replace(',','.'));
+            if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2);
+        }
         updateRiepilogo();
     }
 
@@ -408,7 +481,7 @@
         let ora = document.getElementById('o-orario').value; 
 
         let lHtml = items.map(item => {
-            let colorClass = item.isGf ? 'gf-text' : (item.tipo === '1' ? 'tipo-polleria' : (item.tipo === '2' ? 'tipo-bibite' : (item.tipo === '3' ? 'tipo-banco' : '')));
+            let colorClass = item.isGf ? 'gf-text' : (item.tipo === '1' ? 'tipo-polleria' : (item.tipo === '2' ? 'tipo-bibite' : (item.tipo === '3' ? 'tipo-banco' : (item.tipo === '4' ? 'tipo-coscia' : ''))));
             return `<div class="pizza-item ${colorClass}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf ? '[GF] ' : ''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`
         }).join('');
 
@@ -471,8 +544,9 @@
         for(let i=0; i<25; i++) {
             document.getElementById(`q-${i}`).value = ""; document.getElementById(`g-${i}`).value = ""; document.getElementById(`g-${i}`).style.height = "auto";
             document.getElementById(`p-${i}`).value = ""; document.getElementById(`f-${i}`).checked = false; 
-            document.getElementById(`bt-${i}`).setAttribute('data-tipo', '0'); document.getElementById(`bt-${i}`).style.background = 'white';
-            document.getElementById(`row-${i}`).classList.remove('row-is-gf', 'tipo-polleria', 'tipo-bibite', 'tipo-banco');
+            document.getElementById(`bt-${i}`).setAttribute('data-tipo', '0'); document.getElementById(`bt-${i}`).style.background = '#ccc';
+            document.getElementById(`row-${i}`).classList.remove('row-is-gf', 'tipo-polleria', 'tipo-bibite', 'tipo-banco', 'tipo-coscia');
+            if(document.getElementById(`sug-${i}`)) document.getElementById(`sug-${i}`).style.display = 'none';
         }
         updateTimeSelect(); updateRiepilogo();
         // Reset pulsante verifica posizione
@@ -499,10 +573,8 @@
                 let pInput = document.getElementById(`p-${i}`); let fCheck = document.getElementById(`f-${i}`);
                 let bTipo = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
                 qInput.value = prod.q; gInput.value = prod.g; pInput.value = prod.v; fCheck.checked = prod.isGf;
-                let tipoVal = prod.tipo || '0'; bTipo.setAttribute('data-tipo', tipoVal);
-                if(tipoVal === '1') { row.classList.add('tipo-polleria'); bTipo.style.background = 'var(--rosso)'; }
-                else if(tipoVal === '2') { row.classList.add('tipo-bibite'); bTipo.style.background = 'var(--bibite)'; }
-                if(prod.isGf) row.classList.add('row-is-gf');
+                let tipoVal = prod.tipo || '0'; 
+                setTipo(i, tipoVal);
                 gInput.style.height = 'auto'; gInput.style.height = (gInput.scrollHeight > 0 ? gInput.scrollHeight : 50) + 'px';
             }
         });
@@ -562,7 +634,7 @@
                 <div class="card-list-wrapper" onclick="toggleCardList(this)">
                     <div class="card-list-text">
                         ${o.prodotti.map(p => {
-                            let cClass = p.isGf ? 'var(--ver)' : (p.tipo==='1' ? 'var(--rosso)' : (p.tipo==='2' ? 'var(--bibite)' : (p.tipo==='3' ? '#8B6914' : 'inherit')));
+                            let cClass = p.isGf ? 'var(--ver)' : (p.tipo==='1' ? 'var(--rosso)' : (p.tipo==='2' ? 'var(--bibite)' : (p.tipo==='3' ? '#8B6914' : (p.tipo==='4' ? '#CC5500' : 'inherit'))));
                             return `<div class="card-prod-row" style="color:${cClass}">
                                 <span class="card-prod-desc">${p.isGf?'[GF] ':''}${p.q} ${p.g}</span>
                                 <span class="card-prod-val">${p.v.toFixed(2)}€</span>
