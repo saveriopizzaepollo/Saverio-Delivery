@@ -397,13 +397,12 @@
         setTipo(i, tipo);
         let qta = document.getElementById(`q-${i}`).value.trim();
         if(modalita === 'fisso') {
-            document.getElementById(`p-${i}`).value = prezzo;
+            let q = parseQtaKg(qta) || 1;
+            document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2);
         } else if(modalita === 'kg') {
-            // Calcola prezzo da quantità es. "1", "1/2", "2"
             let q = parseQtaKg(qta);
             if(q > 0) document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2);
         } else if(modalita === 'qta') {
-            // Prezzo dalla quantità scritta
             let q = parseFloat(qta.replace(',','.'));
             if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2);
         }
@@ -418,12 +417,14 @@
     }
 
     function onQtaInput(i) {
-        // Se il prezzo viene dalla quantità, aggiornalo
         let nome = document.getElementById(`g-${i}`).value.trim().toUpperCase();
         let match = Object.values(listino||{}).find(p => p.nome === nome);
         if(!match) return;
         let qta = document.getElementById(`q-${i}`).value.trim();
-        if(match.modalita === 'kg') {
+        if(match.modalita === 'fisso') {
+            let q = parseQtaKg(qta) || 1;
+            if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2);
+        } else if(match.modalita === 'kg') {
             let q = parseQtaKg(qta);
             if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2);
         } else if(match.modalita === 'qta') {
