@@ -57,6 +57,7 @@
     <button class="nav-btn" id="btn-t2" onclick="showTab(2)">RIDER</button>
     <button class="nav-btn" id="btn-t3" onclick="showTab(3)">GIORNATA</button>
     <button class="nav-btn" id="btn-t4" onclick="showTab(4)">STORICO</button>
+    <button class="nav-btn" id="btn-t5" onclick="showTab(5)">LISTINO</button>
 </div>
 
 <div class="content-area">
@@ -93,6 +94,34 @@
             <input type="text" id="filtro-data" class="input-big" placeholder="ES: 11/04 OPPURE APRILE" oninput="renderStorico()" style="margin-bottom:0;">
         </div>
         <div id="storico-lista"></div>
+    </div>
+
+    <div id="tab5" class="tab-content">
+        <div class="sezione">
+            <h3>➕ AGGIUNGI PRODOTTO</h3>
+            <input type="text" id="listino-nome" class="input-big" placeholder="NOME PRODOTTO (ES. POLLO)">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+                <select id="listino-tipo" style="padding:12px; border:2px solid var(--bor); border-radius:10px; font-size:1rem; font-family:'Barlow',sans-serif; font-weight:900; color:var(--blu); background:white; outline:none;">
+                    <option value="0">🍕 PIZZERIA</option>
+                    <option value="1">🍗 POLLO</option>
+                    <option value="4">🍗 COSCIA</option>
+                    <option value="2">🔵 BIBITE</option>
+                    <option value="3">🟡 BANCO</option>
+                </select>
+                <input type="number" id="listino-prezzo" class="input-big" placeholder="PREZZO €" step="0.50" style="margin-bottom:0;">
+            </div>
+            <div style="margin-bottom:10px;">
+                <label style="font-size:0.85rem; color:#888; display:block; margin-bottom:4px;">MODALITÀ PREZZO</label>
+                <select id="listino-modalita" style="width:100%; padding:12px; border:2px solid var(--bor); border-radius:10px; font-size:0.95rem; font-family:'Barlow',sans-serif; font-weight:900; color:var(--blu); background:white; outline:none;">
+                    <option value="fisso">Prezzo fisso</option>
+                    <option value="kg">Prezzo al kg (calcola automatico)</option>
+                    <option value="qta">Prezzo dalla quantità scritta</option>
+                </select>
+            </div>
+            <button class="btn-full" style="background:var(--ver);" onclick="aggiungiProdotto()">➕ AGGIUNGI</button>
+            <p id="msg-listino" style="text-align:center; font-size:0.9rem; display:none; margin-top:5px;"></p>
+        </div>
+        <div id="listino-lista"></div>
     </div>
 
 </div>
@@ -136,6 +165,42 @@
         document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
     });
 
+    let listino = {};
+    const listinoRef = db.ref('listino');
+
+    listinoRef.on('value', snap => {
+        listino = snap.val() || {};
+        // Carica prodotti predefiniti se listino vuoto
+        if(Object.keys(listino).length === 0) {
+            let predefiniti = [
+                {nome:'1/2 POLLO', tipo:'1', prezzo:7.50, modalita:'fisso'},
+                {nome:'POLLO', tipo:'1', prezzo:15.00, modalita:'fisso'},
+                {nome:'COSCIA', tipo:'4', prezzo:4.50, modalita:'fisso'},
+                {nome:'ROSTICCERIA', tipo:'3', prezzo:10.00, modalita:'kg'},
+                {nome:'PIZZA A TAGLIO', tipo:'3', prezzo:10.00, modalita:'kg'},
+                {nome:'PATATINE', tipo:'3', prezzo:0, modalita:'qta'},
+                {nome:'BOTT COCA', tipo:'2', prezzo:3.00, modalita:'fisso'},
+                {nome:'BOTT COCA ZERO', tipo:'2', prezzo:3.00, modalita:'fisso'},
+                {nome:'BOTT FANTA', tipo:'2', prezzo:3.00, modalita:'fisso'},
+                {nome:'BOTT SPRITE', tipo:'2', prezzo:3.00, modalita:'fisso'},
+                {nome:'LATT COCA', tipo:'2', prezzo:1.50, modalita:'fisso'},
+                {nome:'LATT COCA ZERO', tipo:'2', prezzo:1.50, modalita:'fisso'},
+                {nome:'LATT FANTA', tipo:'2', prezzo:1.50, modalita:'fisso'},
+                {nome:'LATT SPRITE', tipo:'2', prezzo:1.50, modalita:'fisso'},
+                {nome:'HEINEKEN 66CL', tipo:'2', prezzo:3.50, modalita:'fisso'},
+                {nome:'HEINEKEN 33CL', tipo:'2', prezzo:2.50, modalita:'fisso'},
+                {nome:"BECK'S 66CL", tipo:'2', prezzo:3.50, modalita:'fisso'},
+                {nome:"BECK'S 33CL", tipo:'2', prezzo:2.50, modalita:'fisso'},
+                {nome:'CERES 33CL', tipo:'2', prezzo:3.00, modalita:'fisso'},
+                {nome:'MORETTI 66CL', tipo:'2', prezzo:3.00, modalita:'fisso'},
+                {nome:'MORETTI 33CL', tipo:'2', prezzo:2.00, modalita:'fisso'},
+                {nome:'DAURA 33CL', tipo:'2', prezzo:3.00, modalita:'fisso'},
+            ];
+            predefiniti.forEach(p => listinoRef.push(p));
+        }
+        if(document.getElementById('tab5').classList.contains('show')) renderListino();
+    });
+
     function showTab(n) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('show'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -144,6 +209,7 @@
         if(n===1) renderStat();
         if(n===2) renderRiderGestione();
         if(n===4) renderStorico();
+        if(n===5) renderListino();
     }
 
     function renderStorico() {
@@ -288,6 +354,57 @@
     function eliminaStorico(key) {
         if(!confirm('Eliminare questa giornata dallo storico?')) return;
         db.ref('storico').child(key).remove().then(() => renderStorico());
+    }
+
+    // ── LISTINO ────────────────────────────────────────────────────
+    const tipoLabel = {'0':'🍕 Pizzeria','1':'🍗 Pollo','4':'🟠 Coscia','2':'🔵 Bibite','3':'🟡 Banco'};
+    const tipoColore = {'0':'#E8600A','1':'#FF4444','4':'#D4620A','2':'#007AFF','3':'#8B6914'};
+
+    function renderListino() {
+        const container = document.getElementById('listino-lista');
+        if(Object.keys(listino).length === 0) {
+            container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>Nessun prodotto nel listino</p></div>';
+            return;
+        }
+        // Raggruppa per tipo
+        let gruppi = {};
+        Object.entries(listino).forEach(([id, p]) => {
+            if(!gruppi[p.tipo]) gruppi[p.tipo] = [];
+            gruppi[p.tipo].push({id, ...p});
+        });
+        container.innerHTML = Object.entries(gruppi).sort((a,b) => a[0]-b[0]).map(([tipo, prods]) => `
+            <div class="sezione" style="margin-bottom:10px;">
+                <h3 style="color:${tipoColore[tipo]};">${tipoLabel[tipo]||tipo}</h3>
+                ${prods.map(p => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f5f5f5;">
+                        <div>
+                            <div style="font-size:1rem; color:var(--blu);">${p.nome}</div>
+                            <div style="font-size:0.78rem; color:#888;">${p.modalita==='kg'?'Al kg':p.modalita==='qta'?'Prezzo dalla quantità':'Fisso'} ${p.modalita!=='qta'?'· '+p.prezzo.toFixed(2).replace('.',',')+'€':''}</div>
+                        </div>
+                        <button class="btn-small" style="background:var(--rosso);" onclick="eliminaProdotto('${p.id}')">🗑</button>
+                    </div>`).join('')}
+            </div>`).join('');
+    }
+
+    function aggiungiProdotto() {
+        let nome = document.getElementById('listino-nome').value.trim().toUpperCase();
+        let tipo = document.getElementById('listino-tipo').value;
+        let prezzo = parseFloat(document.getElementById('listino-prezzo').value) || 0;
+        let modalita = document.getElementById('listino-modalita').value;
+        let msg = document.getElementById('msg-listino');
+        if(!nome) { msg.style.display='block'; msg.style.color='var(--rosso)'; msg.textContent='Inserisci il nome'; return; }
+        if(modalita !== 'qta' && prezzo <= 0) { msg.style.display='block'; msg.style.color='var(--rosso)'; msg.textContent='Inserisci il prezzo'; return; }
+        listinoRef.push({nome, tipo, prezzo, modalita}).then(() => {
+            document.getElementById('listino-nome').value = '';
+            document.getElementById('listino-prezzo').value = '';
+            msg.style.display='block'; msg.style.color='var(--ver)'; msg.textContent=`✅ ${nome} aggiunto!`;
+            setTimeout(() => msg.style.display='none', 2000);
+        });
+    }
+
+    function eliminaProdotto(id) {
+        if(!confirm('Eliminare questo prodotto dal listino?')) return;
+        listinoRef.child(id).remove();
     }
 
     function renderStat() {
