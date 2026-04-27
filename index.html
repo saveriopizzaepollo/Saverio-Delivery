@@ -499,21 +499,209 @@ function stampaSelezionati() {
     if(selezionatiStampa.size===0) return;
     let ordiniDaStampare=ordiniSalvati.filter(o=>selezionatiStampa.has(o._key));
 
-    // Genera uno scontrino alla volta e li manda in sequenza
-    let idx = 0;
-    function stampaProssimo() {
-        if(idx >= ordiniDaStampare.length) {
-            selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
-            return;
+    try {
+        let idx = 0;
+        function stampaProssimo() {
+            if(idx >= ordiniDaStampare.length) {
+                selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
+                return;
+            }
+            let o = ordiniDaStampare[idx++];
+            try {
+                let dataUrl = generaScontrino(o);
+                let base64 = dataUrl.split(',')[1];
+                window.location.href = 'rawbt:base64,' + base64;
+                setTimeout(stampaProssimo, 1500);
+            } catch(e) {
+                console.error('Errore stampa ordine:', e);
+                stampaProssimo();
+            }
         }
-        let o = ordiniDaStampare[idx++];
-        let dataUrl = generaScontrino(o);
-        // Converti dataUrl in blob e manda a RawBT
-        let base64 = dataUrl.split(',')[1];
-        window.location.href = 'rawbt:base64,' + base64;
-        setTimeout(stampaProssimo, 1500);
+        stampaProssimo();
+    } catch(e) {
+        console.error('Errore stampa:', e);
+        alert('Errore stampa: ' + e.message);
+        selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
     }
-    stampaProssimo();
+}
+
+function generaScontrino(o) {
+    var W = 576;
+    var PAD = 24;
+    var FG = '#000000';
+    var GRAY = '#aaaaaa';
+
+    var F_TINY   = '17px sans-serif';
+    var F_NORMAL = '20px sans-serif';
+    var F_BOLD   = 'bold 20px sans-serif';
+    var F_NUM    = 'bold 46px sans-serif';
+    var F_NOME   = 'bold 38px sans-serif';
+    var F_PROD   = 'bold 26px sans-serif';
+    var F_TOT    = 'bold 38px sans-serif';
+
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+
+    function fh(font) {
+        ctx.font = font;
+        var m = ctx.measureText('Ag');
+        if(m.actualBoundingBoxAscent !== undefined) return m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
+        return parseInt(font) || 20;
+    }
+    function fw(font, txt) {
+        ctx.font = font;
+        return ctx.measureText(txt).width;
+    }
+    function bl(font, topY) {
+        ctx.font = font;
+        var m = ctx.measureText('Ag');
+        var asc = m.actualBoundingBoxAscent !== undefined ? m.actualBoundingBoxAscent : (parseInt(font)||20)*0.8;
+        return topY + asc;
+    }
+
+    var prods = o.prodotti || [];
+
+    // Calcola altezza
+    var totalH = 0;
+    totalH += 16 + fh(F_BOLD) + 6;
+    totalH += 4 + 1 + 10;
+    totalH += 8 + fh(F_NUM) + 10;
+    totalH += 4 + fh(F_NOME) + 10;
+    totalH += 2 + fh(F_TINY) + 3;
+    totalH += fh(F_TINY) + 3;
+    if(o.nota) totalH += fh(F_TINY) + 8; else totalH += 8;
+    totalH += 2 + 1 + 16;
+    var tipoPrec = '';
+    for(var pi=0; pi<prods.length; pi++) {
+        var p = prods[pi];
+        if(tipoPrec !== '' && tipoPrec !== p.tipo) totalH += 8;
+        tipoPrec = p.tipo;
+        var nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
+        var prezzoTxt = p.v.toFixed(2) + '\u20ac';
+        totalH += 6 + fh(F_PROD) + 4;
+        if(fw(F_PROD, nomeTxt) + fw(F_NORMAL, prezzoTxt) + PAD*3 > W) totalH += fh(F_NORMAL) + 4;
+        totalH += 10;
+    }
+    totalH += 2 + 1 + 8;
+    totalH += 4 + fh(F_NORMAL) + 10;
+    totalH += 8 + fh(F_TOT) + 6;
+    totalH += 4 + fh(F_NORMAL) + 24;
+    totalH += 80; // feed extra
+
+    canvas.width = W;
+    canvas.height = Math.ceil(totalH) + 20;
+
+    // Sfondo bianco
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    function drawDash(yy) {
+        ctx.strokeStyle = GRAY;
+        ctx.setLineDash([6, 4]);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(PAD, yy);
+        ctx.lineTo(W - PAD, yy);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    var y = 0;
+
+    // SAVERIO DELIVERY
+    y += 16;
+    ctx.font = F_BOLD; ctx.fillStyle = FG;
+    ctx.fillText('SAVERIO DELIVERY', (W - fw(F_BOLD,'SAVERIO DELIVERY'))/2, bl(F_BOLD, y));
+    y += fh(F_BOLD) + 6;
+
+    y += 4; drawDash(y); y += 1 + 10;
+
+    // Num + Ora
+    y += 8;
+    ctx.font = F_NUM; ctx.fillStyle = FG;
+    ctx.fillText(o.num||'#01', PAD, bl(F_NUM, y));
+    ctx.fillText(o.ora||'', W - fw(F_NUM, o.ora||'') - PAD, bl(F_NUM, y));
+    y += fh(F_NUM) + 10;
+
+    // Cognome
+    y += 4;
+    ctx.font = F_NOME; ctx.fillStyle = FG;
+    ctx.fillText(o.cog||'', PAD, bl(F_NOME, y));
+    y += fh(F_NOME) + 10;
+
+    // Indirizzo
+    y += 2;
+    ctx.font = F_TINY; ctx.fillStyle = FG;
+    ctx.fillText(o.ind||'', PAD, bl(F_TINY, y));
+    y += fh(F_TINY) + 3;
+
+    ctx.fillText('TEL: '+(o.tel||''), PAD, bl(F_TINY, y));
+    y += fh(F_TINY) + 3;
+
+    if(o.nota) {
+        ctx.fillText('NOTA: '+o.nota, PAD, bl(F_TINY, y));
+        y += fh(F_TINY) + 8;
+    } else { y += 8; }
+
+    y += 2; drawDash(y); y += 1 + 16;
+
+    // Prodotti
+    tipoPrec = '';
+    for(var pi=0; pi<prods.length; pi++) {
+        var p = prods[pi];
+        if(tipoPrec !== '' && tipoPrec !== p.tipo) y += 8;
+        tipoPrec = p.tipo;
+        y += 6;
+        var nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
+        var prezzoTxt = p.v.toFixed(2) + '\u20ac';
+        var lunga = fw(F_PROD, nomeTxt) + fw(F_NORMAL, prezzoTxt) + PAD*3 > W;
+        ctx.font = F_PROD; ctx.fillStyle = FG;
+        ctx.fillText(nomeTxt, PAD, bl(F_PROD, y));
+        if(!lunga) {
+            var py = y + (fh(F_PROD) - fh(F_NORMAL)) / 2;
+            ctx.font = F_NORMAL;
+            ctx.fillText(prezzoTxt, W - fw(F_NORMAL, prezzoTxt) - PAD, bl(F_NORMAL, py));
+        }
+        y += fh(F_PROD) + 4;
+        if(lunga) {
+            ctx.font = F_NORMAL;
+            ctx.fillText(prezzoTxt, W - fw(F_NORMAL, prezzoTxt) - PAD, bl(F_NORMAL, y));
+            y += fh(F_NORMAL) + 4;
+        }
+        y += 10;
+    }
+
+    y += 2; drawDash(y); y += 1 + 8;
+
+    // Consegna
+    y += 4;
+    var consTxt = o.costoCons.toFixed(2) + '\u20ac';
+    ctx.font = F_NORMAL; ctx.fillStyle = GRAY;
+    ctx.fillText('CONSEGNA', PAD, bl(F_NORMAL, y));
+    ctx.fillText(consTxt, W - fw(F_NORMAL, consTxt) - PAD, bl(F_NORMAL, y));
+    y += fh(F_NORMAL) + 10;
+
+    // Totale
+    y += 8;
+    var totTxt = (o.tot||'').replace(' €','€');
+    var labelTxt = 'TOT.';
+    var totW = fw(F_TOT, totTxt);
+    var lblW = fw(F_NORMAL, labelTxt);
+    var xLbl = W - lblW - 10 - totW - PAD;
+    var xTot = xLbl + lblW + 10;
+    ctx.font = F_NORMAL; ctx.fillStyle = FG;
+    ctx.fillText(labelTxt, xLbl, bl(F_NORMAL, y + (fh(F_TOT)-fh(F_NORMAL))/2));
+    ctx.font = F_TOT;
+    ctx.fillText(totTxt, xTot, bl(F_TOT, y));
+    y += fh(F_TOT) + 6;
+
+    // Pagamento
+    y += 4;
+    var payTxt = o.pay + (o.pay==='CONTANTI'&&o.resto?' - '+o.resto:'');
+    ctx.font = F_NORMAL; ctx.fillStyle = FG;
+    ctx.fillText(payTxt, W - fw(F_NORMAL, payTxt) - PAD, bl(F_NORMAL, y));
+
+    return canvas.toDataURL('image/png');
 }
 
 function generaScontrino(o) {
