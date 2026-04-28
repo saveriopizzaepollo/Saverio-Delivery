@@ -43,7 +43,6 @@
         .pizza-price { width: 80px; text-align: right; color: #555; flex-shrink: 0; }
         .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
         .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
-        .rip-delivery-row { display: flex; width: 100%; justify-content: flex-end; margin-top: 5px; }
         .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); transition: all 0.3s ease; }
         .card-consegna.stato-pronto { border-left-color: #D4A017; }
         .card-consegna.stato-assegnato { border-left-color: var(--ora); }
@@ -54,7 +53,6 @@
         .badge-pronto { background: #FFF9C4; color: #8B6914; }
         .badge-assegnato { background: #FEE5D4; color: var(--ora); }
         .badge-consegnato { background: #D4EDDA; color: var(--ver); }
-        .rider-assegnato-tag { font-size: 1rem; color: var(--ora); margin-bottom: 6px; }
         .card-header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
         .card-num-big { font-size: 1.8rem; color: var(--blu); }
         .card-ora-big { font-size: 1.8rem; color: var(--ora); }
@@ -79,47 +77,23 @@
         .tot-label-big { font-size: 1.8rem; color: var(--ora); }
         .autocomplete-wrap { position: relative; margin-bottom: 12px; }
         .autocomplete-wrap .input-big { margin-bottom: 0; }
-        .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--ora); border-radius: 0 0 10px 10px; z-index: 500; max-height: 200px; overflow-y: auto; }
-        .autocomplete-item { padding: 10px 12px; font-size: 1rem; color: var(--blu); cursor: pointer; border-bottom: 1px solid #eee; }
-        .autocomplete-item:last-child { border-bottom: none; }
-        .autocomplete-item:active { background: #fff5f0; }
+        .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--ora); border-radius: 0 0 10px 10px; z-index: 500; max-height: 200px; overflow-y: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .autocomplete-item { padding: 12px; font-size: 1.1rem; color: var(--blu); cursor: pointer; border-bottom: 1px solid #eee; }
+        .autocomplete-item:active { background: #eee; }
         .search-bar { display: flex; gap: 8px; margin-bottom: 12px; }
-        .search-input { flex: 1; padding: 10px 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1rem; outline: none; color: var(--blu); background: white; font-family: 'Barlow', sans-serif; font-weight: 900; text-transform: uppercase; }
-        .search-input:focus { border-color: var(--ora); }
-        .orario-block { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; border-left: 8px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
-        .orario-block.carico-0 { border-left-color: var(--ver); }
-        .orario-block.carico-1 { border-left-color: var(--ver); }
-        .orario-block.carico-2 { border-left-color: var(--ver); }
-        .orario-block.carico-3 { border-left-color: #F5A623; }
-        .orario-block.carico-4 { border-left-color: #F5A623; }
-        .orario-block.carico-alto { border-left-color: var(--rosso); }
+        .search-input { flex: 1; padding: 10px 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1rem; outline: none; color: var(--blu); background: white; font-weight: 900; text-transform: uppercase; }
+        .orario-block { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; border-left: 8px solid #ccc; }
         .orario-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; cursor: pointer; }
         .orario-ora { font-size: 1.6rem; color: var(--blu); }
-        .orario-badge { font-size: 1.3rem; font-weight: 900; padding: 4px 14px; border-radius: 20px; color: white; }
-        .badge-verde { background: var(--ver); }
-        .badge-giallo { background: #F5A623; }
-        .badge-rosso { background: var(--rosso); }
         .orario-detail { display: none; border-top: 2px solid #eee; padding: 10px 15px; }
         .orario-detail.open { display: block; }
-        .orario-ordine { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-        .orario-ordine:last-child { border-bottom: none; }
-        .orario-ordine-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .orario-cliente { font-size: 1.1rem; color: var(--blu); }
-        .orario-num { font-size: 0.85rem; color: var(--ora); }
-        .orario-ind { font-size: 0.9rem; color: #888; margin-bottom: 4px; }
-        .orario-prodotti { display: flex; flex-wrap: wrap; gap: 4px; }
-        .orario-prod-tag { font-size: 0.78rem; padding: 2px 8px; border-radius: 10px; border: 1px solid #ddd; color: #555; background: #f9f9f9; text-transform: uppercase; }
-        .orario-prod-tag.is-pollo { color: var(--rosso); border-color: var(--rosso); background: #fff0f0; }
-        .orario-prod-tag.is-bibita { color: var(--bibite); border-color: var(--bibite); background: #f0f5ff; }
-        .orario-prod-tag.is-gf { color: var(--ver); border-color: var(--ver); background: #f0fff5; }
-        .orario-prod-tag.is-banco { color: #8B6914; border-color: #8B6914; background: #fffbf0; }
         #barra-stampa { position: fixed; bottom: 0; left: 0; right: 0; background: var(--blu); padding: 12px 15px; display: none; align-items: center; justify-content: space-between; z-index: 500; border-top: 3px solid var(--ora); }
         #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; pointer-events: none; }
     </style>
 </head>
 <body>
  
-<div id="app-admin" style="display:block;">
+<div id="app-admin">
     <div class="header-main">
         <span style="font-size:0.8rem;">SAVERIO DELIVERY</span>
         <div id="main-total">0,00 €</div>
@@ -216,12 +190,12 @@
     const db = firebase.database();
     const ordiniRef = db.ref('ordini');
     const contatoreRef = db.ref('contatore');
+    const clientiRef = db.ref('clienti');
  
     let sCost = 0; let sPay = ""; let currentOrderNum = 1;
     let ordiniSalvati = []; let editKey = null;
     let riders = {}; let clienti = {}; let listino = {};
     let selezionatiStampa = new Set();
-    const clientiRef = db.ref('clienti');
     const coloriTipo = {'0':'#E8600A','1':'#FF4444','2':'#007AFF','3':'#8B6914','4':'#CC5500'};
     const classiTipo = {'0':'','1':'tipo-polleria','2':'tipo-bibite','3':'tipo-banco','4':'tipo-coscia'};
  
@@ -487,7 +461,6 @@
     function stampaSelezionati() {
         if(selezionatiStampa.size===0) return;
         let ordiniDaStampare=ordiniSalvati.filter(o=>selezionatiStampa.has(o._key));
- 
         let testo=ordiniDaStampare.map(o=>{
             let tipoPrec='';
             let righe=o.prodotti.map(p=>{
@@ -498,25 +471,8 @@
                 let spazi=' '.repeat(Math.max(1,30-riga.length-prezzo.length));
                 return sep+riga+spazi+prezzo;
             }).join('\n');
- 
-            return `================================
-      SAVERIO DELIVERY
-================================
-${o.num}                    ${o.ora}
-${o.cog}
-${o.ind}
-TEL: ${o.tel}${o.nota?'\nNOTA: '+o.nota:''}
---------------------------------
-${righe}
---------------------------------
-CONSEGNA           ${o.costoCons.toFixed(2)}E
-================================
-TOTALE        ${o.tot}
-================================
-${o.pay}${o.pay==='CONTANTI'&&o.resto?' - '+o.resto:''}
-================================`;
+            return `================================\n      SAVERIO DELIVERY\n================================\n${o.num}                    ${o.ora}\n${o.cog}\n${o.ind}\nTEL: ${o.tel}${o.nota?'\nNOTA: '+o.nota:''}\n--------------------------------\n${righe}\n--------------------------------\nCONSEGNA           ${o.costoCons.toFixed(2)}E\n================================\nTOTALE        ${o.tot}\n================================\n${o.pay}${o.pay==='CONTANTI'&&o.resto?' - '+o.resto:''}\n================================`;
         }).join('\n\n\n');
- 
         window.location.href='rawbt:'+encodeURIComponent(testo);
         selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
     }
@@ -534,7 +490,6 @@ ${o.pay}${o.pay==='CONTANTI'&&o.resto?' - '+o.resto:''}
             let statoClass=stato==='pronto'?'stato-pronto':stato==='assegnato'?'stato-assegnato':stato==='consegnato'?'stato-consegnato':'';
             let badgeClass=stato==='pronto'?'badge-pronto':stato==='assegnato'?'badge-assegnato':stato==='consegnato'?'badge-consegnato':'badge-attesa';
             let badgeLabel=stato==='pronto'?'✅ PRONTO':stato==='assegnato'?'🛵 ASSEGNATO':stato==='consegnato'?'✔ CONSEGNATO':'⏳ IN ATTESA';
-            let riderNome=o.riderId&&riders[o.riderId]?`<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>`:'';
             let btnMod=stato==='consegnato'
                 ?`<button class="act-btn-small btn-mod" style="opacity:0.3; cursor:default;">✏️</button>`
                 :`<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
@@ -550,7 +505,6 @@ ${o.pay}${o.pay==='CONTANTI'&&o.resto?' - '+o.resto:''}
                     <span class="card-ora-big">🕒 ${o.ora}</span>
                 </div>
                 <span class="stato-badge ${badgeClass}">${badgeLabel}</span>
-                ${riderNome}
                 <div class="card-body-main">
                     <b>👤 ${o.cog}</b><br>
                     <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
@@ -589,8 +543,6 @@ ${o.pay}${o.pay==='CONTANTI'&&o.resto?' - '+o.resto:''}
         let orariOrdinati=Object.keys(fasce).sort();
         container.innerHTML=orariOrdinati.map(ora=>{
             let ordini=fasce[ora],n=ordini.length;
-            let caricoClass=n>=5?'carico-alto':`carico-${n}`;
-            let badgeClass=n>=5?'badge-rosso':n>=3?'badge-giallo':'badge-verde';
             let dettagli=ordini.map(o=>{
                 let prodTags=o.prodotti.map(p=>{
                     let cls=p.isGf?'is-gf':p.tipo==='1'?'is-pollo':p.tipo==='2'?'is-bibita':p.tipo==='3'?'is-banco':'';
@@ -598,7 +550,7 @@ ${o.pay}${o.pay==='CONTANTI'&&o.resto?' - '+o.resto:''}
                 }).join('');
                 return `<div class="orario-ordine"><div class="orario-ordine-top"><span class="orario-cliente">👤 ${o.cog}</span><span class="orario-num">${o.num}</span></div><div class="orario-ind">📍 ${o.ind}</div><div class="orario-prodotti">${prodTags}</div></div>`;
             }).join('');
-            return `<div class="orario-block ${caricoClass}"><div class="orario-header" onclick="toggleOrario(this)"><span class="orario-ora">🕒 ${ora}</span><span class="orario-badge ${badgeClass}">${n} ${n===1?'ordine':'ordini'}</span></div><div class="orario-detail">${dettagli}</div></div>`;
+            return `<div class="orario-block"><div class="orario-header" onclick="toggleOrario(this)"><span class="orario-ora">🕒 ${ora}</span><span class="orario-badge badge-verde">${n} ordini</span></div><div class="orario-detail">${dettagli}</div></div>`;
         }).join('');
     }
  
@@ -611,22 +563,27 @@ ${o.pay}${o.pay==='CONTANTI'&&o.resto?' - '+o.resto:''}
         if(val.length<2){list.style.display='none';return;}
         let matches=Object.values(clienti).filter(c=>c.cog.startsWith(val));
         if(matches.length===0){list.style.display='none';return;}
+        
         list.innerHTML=matches.slice(0,5).map(c=> {
-            const clientData = JSON.stringify(c).replace(/'/g, "\\'");
-            return `<div class="autocomplete-item" onclick="selezionaCliente('${clientData}')">
+            // Prepariamo i dati in modo sicuro per il clic
+            let safeCog = c.cog.replace(/'/g, "\\'");
+            let safeInd = (c.ind || "").replace(/'/g, "\\'");
+            let safeTel = (c.tel || "").replace(/'/g, "\\'");
+            let safeNota = (c.nota || "").replace(/'/g, "\\'");
+            
+            return `<div class="autocomplete-item" onclick="selezionaCliente('${safeCog}','${safeTel}','${safeInd}','${safeNota}')">
                 <b>${c.cog}</b> — ${c.ind}<br><small style="color:#888;">${c.tel||''}</small>
             </div>`;
         }).join('');
         list.style.display='block';
     }
  
-    function selezionaCliente(clientDataStr) {
-        const c = JSON.parse(clientDataStr);
-        document.getElementById('o-cognome').value=c.cog;
-        document.getElementById('o-tel').value=c.tel||'';
-        document.getElementById('o-indirizzo').value=c.ind||'';
-        document.getElementById('o-nota-cons').value=c.nota||'';
-        document.getElementById('autocomplete-list').style.display='none';
+    function selezionaCliente(cog, tel, ind, nota) {
+        document.getElementById('o-cognome').value = cog;
+        document.getElementById('o-tel').value = tel || "";
+        document.getElementById('o-indirizzo').value = ind || "";
+        document.getElementById('o-nota-cons').value = nota || "";
+        document.getElementById('autocomplete-list').style.display = 'none';
         updateRiepilogo();
     }
  
