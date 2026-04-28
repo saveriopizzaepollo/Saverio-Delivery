@@ -48,7 +48,6 @@
         .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); transition: all 0.3s ease; }
         .card-consegna.stato-pronto { border-left-color: #D4A017; }
         .card-consegna.stato-assegnato { border-left-color: var(--ora); }
-        .card-consegna.stato-consegnato { border-left-color: var(--ver); opacity: 0.55; }
         .card-consegna.selezionata { border: 3px solid var(--ora); background: #fffbf5; }
         .stato-badge { font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 6px; }
         .badge-attesa { background: #eee; color: #888; }
@@ -115,9 +114,9 @@
         .orario-prod-tag.is-gf { color: var(--ver); border-color: var(--ver); background: #f0fff5; }
         .orario-prod-tag.is-banco { color: #8B6914; border-color: #8B6914; background: #fffbf0; }
         /* CARD COMPATTA CONSEGNATI */
-        .card-compatta { background: white; border-radius: 10px; padding: 8px 10px 8px 12px; margin-bottom: 8px; border-left: 6px solid var(--ver); box-shadow: 0 2px 4px rgba(0,0,0,0.07); color: var(--blu); cursor: pointer; opacity: 0.75; }
+        .card-compatta { background: white; border-radius: 10px; padding: 8px 10px 8px 12px; margin-bottom: 8px; border-left: 6px solid var(--ver); box-shadow: 0 2px 4px rgba(0,0,0,0.07); color: var(--blu); cursor: pointer; opacity: 0.8; }
         .card-compatta-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-        .card-compatta-left { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+        .card-compatta-left { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
         .card-compatta-nome { font-size: 0.95rem; font-weight: 900; color: var(--blu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-compatta-ind { font-size: 0.75rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-compatta-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
@@ -521,424 +520,43 @@ function stampaSelezionati() {
     if(selezionatiStampa.size===0) return;
     let ordiniDaStampare=ordiniSalvati.filter(o=>selezionatiStampa.has(o._key));
 
-    try {
-        let idx = 0;
-        function stampaProssimo() {
-            if(idx >= ordiniDaStampare.length) {
-                selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
-                return;
-            }
-            let o = ordiniDaStampare[idx++];
-            try {
-                let dataUrl = generaScontrino(o);
-                let base64 = dataUrl.split(',')[1];
-                window.location.href = 'rawbt:base64,' + base64;
-                setTimeout(stampaProssimo, 1500);
-            } catch(e) {
-                console.error('Errore stampa ordine:', e);
-                stampaProssimo();
-            }
-        }
-        stampaProssimo();
-    } catch(e) {
-        console.error('Errore stampa:', e);
-        alert('Errore stampa: ' + e.message);
-        selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
-    }
+    let testo=ordiniDaStampare.map(o=>{
+        let tipoPrec='';
+        let righe=o.prodotti.map(p=>{
+            let sep=(tipoPrec!==''&&tipoPrec!==p.tipo)?'\n':'';
+            tipoPrec=p.tipo;
+            let riga=`${p.q}  ${p.isGf?'[GF] ':''}${p.g}`;
+            let prezzo=p.v.toFixed(2)+'E';
+            let spazi=' '.repeat(Math.max(1,30-riga.length-prezzo.length));
+            return sep+riga+spazi+prezzo;
+        }).join('\n');
+
+        return `================================
+  SAVERIO DELIVERY
+```
+
+## ================================
+${o.num}                    ${o.ora}
+${o.cog}
+${o.ind}
+TEL: ${o.tel}${o.nota?’\nNOTA: ‘+o.nota:’’}
+
+## ${righe}
+
+# CONSEGNA           ${o.costoCons.toFixed(2)}E
+
+# TOTALE        ${o.tot}
+
+${o.pay}${o.pay===‘CONTANTI’&&o.resto?’ - ‘+o.resto:’’}
+================================`;
+}).join(’\n\n\n’);
+
+```
+    window.location.href='rawbt:'+encodeURIComponent(testo);
+    selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
 }
 
-function generaScontrino(o) {
-    var W = 576;
-    var PAD = 24;
-    var FG = '#000000';
-    var GRAY = '#aaaaaa';
-
-    var F_TINY   = '17px sans-serif';
-    var F_NORMAL = '20px sans-serif';
-    var F_BOLD   = 'bold 20px sans-serif';
-    var F_NUM    = 'bold 46px sans-serif';
-    var F_NOME   = 'bold 38px sans-serif';
-    var F_PROD   = 'bold 26px sans-serif';
-    var F_TOT    = 'bold 38px sans-serif';
-
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-
-    function fh(font) {
-        ctx.font = font;
-        var m = ctx.measureText('Ag');
-        if(m.actualBoundingBoxAscent !== undefined) return m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
-        return parseInt(font) || 20;
-    }
-    function fw(font, txt) {
-        ctx.font = font;
-        return ctx.measureText(txt).width;
-    }
-    function bl(font, topY) {
-        ctx.font = font;
-        var m = ctx.measureText('Ag');
-        var asc = m.actualBoundingBoxAscent !== undefined ? m.actualBoundingBoxAscent : (parseInt(font)||20)*0.8;
-        return topY + asc;
-    }
-
-    var prods = o.prodotti || [];
-
-    // Calcola altezza
-    var totalH = 0;
-    totalH += 16 + fh(F_BOLD) + 6;
-    totalH += 4 + 1 + 10;
-    totalH += 8 + fh(F_NUM) + 10;
-    totalH += 4 + fh(F_NOME) + 10;
-    totalH += 2 + fh(F_TINY) + 3;
-    totalH += fh(F_TINY) + 3;
-    if(o.nota) totalH += fh(F_TINY) + 8; else totalH += 8;
-    totalH += 2 + 1 + 16;
-    var tipoPrec = '';
-    for(var pi=0; pi<prods.length; pi++) {
-        var p = prods[pi];
-        if(tipoPrec !== '' && tipoPrec !== p.tipo) totalH += 8;
-        tipoPrec = p.tipo;
-        var nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
-        var prezzoTxt = p.v.toFixed(2) + '\u20ac';
-        totalH += 6 + fh(F_PROD) + 4;
-        if(fw(F_PROD, nomeTxt) + fw(F_NORMAL, prezzoTxt) + PAD*3 > W) totalH += fh(F_NORMAL) + 4;
-        totalH += 10;
-    }
-    totalH += 2 + 1 + 8;
-    totalH += 4 + fh(F_NORMAL) + 10;
-    totalH += 8 + fh(F_TOT) + 6;
-    totalH += 4 + fh(F_NORMAL) + 24;
-    totalH += 80; // feed extra
-
-    canvas.width = W;
-    canvas.height = Math.ceil(totalH) + 20;
-
-    // Sfondo bianco
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    function drawDash(yy) {
-        ctx.strokeStyle = GRAY;
-        ctx.setLineDash([6, 4]);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(PAD, yy);
-        ctx.lineTo(W - PAD, yy);
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-
-    var y = 0;
-
-    // SAVERIO DELIVERY
-    y += 16;
-    ctx.font = F_BOLD; ctx.fillStyle = FG;
-    ctx.fillText('SAVERIO DELIVERY', (W - fw(F_BOLD,'SAVERIO DELIVERY'))/2, bl(F_BOLD, y));
-    y += fh(F_BOLD) + 6;
-
-    y += 4; drawDash(y); y += 1 + 10;
-
-    // Num + Ora
-    y += 8;
-    ctx.font = F_NUM; ctx.fillStyle = FG;
-    ctx.fillText(o.num||'#01', PAD, bl(F_NUM, y));
-    ctx.fillText(o.ora||'', W - fw(F_NUM, o.ora||'') - PAD, bl(F_NUM, y));
-    y += fh(F_NUM) + 10;
-
-    // Cognome
-    y += 4;
-    ctx.font = F_NOME; ctx.fillStyle = FG;
-    ctx.fillText(o.cog||'', PAD, bl(F_NOME, y));
-    y += fh(F_NOME) + 10;
-
-    // Indirizzo
-    y += 2;
-    ctx.font = F_TINY; ctx.fillStyle = FG;
-    ctx.fillText(o.ind||'', PAD, bl(F_TINY, y));
-    y += fh(F_TINY) + 3;
-
-    ctx.fillText('TEL: '+(o.tel||''), PAD, bl(F_TINY, y));
-    y += fh(F_TINY) + 3;
-
-    if(o.nota) {
-        ctx.fillText('NOTA: '+o.nota, PAD, bl(F_TINY, y));
-        y += fh(F_TINY) + 8;
-    } else { y += 8; }
-
-    y += 2; drawDash(y); y += 1 + 16;
-
-    // Prodotti
-    tipoPrec = '';
-    for(var pi=0; pi<prods.length; pi++) {
-        var p = prods[pi];
-        if(tipoPrec !== '' && tipoPrec !== p.tipo) y += 8;
-        tipoPrec = p.tipo;
-        y += 6;
-        var nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
-        var prezzoTxt = p.v.toFixed(2) + '\u20ac';
-        var lunga = fw(F_PROD, nomeTxt) + fw(F_NORMAL, prezzoTxt) + PAD*3 > W;
-        ctx.font = F_PROD; ctx.fillStyle = FG;
-        ctx.fillText(nomeTxt, PAD, bl(F_PROD, y));
-        if(!lunga) {
-            var py = y + (fh(F_PROD) - fh(F_NORMAL)) / 2;
-            ctx.font = F_NORMAL;
-            ctx.fillText(prezzoTxt, W - fw(F_NORMAL, prezzoTxt) - PAD, bl(F_NORMAL, py));
-        }
-        y += fh(F_PROD) + 4;
-        if(lunga) {
-            ctx.font = F_NORMAL;
-            ctx.fillText(prezzoTxt, W - fw(F_NORMAL, prezzoTxt) - PAD, bl(F_NORMAL, y));
-            y += fh(F_NORMAL) + 4;
-        }
-        y += 10;
-    }
-
-    y += 2; drawDash(y); y += 1 + 8;
-
-    // Consegna
-    y += 4;
-    var consTxt = o.costoCons.toFixed(2) + '\u20ac';
-    ctx.font = F_NORMAL; ctx.fillStyle = GRAY;
-    ctx.fillText('CONSEGNA', PAD, bl(F_NORMAL, y));
-    ctx.fillText(consTxt, W - fw(F_NORMAL, consTxt) - PAD, bl(F_NORMAL, y));
-    y += fh(F_NORMAL) + 10;
-
-    // Totale
-    y += 8;
-    var totTxt = (o.tot||'').replace(' €','€');
-    var labelTxt = 'TOT.';
-    var totW = fw(F_TOT, totTxt);
-    var lblW = fw(F_NORMAL, labelTxt);
-    var xLbl = W - lblW - 10 - totW - PAD;
-    var xTot = xLbl + lblW + 10;
-    ctx.font = F_NORMAL; ctx.fillStyle = FG;
-    ctx.fillText(labelTxt, xLbl, bl(F_NORMAL, y + (fh(F_TOT)-fh(F_NORMAL))/2));
-    ctx.font = F_TOT;
-    ctx.fillText(totTxt, xTot, bl(F_TOT, y));
-    y += fh(F_TOT) + 6;
-
-    // Pagamento
-    y += 4;
-    var payTxt = o.pay + (o.pay==='CONTANTI'&&o.resto?' - '+o.resto:'');
-    ctx.font = F_NORMAL; ctx.fillStyle = FG;
-    ctx.fillText(payTxt, W - fw(F_NORMAL, payTxt) - PAD, bl(F_NORMAL, y));
-
-    return canvas.toDataURL('image/png');
-}
-
-function generaScontrino(o) {
-    const W = 576;
-    const PAD = 24;
-    const BG = '#ffffff';
-    const FG = '#000000';
-    const GRAY = '#aaaaaa';
-
-    // Font sizes
-    const F_TINY   = '17px DejaVu Sans, Arial, sans-serif';
-    const F_NORMAL = '20px DejaVu Sans, Arial, sans-serif';
-    const F_BOLD   = 'bold 20px DejaVu Sans, Arial, sans-serif';
-    const F_NUM    = 'bold 46px DejaVu Sans, Arial, sans-serif';
-    const F_NOME   = 'bold 38px DejaVu Sans, Arial, sans-serif';
-    const F_PROD   = 'bold 26px DejaVu Sans, Arial, sans-serif';
-    const F_TOT    = 'bold 38px DejaVu Sans, Arial, sans-serif';
-
-    // Calcola altezza scontrino con canvas temporaneo
-    let tmp = document.createElement('canvas');
-    tmp.width = W; tmp.height = 1;
-    let ctx = tmp.getContext('2d');
-
-    function fh(font) {
-        ctx.font = font;
-        let m = ctx.measureText('Ag');
-        return (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) || 20;
-    }
-    function fw(font, txt) {
-        ctx.font = font;
-        return ctx.measureText(txt).width;
-    }
-
-    // Prodotti
-    let prods = o.prodotti || [];
-
-    // Calcola altezza totale
-    let totalH = 0;
-    totalH += 16 + fh(F_BOLD) + 6;   // SAVERIO DELIVERY
-    totalH += 4 + 1 + 10;             // dash
-    totalH += 8 + fh(F_NUM) + 10;     // num + ora
-    totalH += 4 + fh(F_NOME) + 10;    // cognome
-    totalH += 2 + fh(F_TINY) + 3;     // indirizzo
-    totalH += fh(F_TINY) + 3;         // tel
-    if(o.nota) totalH += fh(F_TINY) + 8; // nota
-    else totalH += 8;
-    totalH += 2 + 1 + 16;             // dash
-    // prodotti
-    let tipoPrec = '';
-    prods.forEach(p => {
-        if(tipoPrec !== '' && tipoPrec !== p.tipo) totalH += 8;
-        tipoPrec = p.tipo;
-        totalH += 6 + fh(F_PROD) + 4;
-        // se nome lungo va a capo
-        let nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
-        let prezzoTxt = p.v.toFixed(2) + '\u20ac';
-        if(fw(F_PROD, nomeTxt) + fw(F_NORMAL, prezzoTxt) + PAD*3 > W) {
-            totalH += fh(F_NORMAL) + 4;
-        }
-        totalH += 10;
-    });
-    totalH += 2 + 1 + 8;             // dash
-    totalH += 4 + fh(F_NORMAL) + 10; // consegna
-    totalH += 8 + fh(F_TOT) + 6;     // totale
-    totalH += 4 + fh(F_NORMAL) + 24; // pagamento
-    totalH += 60;                     // feed extra prima del taglio
-
-    let canvas = document.createElement('canvas');
-    canvas.width = W;
-    canvas.height = Math.ceil(totalH) + 20;
-    ctx = canvas.getContext('2d');
-
-    // Sfondo bianco
-    ctx.fillStyle = BG;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    let y = 0;
-
-    function drawText(txt, font, x, yy, color) {
-        ctx.font = font;
-        ctx.fillStyle = color || FG;
-        ctx.fillText(txt, x, yy);
-    }
-
-    function drawDash(yy) {
-        ctx.strokeStyle = GRAY;
-        ctx.setLineDash([6, 4]);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(PAD, yy);
-        ctx.lineTo(W - PAD, yy);
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-
-    function textH(font) {
-        ctx.font = font;
-        let m = ctx.measureText('Ag');
-        return m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
-    }
-
-    function textW(font, txt) {
-        ctx.font = font;
-        return ctx.measureText(txt).width;
-    }
-
-    function centerX(font, txt) {
-        return (W - textW(font, txt)) / 2;
-    }
-
-    function baseline(font, topY) {
-        ctx.font = font;
-        let m = ctx.measureText('Ag');
-        return topY + m.actualBoundingBoxAscent;
-    }
-
-    // SAVERIO DELIVERY
-    y += 16;
-    drawText('SAVERIO DELIVERY', F_BOLD, centerX(F_BOLD, 'SAVERIO DELIVERY'), baseline(F_BOLD, y));
-    y += textH(F_BOLD) + 6;
-
-    // Dash
-    y += 4; drawDash(y); y += 1 + 10;
-
-    // Numero + Orario
-    y += 8;
-    let numTxt = o.num || '#01';
-    let oraTxt = o.ora || '';
-    drawText(numTxt, F_NUM, PAD, baseline(F_NUM, y));
-    drawText(oraTxt, F_NUM, W - textW(F_NUM, oraTxt) - PAD, baseline(F_NUM, y));
-    y += textH(F_NUM) + 10;
-
-    // Cognome
-    y += 4;
-    drawText(o.cog || '', F_NOME, PAD, baseline(F_NOME, y));
-    y += textH(F_NOME) + 10;
-
-    // Indirizzo
-    y += 2;
-    drawText(o.ind || '', F_TINY, PAD, baseline(F_TINY, y));
-    y += textH(F_TINY) + 3;
-
-    // Tel
-    drawText('TEL: ' + (o.tel || ''), F_TINY, PAD, baseline(F_TINY, y));
-    y += textH(F_TINY) + 3;
-
-    // Nota
-    if(o.nota) {
-        drawText('NOTA: ' + o.nota, F_TINY, PAD, baseline(F_TINY, y));
-        y += textH(F_TINY) + 8;
-    } else { y += 8; }
-
-    // Dash
-    y += 2; drawDash(y); y += 1 + 16;
-
-    // Prodotti
-    tipoPrec = '';
-    prods.forEach(p => {
-        if(tipoPrec !== '' && tipoPrec !== p.tipo) y += 8;
-        tipoPrec = p.tipo;
-        y += 6;
-        let nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
-        let prezzoTxt = p.v.toFixed(2) + '\u20ac';
-        let nomeW = textW(F_PROD, nomeTxt);
-        let prezzoW = textW(F_NORMAL, prezzoTxt);
-        let lunga = nomeW + prezzoW + PAD*3 > W;
-        // Nome prodotto
-        drawText(nomeTxt, F_PROD, PAD, baseline(F_PROD, y));
-        if(!lunga) {
-            // Prezzo sulla stessa riga, verticalmente centrato
-            let py = y + (textH(F_PROD) - textH(F_NORMAL)) / 2;
-            drawText(prezzoTxt, F_NORMAL, W - prezzoW - PAD, baseline(F_NORMAL, py));
-        }
-        y += textH(F_PROD) + 4;
-        if(lunga) {
-            // Prezzo su riga successiva a destra
-            drawText(prezzoTxt, F_NORMAL, W - prezzoW - PAD, baseline(F_NORMAL, y));
-            y += textH(F_NORMAL) + 4;
-        }
-        y += 10;
-    });
-
-    // Dash
-    y += 2; drawDash(y); y += 1 + 8;
-
-    // Consegna
-    y += 4;
-    let consTxt = o.costoCons.toFixed(2) + '\u20ac';
-    drawText('CONSEGNA', F_NORMAL, PAD, baseline(F_NORMAL, y), GRAY);
-    drawText(consTxt, F_NORMAL, W - textW(F_NORMAL, consTxt) - PAD, baseline(F_NORMAL, y), GRAY);
-    y += textH(F_NORMAL) + 10;
-
-    // Totale
-    y += 8;
-    let totTxt = (o.tot || '').replace(' €','€');
-    let labelTxt = 'TOT.';
-    let totW = textW(F_TOT, totTxt);
-    let lblW = textW(F_NORMAL, labelTxt);
-    let xLbl = W - lblW - 10 - totW - PAD;
-    let xTot = xLbl + lblW + 10;
-    let pyLbl = y + (textH(F_TOT) - textH(F_NORMAL)) / 2;
-    drawText(labelTxt, F_NORMAL, xLbl, baseline(F_NORMAL, pyLbl));
-    drawText(totTxt, F_TOT, xTot, baseline(F_TOT, y));
-    y += textH(F_TOT) + 6;
-
-    // Pagamento
-    y += 4;
-    let payTxt = o.pay + (o.pay === 'CONTANTI' && o.resto ? ' - ' + o.resto : '');
-    drawText(payTxt, F_NORMAL, W - textW(F_NORMAL, payTxt) - PAD, baseline(F_NORMAL, y));
-    y += textH(F_NORMAL) + 24;
-
-    return canvas.toDataURL('image/png');
-}
-
-// ── RENDER CONSEGNE (escludi consegnati) ──────────────────────
+// ── RENDER CONSEGNE (solo non consegnati) ──────────────────────
 function renderConsegne() {
     const container=document.getElementById('consegne-lista');
     let searchEl=document.getElementById('search-consegne');
@@ -948,13 +566,11 @@ function renderConsegne() {
     if(lista.length===0){container.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine in corso</div>';return;}
     container.innerHTML=lista.map((o)=>{
         let stato=o.stato||'attesa';
-        let statoClass=stato==='pronto'?'stato-pronto':stato==='assegnato'?'stato-assegnato':stato==='consegnato'?'stato-consegnato':'';
-        let badgeClass=stato==='pronto'?'badge-pronto':stato==='assegnato'?'badge-assegnato':stato==='consegnato'?'badge-consegnato':'badge-attesa';
-        let badgeLabel=stato==='pronto'?'✅ PRONTO':stato==='assegnato'?'🛵 ASSEGNATO':stato==='consegnato'?'✔ CONSEGNATO':'⏳ IN ATTESA';
+        let statoClass=stato==='pronto'?'stato-pronto':stato==='assegnato'?'stato-assegnato':'';
+        let badgeClass=stato==='pronto'?'badge-pronto':stato==='assegnato'?'badge-assegnato':'badge-attesa';
+        let badgeLabel=stato==='pronto'?'✅ PRONTO':stato==='assegnato'?'🛵 ASSEGNATO':'⏳ IN ATTESA';
         let riderNome=o.riderId&&riders[o.riderId]?`<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>`:'';
-        let btnMod=stato==='consegnato'
-            ?`<button class="act-btn-small btn-mod" style="opacity:0.3; cursor:default;">✏️</button>`
-            :`<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
+        let btnMod=`<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
         let isSelezionata=selezionatiStampa.has(o._key);
         return `<div class="card-consegna ${statoClass} ${isSelezionata?'selezionata':''}">
             <div class="card-header-main">
@@ -998,55 +614,52 @@ function renderConsegne() {
     }).join('');
 }
 
-// ── RENDER CONSEGNATI (card compatte) ─────────────────────────
+// ── RENDER CONSEGNATI (card compatte) ──────────────────────────
 function renderConsegnati() {
-    const container = document.getElementById('consegnati-lista');
-    let searchEl = document.getElementById('search-consegnati');
-    let search = searchEl ? searchEl.value.trim().toUpperCase() : '';
-    let lista = ordiniSalvati.filter(o => o.stato === 'consegnato');
-    if(search) lista = lista.filter(o => (o.cog||'').includes(search)||(o.ind||'').includes(search)||(o.num||'').includes(search));
-    if(lista.length === 0) {
-        container.innerHTML = '<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine consegnato</div>';
-        return;
-    }
-    container.innerHTML = lista.map(o => {
-        let riderNome = o.riderId && riders[o.riderId] ? '🛵 ' + riders[o.riderId].nome : '';
-        let payColor = o.pay==='POS'?'var(--rosso)':o.pay==='PAGATO'?'var(--ver)':'var(--blu)';
-        let prodHtml = o.prodotti.map(p => {
-            let col = p.isGf?'var(--ver)':p.tipo==='1'?'var(--rosso)':p.tipo==='2'?'var(--bibite)':p.tipo==='3'?'#8B6914':p.tipo==='4'?'#CC5500':'inherit';
-            return `<div class="card-prod-row" style="color:${col}; display:flex; justify-content:space-between; padding:2px 0; font-size:0.82rem;">
+    const container=document.getElementById('consegnati-lista');
+    let searchEl=document.getElementById('search-consegnati');
+    let search=searchEl?searchEl.value.trim().toUpperCase():'';
+    let lista=ordiniSalvati.filter(o=>o.stato==='consegnato');
+    if(search) lista=lista.filter(o=>(o.cog||'').includes(search)||(o.ind||'').includes(search)||(o.num||'').includes(search));
+    if(lista.length===0){container.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine consegnato</div>';return;}
+    container.innerHTML=lista.map(o=>{
+        let riderNome=o.riderId&&riders[o.riderId]?'🛵 '+riders[o.riderId].nome:'';
+        let payColor=o.pay==='POS'?'var(--rosso)':o.pay==='PAGATO'?'var(--ver)':'var(--blu)';
+        let prodHtml=o.prodotti.map(p=>{
+            let col=p.isGf?'var(--ver)':p.tipo==='1'?'var(--rosso)':p.tipo==='2'?'var(--bibite)':p.tipo==='3'?'#8B6914':p.tipo==='4'?'#CC5500':'inherit';
+            return `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:0.82rem;color:${col};">
                 <span>${p.isGf?'[GF] ':''}${p.q} ${p.g}</span>
-                <span style="color:#666; margin-left:8px;">${p.v.toFixed(2)}€</span>
+                <span style="color:#666;margin-left:8px;">${p.v.toFixed(2)}€</span>
             </div>`;
         }).join('');
         return `<div class="card-compatta" onclick="this.classList.toggle('espansa')">
             <div class="card-compatta-row">
                 <div class="card-compatta-left">
-                    <span style="font-size:0.72rem; color:#aaa;">${o.num}</span>
+                    <span style="font-size:0.72rem;color:#aaa;">${o.num}</span>
                     <span class="card-compatta-nome">👤 ${o.cog}</span>
                     <span class="card-compatta-ind">📍 ${o.ind}</span>
                 </div>
                 <div class="card-compatta-right">
                     <span class="card-compatta-ora">🕒 ${o.ora}</span>
-                    ${riderNome ? `<span style="font-size:0.8rem; color:var(--blu);">${riderNome}</span>` : ''}
+                    ${riderNome?`<span style="font-size:0.8rem;color:var(--blu);">${riderNome}</span>`:''}
                     <span class="card-compatta-tot">${o.tot}</span>
-                    <span style="font-size:0.8rem; color:${payColor};">${o.pay}</span>
+                    <span style="font-size:0.8rem;color:${payColor};">${o.pay}</span>
                 </div>
             </div>
             <div class="card-compatta-detail">
-                <div style="font-size:0.85rem; margin-bottom:6px;">
-                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" style="color:var(--ora); text-decoration:none;" target="_blank" onclick="event.stopPropagation()">📍 ${o.ind}</a><br>
-                    <a href="tel:${o.tel}" style="color:var(--link); text-decoration:none;" onclick="event.stopPropagation()">📞 ${o.tel}</a>
-                    ${o.nota ? `<div style="font-size:0.8rem; color:var(--ora); margin-top:4px;">📝 ${o.nota}</div>` : ''}
+                <div style="font-size:0.85rem;margin-bottom:6px;">
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" style="color:var(--ora);text-decoration:none;" target="_blank" onclick="event.stopPropagation()">📍 ${o.ind}</a><br>
+                    <a href="tel:${o.tel}" style="color:var(--link);text-decoration:none;" onclick="event.stopPropagation()">📞 ${o.tel}</a>
+                    ${o.nota?`<div style="font-size:0.8rem;color:var(--ora);margin-top:4px;">📝 ${o.nota}</div>`:''}
                 </div>
-                <div style="background:#f9f9f9; border-radius:6px; padding:6px;">
+                <div style="background:#f9f9f9;border-radius:6px;padding:6px;">
                     ${prodHtml}
-                    <div style="display:flex; justify-content:space-between; padding:2px 0; margin-top:2px; border-top:1px dashed #ddd; font-size:0.82rem; color:#888;">
+                    <div style="display:flex;justify-content:space-between;padding:2px 0;margin-top:2px;border-top:1px dashed #ddd;font-size:0.82rem;color:#888;">
                         <span>🛵 CONSEGNA</span><span>${o.costoCons.toFixed(2)}€</span>
                     </div>
                 </div>
-                <div style="margin-top:8px; display:flex; gap:8px;">
-                    <button onclick="event.stopPropagation(); eliminaOrdine('${o._key}')" style="flex:1; padding:8px; background:var(--rosso); color:white; border:none; border-radius:8px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.82rem; cursor:pointer;">🗑 ELIMINA</button>
+                <div style="margin-top:8px;">
+                    <button onclick="event.stopPropagation();eliminaOrdine('${o._key}')" style="width:100%;padding:8px;background:var(--rosso);color:white;border:none;border-radius:8px;font-family:'Barlow',sans-serif;font-weight:900;font-size:0.82rem;cursor:pointer;">🗑 ELIMINA</button>
                 </div>
             </div>
         </div>`;
