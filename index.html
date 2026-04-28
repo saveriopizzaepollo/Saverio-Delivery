@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -120,7 +119,7 @@
     </style>
 </head>
 <body>
-
+ 
 <div id="app-admin" style="display:block;">
     <div class="header-main">
         <span style="font-size:0.8rem;">SAVERIO DELIVERY</span>
@@ -156,60 +155,55 @@
             </div>
             <select id="o-orario" class="input-big" onchange="updateRiepilogo()"><option value="">🕒 ORARIO CONSEGNA</option></select>
         </div>
-
-```
-    <div id="tab2" class="tab-content">
-        <h2 style="color:var(--blu); margin-bottom:10px;">LISTA ORDINE</h2>
-        <div class="comanda-paper" id="comanda-root"></div>
-    </div>
-
-    <div id="tab4" class="tab-content">
-        <h2>RIEPILOGO</h2>
-        <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin-bottom:15px; color:var(--blu);"></div>
-        <input type="text" id="o-nota-rip" class="input-big note-field" placeholder="📝 NOTA ORDINE (ES. AGGIUNTE PARTICOLARI)" oninput="updateRiepilogo()">
-        <div class="pay-grid">
-            <button class="nav-btn" id="p-cont" onclick="setPay('CONTANTI')">CONTANTI</button>
-            <button class="nav-btn" id="p-pos" onclick="setPay('POS')">POS</button>
-            <button class="nav-btn" id="p-pag" onclick="setPay('PAGATO')">PAGATO</button>
+ 
+        <div id="tab2" class="tab-content">
+            <h2 style="color:var(--blu); margin-bottom:10px;">LISTA ORDINE</h2>
+            <div class="comanda-paper" id="comanda-root"></div>
         </div>
-        <div id="resto-box" style="display:none; margin-top:10px;">
-            <input type="text" id="o-resto" class="input-big" placeholder="ES: RESTO DA 50€" oninput="updateRiepilogo()">
+ 
+        <div id="tab4" class="tab-content">
+            <h2>RIEPILOGO</h2>
+            <div id="riepilogo-box" style="background:white; padding:15px; border-radius:10px; margin-bottom:15px; color:var(--blu);"></div>
+            <input type="text" id="o-nota-rip" class="input-big note-field" placeholder="📝 NOTA ORDINE (ES. AGGIUNTE PARTICOLARI)" oninput="updateRiepilogo()">
+            <div class="pay-grid">
+                <button class="nav-btn" id="p-cont" onclick="setPay('CONTANTI')">CONTANTI</button>
+                <button class="nav-btn" id="p-pos" onclick="setPay('POS')">POS</button>
+                <button class="nav-btn" id="p-pag" onclick="setPay('PAGATO')">PAGATO</button>
+            </div>
+            <div id="resto-box" style="display:none; margin-top:10px;">
+                <input type="text" id="o-resto" class="input-big" placeholder="ES: RESTO DA 50€" oninput="updateRiepilogo()">
+            </div>
+            <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; margin-top:15px;" disabled onclick="inviaOrdine()">INVIA ORDINE</button>
         </div>
-        <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; margin-top:15px;" disabled onclick="inviaOrdine()">INVIA ORDINE</button>
-    </div>
-
-    <div id="tab5" class="tab-content">
-        <h2 style="color:var(--blu); margin-bottom:10px;">STATO CONSEGNE</h2>
-        <div class="search-bar">
-            <input type="text" id="search-consegne" class="search-input" placeholder="🔍 CERCA COGNOME O INDIRIZZO" oninput="renderConsegne()">
+ 
+        <div id="tab5" class="tab-content">
+            <h2 style="color:var(--blu); margin-bottom:10px;">STATO CONSEGNE</h2>
+            <div class="search-bar">
+                <input type="text" id="search-consegne" class="search-input" placeholder="🔍 CERCA COGNOME O INDIRIZZO" oninput="renderConsegne()">
+            </div>
+            <div id="consegne-lista"></div>
+            <div style="height:70px;"></div>
         </div>
-        <div id="consegne-lista"></div>
-        <div style="height:70px;"></div>
-    </div>
-
-    <div id="tab6" class="tab-content">
-        <h2 style="color:var(--blu); margin-bottom:15px;">ORARI</h2>
-        <div id="orari-lista"></div>
+ 
+        <div id="tab6" class="tab-content">
+            <h2 style="color:var(--blu); margin-bottom:15px;">ORARI</h2>
+            <div id="orari-lista"></div>
+        </div>
     </div>
 </div>
-```
-
-</div>
-
+ 
 <!-- BARRA STAMPA -->
-
 <div id="barra-stampa">
     <button onclick="annullaStampa()" style="padding:8px 14px; background:none; border:2px solid rgba(255,255,255,0.3); color:white; border-radius:8px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.85rem; cursor:pointer;">✕ ANNULLA</button>
     <span id="stampa-count" style="color:var(--giallo); font-size:0.95rem;"></span>
     <button onclick="stampaSelezionati()" style="padding:10px 20px; background:var(--ora); color:white; border:none; border-radius:8px; font-family:'Barlow',sans-serif; font-weight:900; font-size:1rem; cursor:pointer;">🖨️ STAMPA</button>
 </div>
-
+ 
 <div id="fb-status">⚪ connecting...</div>
-
+ 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
+ 
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyBvQVRAkkyO00yttmQuoZiAohM2P44gY1Y",
@@ -224,7 +218,7 @@
     const db = firebase.database();
     const ordiniRef = db.ref('ordini');
     const contatoreRef = db.ref('contatore');
-
+ 
     let sCost = 0; let sPay = ""; let currentOrderNum = 1;
     let ordiniSalvati = []; let editKey = null;
     let riders = {}; let clienti = {}; let listino = {};
@@ -232,9 +226,9 @@
     const clientiRef = db.ref('clienti');
     const coloriTipo = {'0':'#E8600A','1':'#FF4444','2':'#007AFF','3':'#8B6914','4':'#CC5500'};
     const classiTipo = {'0':'','1':'tipo-polleria','2':'tipo-bibite','3':'tipo-banco','4':'tipo-coscia'};
-
+ 
     window.addEventListener('load', () => initApp());
-
+ 
     function showTab(n){ 
         document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); 
         document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); 
@@ -246,7 +240,7 @@
         if(n===6) renderOrari();
         if(n!==5) { selezionatiStampa.clear(); aggiornaBarra(); }
     }
-
+ 
     function initApp(){
         const root = document.getElementById('comanda-root');
         if(root.children.length > 0) return;
@@ -257,789 +251,401 @@
                 <div class="cell-piz c-tipo" style="cursor:pointer;" onclick="cicloTipo(${i})" title="Tocca per cambiare tipo"><div id="bt-${i}" data-tipo="0" style="width:10px; height:10px; border-radius:50%; background:#ccc; margin:auto;"></div></div>
                 <div class="cell-piz c-qty"><input type="text" class="input-piz" id="q-${i}" onkeydown="goGusto(event, ${i})" oninput="onQtaInput(${i})"></div>
                 <div class="cell-piz c-gusto"><textarea class="area-gusto" id="g-${i}" rows="1" oninput="autoExpand(this); onGustoInput(${i})" onkeydown="goNext(event, ${i})"></textarea></div>
-
-```
-            <div class="cell-piz c-prezzo"><input type="number" class="input-prezzo" id="p-${i}" oninput="updateRiepilogo()" onkeydown="goPrezzoNext(event, ${i})"></div>
-            <div id="sug-${i}" style="display:none; position:absolute; left:0; right:0; background:white; border:2px solid var(--ora); border-radius:0 0 8px 8px; z-index:500; max-height:150px; overflow-y:auto;"></div>`;
-        row.style.position = 'relative';
-        root.appendChild(row);
-    }
-    updateTimeSelect();
-    db.ref('listino').on('value', snap => { listino = snap.val() || {}; });
-    ordiniRef.on('value', (snapshot) => {
-        ordiniSalvati = [];
-        snapshot.forEach((child) => { let o = child.val(); o._key = child.key; ordiniSalvati.push(o); });
-        ordiniSalvati.sort((a,b) => a.ora.localeCompare(b.ora));
-        if(document.getElementById('tab5').classList.contains('show')) renderConsegne();
-        document.getElementById('fb-status').textContent = '🟢 sync';
-    });
-    contatoreRef.on('value', (snapshot) => { if(snapshot.val() !== null) currentOrderNum = snapshot.val() + 1; });
-    db.ref('riders').on('value', snap => { riders = snap.val() || {}; });
-    clientiRef.on('value', snap => { clienti = snap.val() || {}; });
-    db.ref('.info/connected').on('value', (snap) => {
-        document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
-    });
-}
-
-function cicloTipo(i) {
-    let dot = document.getElementById(`bt-${i}`);
-    let attuale = parseInt(dot.getAttribute('data-tipo')); let prossimo = (attuale + 1) % 5;
-    setTipo(i, prossimo.toString()); updateRiepilogo();
-}
-
-function setTipo(i, tipo) {
-    let dot = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
-    dot.setAttribute('data-tipo', tipo);
-    row.classList.remove('tipo-polleria','tipo-bibite','tipo-banco','tipo-coscia');
-    if(classiTipo[tipo]) row.classList.add(classiTipo[tipo]);
-    dot.style.background = coloriTipo[tipo] || '#ccc';
-}
-
-function onGustoInput(i) {
-    autoExpand(document.getElementById(`g-${i}`)); updateRiepilogo();
-    let val = document.getElementById(`g-${i}`).value.trim().toUpperCase();
-    let sug = document.getElementById(`sug-${i}`);
-    if(val.length < 2 || !listino) { sug.style.display='none'; return; }
-    let matches = Object.entries(listino).filter(([k,p]) => p.nome.includes(val));
-    if(matches.length === 0) { sug.style.display='none'; return; }
-    sug.innerHTML = matches.slice(0,5).map(([k,p]) => {
-        let priceLabel = p.modalita==='qta' ? '(prezzo da qtà)' : p.modalita==='kg' ? `${p.prezzo.toFixed(2).replace('.',',')}€/kg` : `${p.prezzo.toFixed(2).replace('.',',')}€`;
-        return `<div style="padding:8px 10px; font-size:0.9rem; color:var(--blu); cursor:pointer; border-bottom:1px solid #eee;" 
-            onclick="selezionaProdotto(${i},'${p.nome}','${p.tipo}',${p.prezzo},'${p.modalita}')">
-            <span style="color:${coloriTipo[p.tipo]||'inherit'};">●</span> ${p.nome} <span style="color:#aaa; font-size:0.8rem;">${priceLabel}</span>
-        </div>`;
-    }).join('');
-    sug.style.display = 'block';
-}
-
-function selezionaProdotto(i, nome, tipo, prezzo, modalita) {
-    document.getElementById(`g-${i}`).value = nome; setTipo(i, tipo);
-    let qta = document.getElementById(`q-${i}`).value.trim();
-    if(modalita === 'fisso') { let q = parseQtaKg(qta) || 1; document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2); }
-    else if(modalita === 'kg') { let q = parseQtaKg(qta); if(q > 0) document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2); }
-    else if(modalita === 'qta') { let q = parseFloat(qta.replace(',','.')); if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2); }
-    document.getElementById(`sug-${i}`).style.display = 'none'; updateRiepilogo();
-}
-
-function parseQtaKg(q) {
-    let s = (q||'').toString().trim().replace(',','.');
-    if(s.includes('/')) { let p=s.split('/'); return parseFloat(p[0])/parseFloat(p[1]); }
-    return parseFloat(s) || 0;
-}
-
-function onQtaInput(i) {
-    let nome = document.getElementById(`g-${i}`).value.trim().toUpperCase();
-    let match = Object.values(listino||{}).find(p => p.nome === nome);
-    if(!match) return;
-    let qta = document.getElementById(`q-${i}`).value.trim();
-    if(match.modalita === 'fisso') { let q = parseQtaKg(qta) || 1; if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2); }
-    else if(match.modalita === 'kg') { let q = parseQtaKg(qta); if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2); }
-    else if(match.modalita === 'qta') { let q = parseFloat(qta.replace(',','.')); if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2); }
-    updateRiepilogo();
-}
-
-function updateTimeSelect() {
-    let sel=document.getElementById('o-orario'); sel.innerHTML = '<option value="">🕒 ORARIO CONSEGNA</option>';
-    for(let t = 1080; t <= 1350; t += 15) {
-        let hh = Math.floor(t / 60); let mm = t % 60; let timeStr = `${hh}:${mm === 0 ? '00' : mm}`;
-        let opt = document.createElement('option'); opt.value = timeStr; opt.innerText = timeStr; sel.appendChild(opt);
-    }
-}
-
-function autoExpand(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; updateRiepilogo(); }
-function goGusto(e, i) { 
-    if(e.key === ' ') { e.preventDefault(); document.getElementById(`g-${i}`).focus(); }
-    if(e.key === 'Backspace' && document.getElementById(`q-${i}`).value === '' && i > 0) { e.preventDefault(); document.getElementById(`g-${i-1}`).focus(); }
-}
-function goNext(e, i) { 
-    if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`q-${i+1}`).focus(); }
-    if(e.key === 'Backspace' && document.getElementById(`g-${i}`).value === '') { e.preventDefault(); document.getElementById(`q-${i}`).focus(); }
-}
-function goPrezzoNext(e, i) { 
-    if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`p-${i+1}`).focus(); }
-    if(e.key === 'Backspace' && document.getElementById(`p-${i}`).value === '' && i > 0) { e.preventDefault(); document.getElementById(`p-${i-1}`).focus(); }
-}
-
-function toggleGF(i){ document.getElementById(`row-${i}`).classList.toggle('row-is-gf', document.getElementById(`f-${i}`).checked); updateRiepilogo(); }
-function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); if(v>0) document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
-function setPay(t){ sPay=t; document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); if(t){ let k = t==='PAGATO'?'pag':t==='CONTANTI'?'cont':'pos'; document.getElementById('p-'+k).style.background='var(--ora)'; } document.getElementById('resto-box').style.display=(t==='CONTANTI')?'block':'none'; updateRiepilogo(); }
-function skipTel(){ document.getElementById('o-tel').value="INTERNO"; updateRiepilogo(); }
-
-function updateRiepilogo(){
-    let rawItems = [];
-    for(let i=0; i<25; i++){
-        let v=parseFloat(document.getElementById(`p-${i}`).value)||0; let g=document.getElementById(`g-${i}`).value; 
-        let q=document.getElementById(`q-${i}`).value||"0"; let isGf=document.getElementById(`f-${i}`).checked;
-        let tipo=document.getElementById(`bt-${i}`).getAttribute('data-tipo');
-        if(v>0||g.trim()!=="") rawItems.push({q,g:g.toUpperCase(),v,isGf,tipo});
-    }
-    let items=rawItems.sort((a,b)=>a.tipo-b.tipo);
-    let pt=rawItems.reduce((acc,curr)=>acc+curr.v,0);
-    let tot=pt+sCost; document.getElementById('main-total').innerText=tot.toFixed(2).replace('.',',')+' €';
-    let nOrd=(editKey!==null)?ordiniSalvati.find(o=>o._key===editKey)?.num||('#'+currentOrderNum.toString().padStart(2,'0')):'#'+currentOrderNum.toString().padStart(2,'0');
-    document.getElementById('header-tag').innerText=nOrd;
-    document.getElementById('btn-invia').innerText=(editKey!==null)?`AGGIORNA ORDINE ${nOrd}`:'INVIA ORDINE';
-    let cog=document.getElementById('o-cognome').value.toUpperCase(); 
-    let ind=document.getElementById('o-indirizzo').value.toUpperCase(); 
-    let ora=document.getElementById('o-orario').value; 
-    let lHtml=items.map(item=>{
-        let colorClass=item.isGf?'gf-text':(item.tipo==='1'?'tipo-polleria':(item.tipo==='2'?'tipo-bibite':(item.tipo==='3'?'tipo-banco':(item.tipo==='4'?'tipo-coscia':''))));
-        return `<div class="pizza-item ${colorClass}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf?'[GF] ':''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`;
-    }).join('');
-    document.getElementById('riepilogo-box').innerHTML=`
-        <div class="rip-row-top"><span>🏷️ ${nOrd}</span> <span>🕒 ${ora||'--:--'}</span></div>
-        <div class="rip-row-client">👤 <b>${cog||'---'}</b><br>📍 <b>${ind||'---'}</b></div>
-        <div style="margin-top:10px; border-top:2px solid #333; padding-top:10px;">${lHtml}</div>
-        <div class="rip-delivery-row"><span style="width:80px; text-align:right; font-size:1.2rem;">🛵 <b>${sCost.toFixed(2)}€</b></span></div>
-        <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;"><div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div></div>`;
-    let ok=cog&&ind&&ora&&sCost>0&&pt>0&&sPay;
-    document.getElementById('btn-invia').style.background=ok?'var(--ver)':'#ccc'; document.getElementById('btn-invia').disabled=!ok;
-}
-
-function inviaOrdine() {
-    let rawItems=[];
-    for(let i=0;i<25;i++){
-        let v=parseFloat(document.getElementById(`p-${i}`).value)||0; let g=document.getElementById(`g-${i}`).value; 
-        let q=document.getElementById(`q-${i}`).value||"0"; let isGf=document.getElementById(`f-${i}`).checked;
-        let tipo=document.getElementById(`bt-${i}`).getAttribute('data-tipo');
-        if(v>0||g.trim()!=="") rawItems.push({q,g:g.toUpperCase(),v,isGf,tipo});
-    }
-    let items=rawItems.sort((a,b)=>a.tipo-b.tipo);
-    let ordine={
-        num:(editKey!==null)?ordiniSalvati.find(o=>o._key===editKey)?.num||('#'+currentOrderNum.toString().padStart(2,'0')):'#'+currentOrderNum.toString().padStart(2,'0'),
-        ora:document.getElementById('o-orario').value,
-        cog:document.getElementById('o-cognome').value.toUpperCase(),
-        ind:document.getElementById('o-indirizzo').value.toUpperCase(),
-        tel:document.getElementById('o-tel').value.toUpperCase(),
-        nota:document.getElementById('o-nota-cons').value.toUpperCase(),
-        notaRip:document.getElementById('o-nota-rip').value.toUpperCase(),
-        tot:document.getElementById('main-total').innerText,
-        costoCons:sCost,pay:sPay,resto:document.getElementById('o-resto').value.toUpperCase(),
-        prodotti:items
-    };
-    if(editKey!==null){let k=editKey;editKey=null;ordiniRef.child(k).set(ordine);}
-    else{ordiniRef.push(ordine);contatoreRef.set(currentOrderNum);salvaCliente(ordine.cog,ordine.tel,ordine.ind,ordine.nota);}
-    resetForm(); showTab(5);
-}
-
-function resetForm() {
-    document.getElementById('o-cognome').value=""; document.getElementById('o-tel').value=""; document.getElementById('o-indirizzo').value="";
-    document.getElementById('o-nota-cons').value=""; document.getElementById('o-nota-rip').value=""; document.getElementById('o-orario').value=""; document.getElementById('o-resto').value="";
-    sPay=""; sCost=0; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8');
-    for(let i=0;i<25;i++){
-        document.getElementById(`q-${i}`).value=""; document.getElementById(`g-${i}`).value=""; document.getElementById(`g-${i}`).style.height="auto";
-        document.getElementById(`p-${i}`).value=""; document.getElementById(`f-${i}`).checked=false; 
-        document.getElementById(`bt-${i}`).setAttribute('data-tipo','0'); document.getElementById(`bt-${i}`).style.background='#ccc';
-        document.getElementById(`row-${i}`).classList.remove('row-is-gf','tipo-polleria','tipo-bibite','tipo-banco','tipo-coscia');
-        if(document.getElementById(`sug-${i}`)) document.getElementById(`sug-${i}`).style.display='none';
-    }
-    updateTimeSelect(); updateRiepilogo();
-    document.getElementById('btn-maps').style.background='#4285F4';
-    document.getElementById('btn-maps').innerText='📍 VERIFICA POSIZIONE';
-}
-
-function modificaOrdine(key) {
-    let o=ordiniSalvati.find(ord=>ord._key===key);
-    if(!o) return;
-    editKey=key; resetForm();
-    document.getElementById('o-cognome').value=o.cog; document.getElementById('o-tel').value=o.tel; document.getElementById('o-indirizzo').value=o.ind;
-    document.getElementById('o-nota-cons').value=o.nota; document.getElementById('o-nota-rip').value=o.notaRip; 
-    updateTimeSelect();
-    let selOra=document.getElementById('o-orario');
-    let hasTime=Array.from(selOra.options).some(opt=>opt.value===o.ora);
-    if(!hasTime){let opt=document.createElement('option');opt.value=o.ora;opt.innerText=o.ora;selOra.appendChild(opt);}
-    selOra.value=o.ora; document.getElementById('o-resto').value=o.resto;
-    setCost(o.costoCons); setPay(o.pay);
-    o.prodotti.forEach((prod,i)=>{
-        if(i<25){
-            document.getElementById(`q-${i}`).value=prod.q;
-            document.getElementById(`g-${i}`).value=prod.g;
-            document.getElementById(`p-${i}`).value=prod.v;
-            document.getElementById(`f-${i}`).checked=prod.isGf;
-            setTipo(i,prod.tipo||'0');
-            let gInput=document.getElementById(`g-${i}`);
-            gInput.style.height='auto'; gInput.style.height=(gInput.scrollHeight>0?gInput.scrollHeight:50)+'px';
+                <div class="cell-piz c-prezzo"><input type="number" class="input-prezzo" id="p-${i}" oninput="updateRiepilogo()" onkeydown="goPrezzoNext(event, ${i})"></div>
+                <div id="sug-${i}" style="display:none; position:absolute; left:0; right:0; background:white; border:2px solid var(--ora); border-radius:0 0 8px 8px; z-index:500; max-height:150px; overflow-y:auto;"></div>`;
+            row.style.position = 'relative';
+            root.appendChild(row);
         }
-    });
-    showTab(1);
-}
-
-function eliminaOrdine(key) {
-    let o=ordiniSalvati.find(ord=>ord._key===key);
-    if(o&&confirm(`Sei sicura di voler eliminare l'ordine ${o.num}?`)) ordiniRef.child(key).remove();
-}
-
-function toggleCardList(element) { element.classList.toggle('expanded'); }
-
-// ── SELEZIONE STAMPA ───────────────────────────────────────────
-function toggleSelezioneStampa(key, event) {
-    event.stopPropagation();
-    if(selezionatiStampa.has(key)) selezionatiStampa.delete(key);
-    else selezionatiStampa.add(key);
-    aggiornaBarra();
-    renderConsegne();
-}
-
-function aggiornaBarra() {
-    let barra=document.getElementById('barra-stampa');
-    let count=document.getElementById('stampa-count');
-    if(selezionatiStampa.size>0){
-        barra.style.display='flex';
-        count.textContent=selezionatiStampa.size+(selezionatiStampa.size===1?' ordine':' ordini');
-    } else {
-        barra.style.display='none';
+        updateTimeSelect();
+        db.ref('listino').on('value', snap => { listino = snap.val() || {}; });
+        ordiniRef.on('value', (snapshot) => {
+            ordiniSalvati = [];
+            snapshot.forEach((child) => { let o = child.val(); o._key = child.key; ordiniSalvati.push(o); });
+            ordiniSalvati.sort((a,b) => a.ora.localeCompare(b.ora));
+            if(document.getElementById('tab5').classList.contains('show')) renderConsegne();
+            document.getElementById('fb-status').textContent = '🟢 sync';
+        });
+        contatoreRef.on('value', (snapshot) => { if(snapshot.val() !== null) currentOrderNum = snapshot.val() + 1; });
+        db.ref('riders').on('value', snap => { riders = snap.val() || {}; });
+        clientiRef.on('value', snap => { clienti = snap.val() || {}; });
+        db.ref('.info/connected').on('value', (snap) => {
+            document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
+        });
     }
-}
-
-function annullaStampa() {
-    selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
-}
-
-function stampaSelezionati() {
-    if(selezionatiStampa.size===0) return;
-    let ordiniDaStampare=ordiniSalvati.filter(o=>selezionatiStampa.has(o._key));
-
-    try {
-        let idx = 0;
-        function stampaProssimo() {
-            if(idx >= ordiniDaStampare.length) {
-                selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
-                return;
-            }
-            let o = ordiniDaStampare[idx++];
-            try {
-                let dataUrl = generaScontrino(o);
-                let base64 = dataUrl.split(',')[1];
-                window.location.href = 'rawbt:base64,' + base64;
-                setTimeout(stampaProssimo, 1500);
-            } catch(e) {
-                console.error('Errore stampa ordine:', e);
-                stampaProssimo();
-            }
+ 
+    function cicloTipo(i) {
+        let dot = document.getElementById(`bt-${i}`);
+        let attuale = parseInt(dot.getAttribute('data-tipo')); let prossimo = (attuale + 1) % 5;
+        setTipo(i, prossimo.toString()); updateRiepilogo();
+    }
+ 
+    function setTipo(i, tipo) {
+        let dot = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
+        dot.setAttribute('data-tipo', tipo);
+        row.classList.remove('tipo-polleria','tipo-bibite','tipo-banco','tipo-coscia');
+        if(classiTipo[tipo]) row.classList.add(classiTipo[tipo]);
+        dot.style.background = coloriTipo[tipo] || '#ccc';
+    }
+ 
+    function onGustoInput(i) {
+        autoExpand(document.getElementById(`g-${i}`)); updateRiepilogo();
+        let val = document.getElementById(`g-${i}`).value.trim().toUpperCase();
+        let sug = document.getElementById(`sug-${i}`);
+        if(val.length < 2 || !listino) { sug.style.display='none'; return; }
+        let matches = Object.entries(listino).filter(([k,p]) => p.nome.includes(val));
+        if(matches.length === 0) { sug.style.display='none'; return; }
+        sug.innerHTML = matches.slice(0,5).map(([k,p]) => {
+            let priceLabel = p.modalita==='qta' ? '(prezzo da qtà)' : p.modalita==='kg' ? `${p.prezzo.toFixed(2).replace('.',',')}€/kg` : `${p.prezzo.toFixed(2).replace('.',',')}€`;
+            return `<div style="padding:8px 10px; font-size:0.9rem; color:var(--blu); cursor:pointer; border-bottom:1px solid #eee;" 
+                onclick="selezionaProdotto(${i},'${p.nome}','${p.tipo}',${p.prezzo},'${p.modalita}')">
+                <span style="color:${coloriTipo[p.tipo]||'inherit'};">●</span> ${p.nome} <span style="color:#aaa; font-size:0.8rem;">${priceLabel}</span>
+            </div>`;
+        }).join('');
+        sug.style.display = 'block';
+    }
+ 
+    function selezionaProdotto(i, nome, tipo, prezzo, modalita) {
+        document.getElementById(`g-${i}`).value = nome; setTipo(i, tipo);
+        let qta = document.getElementById(`q-${i}`).value.trim();
+        if(modalita === 'fisso') { let q = parseQtaKg(qta) || 1; document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2); }
+        else if(modalita === 'kg') { let q = parseQtaKg(qta); if(q > 0) document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2); }
+        else if(modalita === 'qta') { let q = parseFloat(qta.replace(',','.')); if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2); }
+        document.getElementById(`sug-${i}`).style.display = 'none'; updateRiepilogo();
+    }
+ 
+    function parseQtaKg(q) {
+        let s = (q||'').toString().trim().replace(',','.');
+        if(s.includes('/')) { let p=s.split('/'); return parseFloat(p[0])/parseFloat(p[1]); }
+        return parseFloat(s) || 0;
+    }
+ 
+    function onQtaInput(i) {
+        let nome = document.getElementById(`g-${i}`).value.trim().toUpperCase();
+        let match = Object.values(listino||{}).find(p => p.nome === nome);
+        if(!match) return;
+        let qta = document.getElementById(`q-${i}`).value.trim();
+        if(match.modalita === 'fisso') { let q = parseQtaKg(qta) || 1; if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2); }
+        else if(match.modalita === 'kg') { let q = parseQtaKg(qta); if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2); }
+        else if(match.modalita === 'qta') { let q = parseFloat(qta.replace(',','.')); if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2); }
+        updateRiepilogo();
+    }
+ 
+    function updateTimeSelect() {
+        let sel=document.getElementById('o-orario'); sel.innerHTML = '<option value="">🕒 ORARIO CONSEGNA</option>';
+        for(let t = 1080; t <= 1350; t += 15) {
+            let hh = Math.floor(t / 60); let mm = t % 60; let timeStr = `${hh}:${mm === 0 ? '00' : mm}`;
+            let opt = document.createElement('option'); opt.value = timeStr; opt.innerText = timeStr; sel.appendChild(opt);
         }
-        stampaProssimo();
-    } catch(e) {
-        console.error('Errore stampa:', e);
-        alert('Errore stampa: ' + e.message);
+    }
+ 
+    function autoExpand(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; updateRiepilogo(); }
+    function goGusto(e, i) { 
+        if(e.key === ' ') { e.preventDefault(); document.getElementById(`g-${i}`).focus(); }
+        if(e.key === 'Backspace' && document.getElementById(`q-${i}`).value === '' && i > 0) { e.preventDefault(); document.getElementById(`g-${i-1}`).focus(); }
+    }
+    function goNext(e, i) { 
+        if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`q-${i+1}`).focus(); }
+        if(e.key === 'Backspace' && document.getElementById(`g-${i}`).value === '') { e.preventDefault(); document.getElementById(`q-${i}`).focus(); }
+    }
+    function goPrezzoNext(e, i) { 
+        if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`p-${i+1}`).focus(); }
+        if(e.key === 'Backspace' && document.getElementById(`p-${i}`).value === '' && i > 0) { e.preventDefault(); document.getElementById(`p-${i-1}`).focus(); }
+    }
+ 
+    function toggleGF(i){ document.getElementById(`row-${i}`).classList.toggle('row-is-gf', document.getElementById(`f-${i}`).checked); updateRiepilogo(); }
+    function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); if(v>0) document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
+    function setPay(t){ sPay=t; document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); if(t){ let k = t==='PAGATO'?'pag':t==='CONTANTI'?'cont':'pos'; document.getElementById('p-'+k).style.background='var(--ora)'; } document.getElementById('resto-box').style.display=(t==='CONTANTI')?'block':'none'; updateRiepilogo(); }
+    function skipTel(){ document.getElementById('o-tel').value="INTERNO"; updateRiepilogo(); }
+ 
+    function updateRiepilogo(){
+        let rawItems = [];
+        for(let i=0; i<25; i++){
+            let v=parseFloat(document.getElementById(`p-${i}`).value)||0; let g=document.getElementById(`g-${i}`).value; 
+            let q=document.getElementById(`q-${i}`).value||"0"; let isGf=document.getElementById(`f-${i}`).checked;
+            let tipo=document.getElementById(`bt-${i}`).getAttribute('data-tipo');
+            if(v>0||g.trim()!=="") rawItems.push({q,g:g.toUpperCase(),v,isGf,tipo});
+        }
+        let items=rawItems.sort((a,b)=>a.tipo-b.tipo);
+        let pt=rawItems.reduce((acc,curr)=>acc+curr.v,0);
+        let tot=pt+sCost; document.getElementById('main-total').innerText=tot.toFixed(2).replace('.',',')+' €';
+        let nOrd=(editKey!==null)?ordiniSalvati.find(o=>o._key===editKey)?.num||('#'+currentOrderNum.toString().padStart(2,'0')):'#'+currentOrderNum.toString().padStart(2,'0');
+        document.getElementById('header-tag').innerText=nOrd;
+        document.getElementById('btn-invia').innerText=(editKey!==null)?`AGGIORNA ORDINE ${nOrd}`:'INVIA ORDINE';
+        let cog=document.getElementById('o-cognome').value.toUpperCase(); 
+        let ind=document.getElementById('o-indirizzo').value.toUpperCase(); 
+        let ora=document.getElementById('o-orario').value; 
+        let lHtml=items.map(item=>{
+            let colorClass=item.isGf?'gf-text':(item.tipo==='1'?'tipo-polleria':(item.tipo==='2'?'tipo-bibite':(item.tipo==='3'?'tipo-banco':(item.tipo==='4'?'tipo-coscia':''))));
+            return `<div class="pizza-item ${colorClass}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf?'[GF] ':''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`;
+        }).join('');
+        document.getElementById('riepilogo-box').innerHTML=`
+            <div class="rip-row-top"><span>🏷️ ${nOrd}</span> <span>🕒 ${ora||'--:--'}</span></div>
+            <div class="rip-row-client">👤 <b>${cog||'---'}</b><br>📍 <b>${ind||'---'}</b></div>
+            <div style="margin-top:10px; border-top:2px solid #333; padding-top:10px;">${lHtml}</div>
+            <div class="rip-delivery-row"><span style="width:80px; text-align:right; font-size:1.2rem;">🛵 <b>${sCost.toFixed(2)}€</b></span></div>
+            <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;"><div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div></div>`;
+        let ok=cog&&ind&&ora&&sCost>0&&pt>0&&sPay;
+        document.getElementById('btn-invia').style.background=ok?'var(--ver)':'#ccc'; document.getElementById('btn-invia').disabled=!ok;
+    }
+ 
+    function inviaOrdine() {
+        let rawItems=[];
+        for(let i=0;i<25;i++){
+            let v=parseFloat(document.getElementById(`p-${i}`).value)||0; let g=document.getElementById(`g-${i}`).value; 
+            let q=document.getElementById(`q-${i}`).value||"0"; let isGf=document.getElementById(`f-${i}`).checked;
+            let tipo=document.getElementById(`bt-${i}`).getAttribute('data-tipo');
+            if(v>0||g.trim()!=="") rawItems.push({q,g:g.toUpperCase(),v,isGf,tipo});
+        }
+        let items=rawItems.sort((a,b)=>a.tipo-b.tipo);
+        let ordine={
+            num:(editKey!==null)?ordiniSalvati.find(o=>o._key===editKey)?.num||('#'+currentOrderNum.toString().padStart(2,'0')):'#'+currentOrderNum.toString().padStart(2,'0'),
+            ora:document.getElementById('o-orario').value,
+            cog:document.getElementById('o-cognome').value.toUpperCase(),
+            ind:document.getElementById('o-indirizzo').value.toUpperCase(),
+            tel:document.getElementById('o-tel').value.toUpperCase(),
+            nota:document.getElementById('o-nota-cons').value.toUpperCase(),
+            notaRip:document.getElementById('o-nota-rip').value.toUpperCase(),
+            tot:document.getElementById('main-total').innerText,
+            costoCons:sCost,pay:sPay,resto:document.getElementById('o-resto').value.toUpperCase(),
+            prodotti:items
+        };
+        if(editKey!==null){let k=editKey;editKey=null;ordiniRef.child(k).set(ordine);}
+        else{ordiniRef.push(ordine);contatoreRef.set(currentOrderNum);salvaCliente(ordine.cog,ordine.tel,ordine.ind,ordine.nota);}
+        resetForm(); showTab(5);
+    }
+ 
+    function resetForm() {
+        document.getElementById('o-cognome').value=""; document.getElementById('o-tel').value=""; document.getElementById('o-indirizzo').value="";
+        document.getElementById('o-nota-cons').value=""; document.getElementById('o-nota-rip').value=""; document.getElementById('o-orario').value=""; document.getElementById('o-resto').value="";
+        sPay=""; sCost=0; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8');
+        for(let i=0;i<25;i++){
+            document.getElementById(`q-${i}`).value=""; document.getElementById(`g-${i}`).value=""; document.getElementById(`g-${i}`).style.height="auto";
+            document.getElementById(`p-${i}`).value=""; document.getElementById(`f-${i}`).checked=false; 
+            document.getElementById(`bt-${i}`).setAttribute('data-tipo','0'); document.getElementById(`bt-${i}`).style.background='#ccc';
+            document.getElementById(`row-${i}`).classList.remove('row-is-gf','tipo-polleria','tipo-bibite','tipo-banco','tipo-coscia');
+            if(document.getElementById(`sug-${i}`)) document.getElementById(`sug-${i}`).style.display='none';
+        }
+        updateTimeSelect(); updateRiepilogo();
+        document.getElementById('btn-maps').style.background='#4285F4';
+        document.getElementById('btn-maps').innerText='📍 VERIFICA POSIZIONE';
+    }
+ 
+    function modificaOrdine(key) {
+        let o=ordiniSalvati.find(ord=>ord._key===key);
+        if(!o) return;
+        editKey=key; resetForm();
+        document.getElementById('o-cognome').value=o.cog; document.getElementById('o-tel').value=o.tel; document.getElementById('o-indirizzo').value=o.ind;
+        document.getElementById('o-nota-cons').value=o.nota; document.getElementById('o-nota-rip').value=o.notaRip; 
+        updateTimeSelect();
+        let selOra=document.getElementById('o-orario');
+        let hasTime=Array.from(selOra.options).some(opt=>opt.value===o.ora);
+        if(!hasTime){let opt=document.createElement('option');opt.value=o.ora;opt.innerText=o.ora;selOra.appendChild(opt);}
+        selOra.value=o.ora; document.getElementById('o-resto').value=o.resto;
+        setCost(o.costoCons); setPay(o.pay);
+        o.prodotti.forEach((prod,i)=>{
+            if(i<25){
+                document.getElementById(`q-${i}`).value=prod.q;
+                document.getElementById(`g-${i}`).value=prod.g;
+                document.getElementById(`p-${i}`).value=prod.v;
+                document.getElementById(`f-${i}`).checked=prod.isGf;
+                setTipo(i,prod.tipo||'0');
+                let gInput=document.getElementById(`g-${i}`);
+                gInput.style.height='auto'; gInput.style.height=(gInput.scrollHeight>0?gInput.scrollHeight:50)+'px';
+            }
+        });
+        showTab(1);
+    }
+ 
+    function eliminaOrdine(key) {
+        let o=ordiniSalvati.find(ord=>ord._key===key);
+        if(o&&confirm(`Sei sicura di voler eliminare l'ordine ${o.num}?`)) ordiniRef.child(key).remove();
+    }
+ 
+    function toggleCardList(element) { element.classList.toggle('expanded'); }
+ 
+    // ── SELEZIONE STAMPA ───────────────────────────────────────────
+    function toggleSelezioneStampa(key, event) {
+        event.stopPropagation();
+        if(selezionatiStampa.has(key)) selezionatiStampa.delete(key);
+        else selezionatiStampa.add(key);
+        aggiornaBarra();
+        renderConsegne();
+    }
+ 
+    function aggiornaBarra() {
+        let barra=document.getElementById('barra-stampa');
+        let count=document.getElementById('stampa-count');
+        if(selezionatiStampa.size>0){
+            barra.style.display='flex';
+            count.textContent=selezionatiStampa.size+(selezionatiStampa.size===1?' ordine':' ordini');
+        } else {
+            barra.style.display='none';
+        }
+    }
+ 
+    function annullaStampa() {
         selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
     }
-}
-
-function generaScontrino(o) {
-    var W = 576;
-    var PAD = 24;
-    var FG = '#000000';
-    var GRAY = '#aaaaaa';
-
-    var F_TINY   = '17px sans-serif';
-    var F_NORMAL = '20px sans-serif';
-    var F_BOLD   = 'bold 20px sans-serif';
-    var F_NUM    = 'bold 46px sans-serif';
-    var F_NOME   = 'bold 38px sans-serif';
-    var F_PROD   = 'bold 26px sans-serif';
-    var F_TOT    = 'bold 38px sans-serif';
-
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-
-    function fh(font) {
-        ctx.font = font;
-        var m = ctx.measureText('Ag');
-        if(m.actualBoundingBoxAscent !== undefined) return m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
-        return parseInt(font) || 20;
+ 
+    function stampaSelezionati() {
+        if(selezionatiStampa.size===0) return;
+        let ordiniDaStampare=ordiniSalvati.filter(o=>selezionatiStampa.has(o._key));
+ 
+        let testo=ordiniDaStampare.map(o=>{
+            let tipoPrec='';
+            let righe=o.prodotti.map(p=>{
+                let sep=(tipoPrec!==''&&tipoPrec!==p.tipo)?'\n':'';
+                tipoPrec=p.tipo;
+                let riga=`${p.q}  ${p.isGf?'[GF] ':''}${p.g}`;
+                let prezzo=p.v.toFixed(2)+'E';
+                let spazi=' '.repeat(Math.max(1,30-riga.length-prezzo.length));
+                return sep+riga+spazi+prezzo;
+            }).join('\n');
+ 
+            return `================================
+      SAVERIO DELIVERY
+================================
+${o.num}                    ${o.ora}
+${o.cog}
+${o.ind}
+TEL: ${o.tel}${o.nota?'\nNOTA: '+o.nota:''}
+--------------------------------
+${righe}
+--------------------------------
+CONSEGNA           ${o.costoCons.toFixed(2)}E
+================================
+TOTALE        ${o.tot}
+================================
+${o.pay}${o.pay==='CONTANTI'&&o.resto?' - '+o.resto:''}
+================================`;
+        }).join('\n\n\n');
+ 
+        window.location.href='rawbt:'+encodeURIComponent(testo);
+        selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
     }
-    function fw(font, txt) {
-        ctx.font = font;
-        return ctx.measureText(txt).width;
-    }
-    function bl(font, topY) {
-        ctx.font = font;
-        var m = ctx.measureText('Ag');
-        var asc = m.actualBoundingBoxAscent !== undefined ? m.actualBoundingBoxAscent : (parseInt(font)||20)*0.8;
-        return topY + asc;
-    }
-
-    var prods = o.prodotti || [];
-
-    // Calcola altezza
-    var totalH = 0;
-    totalH += 16 + fh(F_BOLD) + 6;
-    totalH += 4 + 1 + 10;
-    totalH += 8 + fh(F_NUM) + 10;
-    totalH += 4 + fh(F_NOME) + 10;
-    totalH += 2 + fh(F_TINY) + 3;
-    totalH += fh(F_TINY) + 3;
-    if(o.nota) totalH += fh(F_TINY) + 8; else totalH += 8;
-    totalH += 2 + 1 + 16;
-    var tipoPrec = '';
-    for(var pi=0; pi<prods.length; pi++) {
-        var p = prods[pi];
-        if(tipoPrec !== '' && tipoPrec !== p.tipo) totalH += 8;
-        tipoPrec = p.tipo;
-        var nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
-        var prezzoTxt = p.v.toFixed(2) + '\u20ac';
-        totalH += 6 + fh(F_PROD) + 4;
-        if(fw(F_PROD, nomeTxt) + fw(F_NORMAL, prezzoTxt) + PAD*3 > W) totalH += fh(F_NORMAL) + 4;
-        totalH += 10;
-    }
-    totalH += 2 + 1 + 8;
-    totalH += 4 + fh(F_NORMAL) + 10;
-    totalH += 8 + fh(F_TOT) + 6;
-    totalH += 4 + fh(F_NORMAL) + 24;
-    totalH += 80; // feed extra
-
-    canvas.width = W;
-    canvas.height = Math.ceil(totalH) + 20;
-
-    // Sfondo bianco
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    function drawDash(yy) {
-        ctx.strokeStyle = GRAY;
-        ctx.setLineDash([6, 4]);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(PAD, yy);
-        ctx.lineTo(W - PAD, yy);
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-
-    var y = 0;
-
-    // SAVERIO DELIVERY
-    y += 16;
-    ctx.font = F_BOLD; ctx.fillStyle = FG;
-    ctx.fillText('SAVERIO DELIVERY', (W - fw(F_BOLD,'SAVERIO DELIVERY'))/2, bl(F_BOLD, y));
-    y += fh(F_BOLD) + 6;
-
-    y += 4; drawDash(y); y += 1 + 10;
-
-    // Num + Ora
-    y += 8;
-    ctx.font = F_NUM; ctx.fillStyle = FG;
-    ctx.fillText(o.num||'#01', PAD, bl(F_NUM, y));
-    ctx.fillText(o.ora||'', W - fw(F_NUM, o.ora||'') - PAD, bl(F_NUM, y));
-    y += fh(F_NUM) + 10;
-
-    // Cognome
-    y += 4;
-    ctx.font = F_NOME; ctx.fillStyle = FG;
-    ctx.fillText(o.cog||'', PAD, bl(F_NOME, y));
-    y += fh(F_NOME) + 10;
-
-    // Indirizzo
-    y += 2;
-    ctx.font = F_TINY; ctx.fillStyle = FG;
-    ctx.fillText(o.ind||'', PAD, bl(F_TINY, y));
-    y += fh(F_TINY) + 3;
-
-    ctx.fillText('TEL: '+(o.tel||''), PAD, bl(F_TINY, y));
-    y += fh(F_TINY) + 3;
-
-    if(o.nota) {
-        ctx.fillText('NOTA: '+o.nota, PAD, bl(F_TINY, y));
-        y += fh(F_TINY) + 8;
-    } else { y += 8; }
-
-    y += 2; drawDash(y); y += 1 + 16;
-
-    // Prodotti
-    tipoPrec = '';
-    for(var pi=0; pi<prods.length; pi++) {
-        var p = prods[pi];
-        if(tipoPrec !== '' && tipoPrec !== p.tipo) y += 8;
-        tipoPrec = p.tipo;
-        y += 6;
-        var nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
-        var prezzoTxt = p.v.toFixed(2) + '\u20ac';
-        var lunga = fw(F_PROD, nomeTxt) + fw(F_NORMAL, prezzoTxt) + PAD*3 > W;
-        ctx.font = F_PROD; ctx.fillStyle = FG;
-        ctx.fillText(nomeTxt, PAD, bl(F_PROD, y));
-        if(!lunga) {
-            var py = y + (fh(F_PROD) - fh(F_NORMAL)) / 2;
-            ctx.font = F_NORMAL;
-            ctx.fillText(prezzoTxt, W - fw(F_NORMAL, prezzoTxt) - PAD, bl(F_NORMAL, py));
-        }
-        y += fh(F_PROD) + 4;
-        if(lunga) {
-            ctx.font = F_NORMAL;
-            ctx.fillText(prezzoTxt, W - fw(F_NORMAL, prezzoTxt) - PAD, bl(F_NORMAL, y));
-            y += fh(F_NORMAL) + 4;
-        }
-        y += 10;
-    }
-
-    y += 2; drawDash(y); y += 1 + 8;
-
-    // Consegna
-    y += 4;
-    var consTxt = o.costoCons.toFixed(2) + '\u20ac';
-    ctx.font = F_NORMAL; ctx.fillStyle = GRAY;
-    ctx.fillText('CONSEGNA', PAD, bl(F_NORMAL, y));
-    ctx.fillText(consTxt, W - fw(F_NORMAL, consTxt) - PAD, bl(F_NORMAL, y));
-    y += fh(F_NORMAL) + 10;
-
-    // Totale
-    y += 8;
-    var totTxt = (o.tot||'').replace(' €','€');
-    var labelTxt = 'TOT.';
-    var totW = fw(F_TOT, totTxt);
-    var lblW = fw(F_NORMAL, labelTxt);
-    var xLbl = W - lblW - 10 - totW - PAD;
-    var xTot = xLbl + lblW + 10;
-    ctx.font = F_NORMAL; ctx.fillStyle = FG;
-    ctx.fillText(labelTxt, xLbl, bl(F_NORMAL, y + (fh(F_TOT)-fh(F_NORMAL))/2));
-    ctx.font = F_TOT;
-    ctx.fillText(totTxt, xTot, bl(F_TOT, y));
-    y += fh(F_TOT) + 6;
-
-    // Pagamento
-    y += 4;
-    var payTxt = o.pay + (o.pay==='CONTANTI'&&o.resto?' - '+o.resto:'');
-    ctx.font = F_NORMAL; ctx.fillStyle = FG;
-    ctx.fillText(payTxt, W - fw(F_NORMAL, payTxt) - PAD, bl(F_NORMAL, y));
-
-    return canvas.toDataURL('image/png');
-}
-
-function generaScontrino(o) {
-    const W = 576;
-    const PAD = 24;
-    const BG = '#ffffff';
-    const FG = '#000000';
-    const GRAY = '#aaaaaa';
-
-    // Font sizes
-    const F_TINY   = '17px DejaVu Sans, Arial, sans-serif';
-    const F_NORMAL = '20px DejaVu Sans, Arial, sans-serif';
-    const F_BOLD   = 'bold 20px DejaVu Sans, Arial, sans-serif';
-    const F_NUM    = 'bold 46px DejaVu Sans, Arial, sans-serif';
-    const F_NOME   = 'bold 38px DejaVu Sans, Arial, sans-serif';
-    const F_PROD   = 'bold 26px DejaVu Sans, Arial, sans-serif';
-    const F_TOT    = 'bold 38px DejaVu Sans, Arial, sans-serif';
-
-    // Calcola altezza scontrino con canvas temporaneo
-    let tmp = document.createElement('canvas');
-    tmp.width = W; tmp.height = 1;
-    let ctx = tmp.getContext('2d');
-
-    function fh(font) {
-        ctx.font = font;
-        let m = ctx.measureText('Ag');
-        return (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) || 20;
-    }
-    function fw(font, txt) {
-        ctx.font = font;
-        return ctx.measureText(txt).width;
-    }
-
-    // Prodotti
-    let prods = o.prodotti || [];
-
-    // Calcola altezza totale
-    let totalH = 0;
-    totalH += 16 + fh(F_BOLD) + 6;   // SAVERIO DELIVERY
-    totalH += 4 + 1 + 10;             // dash
-    totalH += 8 + fh(F_NUM) + 10;     // num + ora
-    totalH += 4 + fh(F_NOME) + 10;    // cognome
-    totalH += 2 + fh(F_TINY) + 3;     // indirizzo
-    totalH += fh(F_TINY) + 3;         // tel
-    if(o.nota) totalH += fh(F_TINY) + 8; // nota
-    else totalH += 8;
-    totalH += 2 + 1 + 16;             // dash
-    // prodotti
-    let tipoPrec = '';
-    prods.forEach(p => {
-        if(tipoPrec !== '' && tipoPrec !== p.tipo) totalH += 8;
-        tipoPrec = p.tipo;
-        totalH += 6 + fh(F_PROD) + 4;
-        // se nome lungo va a capo
-        let nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
-        let prezzoTxt = p.v.toFixed(2) + '\u20ac';
-        if(fw(F_PROD, nomeTxt) + fw(F_NORMAL, prezzoTxt) + PAD*3 > W) {
-            totalH += fh(F_NORMAL) + 4;
-        }
-        totalH += 10;
-    });
-    totalH += 2 + 1 + 8;             // dash
-    totalH += 4 + fh(F_NORMAL) + 10; // consegna
-    totalH += 8 + fh(F_TOT) + 6;     // totale
-    totalH += 4 + fh(F_NORMAL) + 24; // pagamento
-    totalH += 60;                     // feed extra prima del taglio
-
-    let canvas = document.createElement('canvas');
-    canvas.width = W;
-    canvas.height = Math.ceil(totalH) + 20;
-    ctx = canvas.getContext('2d');
-
-    // Sfondo bianco
-    ctx.fillStyle = BG;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    let y = 0;
-
-    function drawText(txt, font, x, yy, color) {
-        ctx.font = font;
-        ctx.fillStyle = color || FG;
-        ctx.fillText(txt, x, yy);
-    }
-
-    function drawDash(yy) {
-        ctx.strokeStyle = GRAY;
-        ctx.setLineDash([6, 4]);
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(PAD, yy);
-        ctx.lineTo(W - PAD, yy);
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-
-    function textH(font) {
-        ctx.font = font;
-        let m = ctx.measureText('Ag');
-        return m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
-    }
-
-    function textW(font, txt) {
-        ctx.font = font;
-        return ctx.measureText(txt).width;
-    }
-
-    function centerX(font, txt) {
-        return (W - textW(font, txt)) / 2;
-    }
-
-    function baseline(font, topY) {
-        ctx.font = font;
-        let m = ctx.measureText('Ag');
-        return topY + m.actualBoundingBoxAscent;
-    }
-
-    // SAVERIO DELIVERY
-    y += 16;
-    drawText('SAVERIO DELIVERY', F_BOLD, centerX(F_BOLD, 'SAVERIO DELIVERY'), baseline(F_BOLD, y));
-    y += textH(F_BOLD) + 6;
-
-    // Dash
-    y += 4; drawDash(y); y += 1 + 10;
-
-    // Numero + Orario
-    y += 8;
-    let numTxt = o.num || '#01';
-    let oraTxt = o.ora || '';
-    drawText(numTxt, F_NUM, PAD, baseline(F_NUM, y));
-    drawText(oraTxt, F_NUM, W - textW(F_NUM, oraTxt) - PAD, baseline(F_NUM, y));
-    y += textH(F_NUM) + 10;
-
-    // Cognome
-    y += 4;
-    drawText(o.cog || '', F_NOME, PAD, baseline(F_NOME, y));
-    y += textH(F_NOME) + 10;
-
-    // Indirizzo
-    y += 2;
-    drawText(o.ind || '', F_TINY, PAD, baseline(F_TINY, y));
-    y += textH(F_TINY) + 3;
-
-    // Tel
-    drawText('TEL: ' + (o.tel || ''), F_TINY, PAD, baseline(F_TINY, y));
-    y += textH(F_TINY) + 3;
-
-    // Nota
-    if(o.nota) {
-        drawText('NOTA: ' + o.nota, F_TINY, PAD, baseline(F_TINY, y));
-        y += textH(F_TINY) + 8;
-    } else { y += 8; }
-
-    // Dash
-    y += 2; drawDash(y); y += 1 + 16;
-
-    // Prodotti
-    tipoPrec = '';
-    prods.forEach(p => {
-        if(tipoPrec !== '' && tipoPrec !== p.tipo) y += 8;
-        tipoPrec = p.tipo;
-        y += 6;
-        let nomeTxt = p.q + '  ' + (p.isGf ? '[GF] ' : '') + p.g;
-        let prezzoTxt = p.v.toFixed(2) + '\u20ac';
-        let nomeW = textW(F_PROD, nomeTxt);
-        let prezzoW = textW(F_NORMAL, prezzoTxt);
-        let lunga = nomeW + prezzoW + PAD*3 > W;
-        // Nome prodotto
-        drawText(nomeTxt, F_PROD, PAD, baseline(F_PROD, y));
-        if(!lunga) {
-            // Prezzo sulla stessa riga, verticalmente centrato
-            let py = y + (textH(F_PROD) - textH(F_NORMAL)) / 2;
-            drawText(prezzoTxt, F_NORMAL, W - prezzoW - PAD, baseline(F_NORMAL, py));
-        }
-        y += textH(F_PROD) + 4;
-        if(lunga) {
-            // Prezzo su riga successiva a destra
-            drawText(prezzoTxt, F_NORMAL, W - prezzoW - PAD, baseline(F_NORMAL, y));
-            y += textH(F_NORMAL) + 4;
-        }
-        y += 10;
-    });
-
-    // Dash
-    y += 2; drawDash(y); y += 1 + 8;
-
-    // Consegna
-    y += 4;
-    let consTxt = o.costoCons.toFixed(2) + '\u20ac';
-    drawText('CONSEGNA', F_NORMAL, PAD, baseline(F_NORMAL, y), GRAY);
-    drawText(consTxt, F_NORMAL, W - textW(F_NORMAL, consTxt) - PAD, baseline(F_NORMAL, y), GRAY);
-    y += textH(F_NORMAL) + 10;
-
-    // Totale
-    y += 8;
-    let totTxt = (o.tot || '').replace(' €','€');
-    let labelTxt = 'TOT.';
-    let totW = textW(F_TOT, totTxt);
-    let lblW = textW(F_NORMAL, labelTxt);
-    let xLbl = W - lblW - 10 - totW - PAD;
-    let xTot = xLbl + lblW + 10;
-    let pyLbl = y + (textH(F_TOT) - textH(F_NORMAL)) / 2;
-    drawText(labelTxt, F_NORMAL, xLbl, baseline(F_NORMAL, pyLbl));
-    drawText(totTxt, F_TOT, xTot, baseline(F_TOT, y));
-    y += textH(F_TOT) + 6;
-
-    // Pagamento
-    y += 4;
-    let payTxt = o.pay + (o.pay === 'CONTANTI' && o.resto ? ' - ' + o.resto : '');
-    drawText(payTxt, F_NORMAL, W - textW(F_NORMAL, payTxt) - PAD, baseline(F_NORMAL, y));
-    y += textH(F_NORMAL) + 24;
-
-    return canvas.toDataURL('image/png');
-}
-
-// ── RENDER CONSEGNE ────────────────────────────────────────────
-function renderConsegne() {
-    const container=document.getElementById('consegne-lista');
-    let searchEl=document.getElementById('search-consegne');
-    let search=searchEl?searchEl.value.trim().toUpperCase():'';
-    let lista=search
-        ?ordiniSalvati.filter(o=>(o.cog||'').includes(search)||(o.ind||'').includes(search)||(o.num||'').includes(search))
-        :ordiniSalvati;
-    if(lista.length===0){container.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine trovato</div>';return;}
-    container.innerHTML=lista.map((o)=>{
-        let stato=o.stato||'attesa';
-        let statoClass=stato==='pronto'?'stato-pronto':stato==='assegnato'?'stato-assegnato':stato==='consegnato'?'stato-consegnato':'';
-        let badgeClass=stato==='pronto'?'badge-pronto':stato==='assegnato'?'badge-assegnato':stato==='consegnato'?'badge-consegnato':'badge-attesa';
-        let badgeLabel=stato==='pronto'?'✅ PRONTO':stato==='assegnato'?'🛵 ASSEGNATO':stato==='consegnato'?'✔ CONSEGNATO':'⏳ IN ATTESA';
-        let riderNome=o.riderId&&riders[o.riderId]?`<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>`:'';
-        let btnMod=stato==='consegnato'
-            ?`<button class="act-btn-small btn-mod" style="opacity:0.3; cursor:default;">✏️</button>`
-            :`<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
-        let isSelezionata=selezionatiStampa.has(o._key);
-        return `<div class="card-consegna ${statoClass} ${isSelezionata?'selezionata':''}">
-            <div class="card-header-main">
-                <span class="card-num-big">🏷️ ${o.num}</span>
-                <div class="card-actions-top">
-                    <input type="checkbox" ${isSelezionata?'checked':''} onclick="toggleSelezioneStampa('${o._key}',event)" style="width:22px;height:22px;cursor:pointer;accent-color:var(--ora);">
-                    ${btnMod}
-                    <button class="act-btn-small btn-del" onclick="eliminaOrdine('${o._key}')">🗑️</button>
+ 
+    // ── RENDER CONSEGNE ────────────────────────────────────────────
+    function renderConsegne() {
+        const container=document.getElementById('consegne-lista');
+        let searchEl=document.getElementById('search-consegne');
+        let search=searchEl?searchEl.value.trim().toUpperCase():'';
+        let lista=search
+            ?ordiniSalvati.filter(o=>(o.cog||'').includes(search)||(o.ind||'').includes(search)||(o.num||'').includes(search))
+            :ordiniSalvati;
+        if(lista.length===0){container.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine trovato</div>';return;}
+        container.innerHTML=lista.map((o)=>{
+            let stato=o.stato||'attesa';
+            let statoClass=stato==='pronto'?'stato-pronto':stato==='assegnato'?'stato-assegnato':stato==='consegnato'?'stato-consegnato':'';
+            let badgeClass=stato==='pronto'?'badge-pronto':stato==='assegnato'?'badge-assegnato':stato==='consegnato'?'badge-consegnato':'badge-attesa';
+            let badgeLabel=stato==='pronto'?'✅ PRONTO':stato==='assegnato'?'🛵 ASSEGNATO':stato==='consegnato'?'✔ CONSEGNATO':'⏳ IN ATTESA';
+            let riderNome=o.riderId&&riders[o.riderId]?`<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>`:'';
+            let btnMod=stato==='consegnato'
+                ?`<button class="act-btn-small btn-mod" style="opacity:0.3; cursor:default;">✏️</button>`
+                :`<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
+            let isSelezionata=selezionatiStampa.has(o._key);
+            return `<div class="card-consegna ${statoClass} ${isSelezionata?'selezionata':''}">
+                <div class="card-header-main">
+                    <span class="card-num-big">🏷️ ${o.num}</span>
+                    <div class="card-actions-top">
+                        <input type="checkbox" ${isSelezionata?'checked':''} onclick="toggleSelezioneStampa('${o._key}',event)" style="width:22px;height:22px;cursor:pointer;accent-color:var(--ora);">
+                        ${btnMod}
+                        <button class="act-btn-small btn-del" onclick="eliminaOrdine('${o._key}')">🗑️</button>
+                    </div>
+                    <span class="card-ora-big">🕒 ${o.ora}</span>
                 </div>
-                <span class="card-ora-big">🕒 ${o.ora}</span>
-            </div>
-            <span class="stato-badge ${badgeClass}">${badgeLabel}</span>
-            ${riderNome}
-            <div class="card-body-main">
-                <b>👤 ${o.cog}</b><br>
-                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
-                <small>📞 <a href="tel:${o.tel}" class="card-link-tel">${o.tel}</a></small>
-            </div>
-            <div class="card-list-wrapper" onclick="toggleCardList(this)">
-                <div class="card-list-text">
-                    ${o.prodotti.map(p=>{
-                        let cClass=p.isGf?'var(--ver)':(p.tipo==='1'?'var(--rosso)':(p.tipo==='2'?'var(--bibite)':(p.tipo==='3'?'#8B6914':(p.tipo==='4'?'#CC5500':'inherit'))));
-                        return `<div class="card-prod-row" style="color:${cClass}">
-                            <span class="card-prod-desc">${p.isGf?'[GF] ':''}${p.q} ${p.g}</span>
-                            <span class="card-prod-val">${p.v.toFixed(2)}€</span>
-                        </div>`;
-                    }).join('')}
-                    <div class="card-prod-row" style="margin-top:2px;border-top:1px dashed #ddd;padding-top:2px;">
-                        <span class="card-prod-desc">🛵 CONSEGNA</span>
-                        <span class="card-prod-val">${o.costoCons.toFixed(2)}€</span>
+                <span class="stato-badge ${badgeClass}">${badgeLabel}</span>
+                ${riderNome}
+                <div class="card-body-main">
+                    <b>👤 ${o.cog}</b><br>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
+                    <small>📞 <a href="tel:${o.tel}" class="card-link-tel">${o.tel}</a></small>
+                </div>
+                <div class="card-list-wrapper" onclick="toggleCardList(this)">
+                    <div class="card-list-text">
+                        ${o.prodotti.map(p=>{
+                            let cClass=p.isGf?'var(--ver)':(p.tipo==='1'?'var(--rosso)':(p.tipo==='2'?'var(--bibite)':(p.tipo==='3'?'#8B6914':(p.tipo==='4'?'#CC5500':'inherit'))));
+                            return `<div class="card-prod-row" style="color:${cClass}">
+                                <span class="card-prod-desc">${p.isGf?'[GF] ':''}${p.q} ${p.g}</span>
+                                <span class="card-prod-val">${p.v.toFixed(2)}€</span>
+                            </div>`;
+                        }).join('')}
+                        <div class="card-prod-row" style="margin-top:2px;border-top:1px dashed #ddd;padding-top:2px;">
+                            <span class="card-prod-desc">🛵 CONSEGNA</span>
+                            <span class="card-prod-val">${o.costoCons.toFixed(2)}€</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer-big">
-                <span class="pay-label-big" style="color:${o.pay==='POS'?'var(--rosso)':o.pay==='PAGATO'?'var(--ver)':'var(--blu)'}">
-                    ${o.pay} ${o.pay==='CONTANTI'&&o.resto?'('+o.resto+')':''}
-                </span>
-                <b class="tot-label-big">${o.tot}</b>
-            </div>
-        </div>`;
-    }).join('');
-}
-
-function renderOrari() {
-    const container=document.getElementById('orari-lista');
-    if(ordiniSalvati.length===0){container.innerHTML='<div style="text-align:center;padding:40px;color:#aaa;font-size:1.1rem;">Nessun ordine ancora</div>';return;}
-    let fasce={};
-    ordiniSalvati.forEach(o=>{if(!o.ora)return;if(!fasce[o.ora])fasce[o.ora]=[];fasce[o.ora].push(o);});
-    let orariOrdinati=Object.keys(fasce).sort();
-    container.innerHTML=orariOrdinati.map(ora=>{
-        let ordini=fasce[ora],n=ordini.length;
-        let caricoClass=n>=5?'carico-alto':`carico-${n}`;
-        let badgeClass=n>=5?'badge-rosso':n>=3?'badge-giallo':'badge-verde';
-        let dettagli=ordini.map(o=>{
-            let prodTags=o.prodotti.map(p=>{
-                let cls=p.isGf?'is-gf':p.tipo==='1'?'is-pollo':p.tipo==='2'?'is-bibita':p.tipo==='3'?'is-banco':'';
-                return `<span class="orario-prod-tag ${cls}">${p.q} ${p.g}</span>`;
-            }).join('');
-            return `<div class="orario-ordine"><div class="orario-ordine-top"><span class="orario-cliente">👤 ${o.cog}</span><span class="orario-num">${o.num}</span></div><div class="orario-ind">📍 ${o.ind}</div><div class="orario-prodotti">${prodTags}</div></div>`;
+                <div class="card-footer-big">
+                    <span class="pay-label-big" style="color:${o.pay==='POS'?'var(--rosso)':o.pay==='PAGATO'?'var(--ver)':'var(--blu)'}">
+                        ${o.pay} ${o.pay==='CONTANTI'&&o.resto?'('+o.resto+')':''}
+                    </span>
+                    <b class="tot-label-big">${o.tot}</b>
+                </div>
+            </div>`;
         }).join('');
-        return `<div class="orario-block ${caricoClass}"><div class="orario-header" onclick="toggleOrario(this)"><span class="orario-ora">🕒 ${ora}</span><span class="orario-badge ${badgeClass}">${n} ${n===1?'ordine':'ordini'}</span></div><div class="orario-detail">${dettagli}</div></div>`;
-    }).join('');
-}
-
-function toggleOrario(header) { header.nextElementSibling.classList.toggle('open'); }
-
-function onCognomeInput() {
-    updateRiepilogo();
-    let val=document.getElementById('o-cognome').value.trim().toUpperCase();
-    let list=document.getElementById('autocomplete-list');
-    if(val.length<2){list.style.display='none';return;}
-    let matches=Object.values(clienti).filter(c=>c.cog.startsWith(val));
-    if(matches.length===0){list.style.display='none';return;}
-    list.innerHTML=matches.slice(0,5).map(c=>
-        `<div class="autocomplete-item" onclick="selezionaCliente(${JSON.stringify(c).replace(/"/g,'&quot;')})">
-            <b>${c.cog}</b> — ${c.ind}<br><small style="color:#888;">${c.tel||''}</small>
-        </div>`
-    ).join('');
-    list.style.display='block';
-}
-
-function selezionaCliente(c) {
-    document.getElementById('o-cognome').value=c.cog;
-    document.getElementById('o-tel').value=c.tel||'';
-    document.getElementById('o-indirizzo').value=c.ind||'';
-    document.getElementById('o-nota-cons').value=c.nota||'';
-    document.getElementById('autocomplete-list').style.display='none';
-    updateRiepilogo();
-}
-
-function salvaCliente(cog,tel,ind,nota) {
-    if(!cog||!ind) return;
-    let esistente=Object.entries(clienti).find(([k,c])=>c.cog===cog&&c.ind===ind);
-    if(esistente) clientiRef.child(esistente[0]).update({cog,tel,ind,nota});
-    else clientiRef.push({cog,tel,ind,nota});
-}
-
-function verifyMaps() {
-    let a=document.getElementById('o-indirizzo').value;
-    if(!a) return alert("METTI INDIRIZZO");
-    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`);
-    document.getElementById('btn-maps').style.background='var(--ver)';
-    document.getElementById('btn-maps').innerText='✅ POSIZIONE VERIFICATA';
-}
-```
-
+    }
+ 
+    function renderOrari() {
+        const container=document.getElementById('orari-lista');
+        if(ordiniSalvati.length===0){container.innerHTML='<div style="text-align:center;padding:40px;color:#aaa;font-size:1.1rem;">Nessun ordine ancora</div>';return;}
+        let fasce={};
+        ordiniSalvati.forEach(o=>{if(!o.ora)return;if(!fasce[o.ora])fasce[o.ora]=[];fasce[o.ora].push(o);});
+        let orariOrdinati=Object.keys(fasce).sort();
+        container.innerHTML=orariOrdinati.map(ora=>{
+            let ordini=fasce[ora],n=ordini.length;
+            let caricoClass=n>=5?'carico-alto':`carico-${n}`;
+            let badgeClass=n>=5?'badge-rosso':n>=3?'badge-giallo':'badge-verde';
+            let dettagli=ordini.map(o=>{
+                let prodTags=o.prodotti.map(p=>{
+                    let cls=p.isGf?'is-gf':p.tipo==='1'?'is-pollo':p.tipo==='2'?'is-bibita':p.tipo==='3'?'is-banco':'';
+                    return `<span class="orario-prod-tag ${cls}">${p.q} ${p.g}</span>`;
+                }).join('');
+                return `<div class="orario-ordine"><div class="orario-ordine-top"><span class="orario-cliente">👤 ${o.cog}</span><span class="orario-num">${o.num}</span></div><div class="orario-ind">📍 ${o.ind}</div><div class="orario-prodotti">${prodTags}</div></div>`;
+            }).join('');
+            return `<div class="orario-block ${caricoClass}"><div class="orario-header" onclick="toggleOrario(this)"><span class="orario-ora">🕒 ${ora}</span><span class="orario-badge ${badgeClass}">${n} ${n===1?'ordine':'ordini'}</span></div><div class="orario-detail">${dettagli}</div></div>`;
+        }).join('');
+    }
+ 
+    function toggleOrario(header) { header.nextElementSibling.classList.toggle('open'); }
+ 
+    function onCognomeInput() {
+        updateRiepilogo();
+        let val=document.getElementById('o-cognome').value.trim().toUpperCase();
+        let list=document.getElementById('autocomplete-list');
+        if(val.length<2){list.style.display='none';return;}
+        let matches=Object.values(clienti).filter(c=>c.cog.startsWith(val));
+        if(matches.length===0){list.style.display='none';return;}
+        list.innerHTML=matches.slice(0,5).map(c=>
+            `<div class="autocomplete-item" onclick="selezionaCliente(${JSON.stringify(c).replace(/"/g,'&quot;')})">
+                <b>${c.cog}</b> — ${c.ind}<br><small style="color:#888;">${c.tel||''}</small>
+            </div>`
+        ).join('');
+        list.style.display='block';
+    }
+ 
+    function selezionaCliente(c) {
+        document.getElementById('o-cognome').value=c.cog;
+        document.getElementById('o-tel').value=c.tel||'';
+        document.getElementById('o-indirizzo').value=c.ind||'';
+        document.getElementById('o-nota-cons').value=c.nota||'';
+        document.getElementById('autocomplete-list').style.display='none';
+        updateRiepilogo();
+    }
+ 
+    function salvaCliente(cog,tel,ind,nota) {
+        if(!cog||!ind) return;
+        let esistente=Object.entries(clienti).find(([k,c])=>c.cog===cog&&c.ind===ind);
+        if(esistente) clientiRef.child(esistente[0]).update({cog,tel,ind,nota});
+        else clientiRef.push({cog,tel,ind,nota});
+    }
+ 
+    function verifyMaps() {
+        let a=document.getElementById('o-indirizzo').value;
+        if(!a) return alert("METTI INDIRIZZO");
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`);
+        document.getElementById('btn-maps').style.background='var(--ver)';
+        document.getElementById('btn-maps').innerText='✅ POSIZIONE VERIFICATA';
+    }
 </script>
 </body>
 </html>
