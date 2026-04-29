@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -29,140 +28,130 @@
         .c-qty { width: 50px; border-left: 1px solid #F0E6BC; border-right: 1px solid #F0E6BC; }
         .c-gusto { border-right: 2px solid var(--blu); }
         .c-prezzo { width: 65px; background: white; }
-
-```
-    .tipo-polleria { color: var(--rosso) !important; }
-    .tipo-bibite { color: var(--bibite) !important; }
-    .tipo-banco { color: #8B6914 !important; }
-    .tipo-coscia { color: #CC5500 !important; }
-    .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
-    .gf-text { color: var(--ver) !important; }
-
-    .btn-tipo-ciclo { width: 22px; height: 22px; border-radius: 4px; border: 2px solid #999; background: white; cursor: pointer; }
-    .area-gusto { width: 100%; border: none; background: transparent; outline: none; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; color: inherit; resize: none; overflow: hidden; display: block; line-height: 1.2; }
-    .input-piz { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: center; }
-    .input-prezzo { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: right; }
-    
-    .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-    .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
-    
-    .rip-row-top { font-size: 1.6rem; color: var(--ora); margin-bottom: 10px; display: flex; gap: 20px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
-    .rip-row-client { font-size: 1.3rem; color: var(--blu); margin-bottom: 15px; line-height: 1.4; }
-    .pizza-item { display: flex; align-items: flex-start; margin-bottom: 6px; font-size: 1.2rem; }
-    .pizza-qty { width: 40px; color: var(--blu); flex-shrink: 0; }
-    .pizza-desc { flex-grow: 1; text-transform: uppercase; line-height: 1.1; }
-    .pizza-price { width: 80px; text-align: right; color: #555; flex-shrink: 0; }
-    
-    .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
-    .pay-note-big { font-size: 1.6rem; font-weight: 900; text-align: right; margin-top: 8px; text-transform: uppercase; }
-    .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
-    .rip-delivery-row { display: flex; width: 100%; justify-content: flex-end; margin-top: 5px; }
-
-    .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); transition: all 0.3s ease; }
-    .card-consegna.stato-pronto { border-left-color: #D4A017; }
-    .card-consegna.stato-assegnato { border-left-color: var(--ora); }
-    .card-consegna.stato-consegnato { border-left-color: var(--ver); opacity: 0.55; }
-    .stato-badge { font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 6px; }
-    .badge-attesa { background: #eee; color: #888; }
-    .badge-pronto { background: #FFF9C4; color: #8B6914; }
-    .badge-assegnato { background: #FEE5D4; color: var(--ora); }
-    .badge-consegnato { background: #D4EDDA; color: var(--ver); }
-    .rider-assegnato-tag { font-size: 1rem; color: var(--ora); margin-bottom: 6px; }
-    .card-header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
-    .card-num-big { font-size: 1.8rem; color: var(--blu); }
-    .card-ora-big { font-size: 1.8rem; color: var(--ora); }
-    .card-actions-top { display: flex; gap: 8px; }
-    .act-btn-small { border: none; padding: 5px 10px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; color: white; }
-    .btn-mod { background: var(--blu); }
-    .btn-del { background: var(--rosso); }
-    .card-body-main { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
-    .card-link-tel { color: var(--link); text-decoration: none; display: inline-block; }
-    .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
-    
-    .card-list-wrapper { background: #f9f9f9; padding: 6px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 1px solid #eee; }
-    .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--ora); }
-    
-    .card-list-text { font-size: 0.9rem; color: #555; display: flex; flex-direction: column; gap: 2px; }
-    .card-prod-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 1px 0; border-bottom: 1px solid rgba(0,0,0,0.03); }
-    .card-prod-desc { flex-grow: 1; text-transform: uppercase; white-space: normal; word-wrap: break-word; }
-    .card-prod-val { width: 65px; text-align: right; color: #666; flex-shrink: 0; font-weight: 700; margin-left: 5px; }
-    
-    .expanded .card-prod-val { display: none; }
-    .expanded .card-list-text { font-size: 1.6rem; color: var(--blu); line-height: 1.2; gap: 5px; }
-    .expanded .card-prod-row { border-bottom: 1px solid #eee; padding: 4px 0; }
-
-    .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
-    .pay-label-big { font-size: 1.3rem; font-weight: 900; }
-    .tot-label-big { font-size: 1.8rem; color: var(--ora); }
-
-    /* Autocomplete clienti */
-    .autocomplete-wrap { position: relative; margin-bottom: 12px; }
-    .autocomplete-wrap .input-big { margin-bottom: 0; }
-    .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--ora); border-radius: 0 0 10px 10px; z-index: 500; max-height: 200px; overflow-y: auto; }
-    .autocomplete-item { padding: 10px 12px; font-size: 1rem; color: var(--blu); cursor: pointer; border-bottom: 1px solid #eee; }
-    .autocomplete-item:last-child { border-bottom: none; }
-    .autocomplete-item:active { background: #fff5f0; }
-    /* Barra ricerca consegne */
-    .search-bar { display: flex; gap: 8px; margin-bottom: 12px; }
-    .search-input { flex: 1; padding: 10px 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1rem; outline: none; color: var(--blu); background: white; font-family: 'Barlow', sans-serif; font-weight: 900; text-transform: uppercase; }
-    .search-input:focus { border-color: var(--ora); }
-
-    /* Tab ORARI */
-    .orario-block { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; border-left: 8px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
-    .orario-block.carico-0 { border-left-color: var(--ver); }
-    .orario-block.carico-1 { border-left-color: var(--ver); }
-    .orario-block.carico-2 { border-left-color: var(--ver); }
-    .orario-block.carico-3 { border-left-color: #F5A623; }
-    .orario-block.carico-4 { border-left-color: #F5A623; }
-    .orario-block.carico-alto { border-left-color: var(--rosso); }
-    .orario-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; cursor: pointer; }
-    .orario-ora { font-size: 1.6rem; color: var(--blu); }
-    .orario-badge { font-size: 1.3rem; font-weight: 900; padding: 4px 14px; border-radius: 20px; color: white; }
-    .badge-verde { background: var(--ver); }
-    .badge-giallo { background: #F5A623; }
-    .badge-rosso { background: var(--rosso); }
-    .orario-detail { display: none; border-top: 2px solid #eee; padding: 10px 15px; }
-    .orario-detail.open { display: block; }
-    .orario-ordine { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-    .orario-ordine:last-child { border-bottom: none; }
-    .orario-ordine-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-    .orario-cliente { font-size: 1.1rem; color: var(--blu); }
-    .orario-num { font-size: 0.85rem; color: var(--ora); }
-    .orario-ind { font-size: 0.9rem; color: #888; margin-bottom: 4px; }
-    .orario-prodotti { display: flex; flex-wrap: wrap; gap: 4px; }
-    .orario-prod-tag { font-size: 0.78rem; padding: 2px 8px; border-radius: 10px; border: 1px solid #ddd; color: #555; background: #f9f9f9; text-transform: uppercase; }
-    .orario-prod-tag.is-pollo { color: var(--rosso); border-color: var(--rosso); background: #fff0f0; }
-    .orario-prod-tag.is-bibita { color: var(--bibite); border-color: var(--bibite); background: #f0f5ff; }
-    .orario-prod-tag.is-gf { color: var(--ver); border-color: var(--ver); background: #f0fff5; }
-    .orario-prod-tag.is-banco { color: #8B6914; border-color: #8B6914; background: #fffbf0; }
-
-    /* STATISTICHE */
-    .stat-sezione { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; color: var(--blu); }
-    .stat-sezione h3 { font-size: 1rem; color: var(--blu); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #eee; text-transform: uppercase; letter-spacing: 1px; }
-    .stat-riga { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #f5f5f5; font-size: 1rem; }
-    .stat-riga:last-child { border-bottom: none; }
-    .stat-label { color: #555; }
-    .stat-val { font-size: 1.2rem; font-weight: 900; }
-    .stat-val.arancio { color: var(--ora); }
-    .stat-val.verde { color: var(--ver); }
-    .stat-val.rosso { color: var(--rosso); }
-    .stat-val.blu { color: var(--blu); }
-    .stat-val.giallo { color: #8B6914; }
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .stat-card-mini { background: #f4f7f9; border-radius: 8px; padding: 10px 12px; }
-    .stat-card-mini .label { font-size: 0.75rem; color: #888; margin-bottom: 4px; text-transform: uppercase; }
-    .stat-card-mini .valore { font-size: 1.3rem; font-weight: 900; }
-    .stat-rider-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
-    .stat-rider-row:last-child { border-bottom: none; }
-    .stat-rider-nome { font-size: 1rem; color: var(--blu); }
-    .stat-rider-dati { text-align: right; font-size: 0.85rem; color: #888; }
-</style>
-```
-
+        .tipo-polleria { color: var(--rosso) !important; }
+        .tipo-bibite { color: var(--bibite) !important; }
+        .tipo-banco { color: #8B6914 !important; }
+        .tipo-coscia { color: #CC5500 !important; }
+        .row-is-gf { background-color: #e8fff5 !important; color: #00E676 !important; }
+        .gf-text { color: var(--ver) !important; }
+        .btn-tipo-ciclo { width: 22px; height: 22px; border-radius: 4px; border: 2px solid #999; background: white; cursor: pointer; }
+        .area-gusto { width: 100%; border: none; background: transparent; outline: none; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; color: inherit; resize: none; overflow: hidden; display: block; line-height: 1.2; }
+        .input-piz { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: center; }
+        .input-prezzo { width: 100%; border: none; background: transparent; outline: none; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; color: inherit; text-align: right; }
+        .grid-pin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .num-key { width: 70px; height: 70px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; cursor: pointer; }
+        .rip-row-top { font-size: 1.6rem; color: var(--ora); margin-bottom: 10px; display: flex; gap: 20px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+        .rip-row-client { font-size: 1.3rem; color: var(--blu); margin-bottom: 15px; line-height: 1.4; }
+        .pizza-item { display: flex; align-items: flex-start; margin-bottom: 6px; font-size: 1.2rem; }
+        .pizza-qty { width: 40px; color: var(--blu); flex-shrink: 0; }
+        .pizza-desc { flex-grow: 1; text-transform: uppercase; line-height: 1.1; }
+        .pizza-price { width: 80px; text-align: right; color: #555; flex-shrink: 0; }
+        .pay-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
+        .pay-note-big { font-size: 1.6rem; font-weight: 900; text-align: right; margin-top: 8px; text-transform: uppercase; }
+        .note-field { border-left: 5px solid var(--ora) !important; background: #fffcf0 !important; }
+        .rip-delivery-row { display: flex; width: 100%; justify-content: flex-end; margin-top: 5px; }
+        .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); transition: all 0.3s ease; }
+        .card-consegna.stato-pronto { border-left-color: #D4A017; }
+        .card-consegna.stato-assegnato { border-left-color: var(--ora); }
+        .card-consegna.stato-consegnato { border-left-color: var(--ver); opacity: 0.55; }
+        .stato-badge { font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 6px; }
+        .badge-attesa { background: #eee; color: #888; }
+        .badge-pronto { background: #FFF9C4; color: #8B6914; }
+        .badge-assegnato { background: #FEE5D4; color: var(--ora); }
+        .badge-consegnato { background: #D4EDDA; color: var(--ver); }
+        .rider-assegnato-tag { font-size: 1rem; color: var(--ora); margin-bottom: 6px; }
+        .card-header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+        .card-num-big { font-size: 1.8rem; color: var(--blu); }
+        .card-ora-big { font-size: 1.8rem; color: var(--ora); }
+        .card-actions-top { display: flex; gap: 8px; }
+        .act-btn-small { border: none; padding: 5px 10px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; color: white; }
+        .btn-mod { background: var(--blu); }
+        .btn-del { background: var(--rosso); }
+        .card-body-main { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
+        .card-link-tel { color: var(--link); text-decoration: none; display: inline-block; }
+        .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
+        .card-list-wrapper { background: #f9f9f9; padding: 6px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 1px solid #eee; }
+        .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--ora); }
+        .card-list-text { font-size: 0.9rem; color: #555; display: flex; flex-direction: column; gap: 2px; }
+        .card-prod-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 1px 0; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        .card-prod-desc { flex-grow: 1; text-transform: uppercase; white-space: normal; word-wrap: break-word; }
+        .card-prod-val { width: 65px; text-align: right; color: #666; flex-shrink: 0; font-weight: 700; margin-left: 5px; }
+        .expanded .card-prod-val { display: none; }
+        .expanded .card-list-text { font-size: 1.6rem; color: var(--blu); line-height: 1.2; gap: 5px; }
+        .expanded .card-prod-row { border-bottom: 1px solid #eee; padding: 4px 0; }
+        .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
+        .pay-label-big { font-size: 1.3rem; font-weight: 900; }
+        .tot-label-big { font-size: 1.8rem; color: var(--ora); }
+        .autocomplete-wrap { position: relative; margin-bottom: 12px; }
+        .autocomplete-wrap .input-big { margin-bottom: 0; }
+        .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 2px solid var(--ora); border-radius: 0 0 10px 10px; z-index: 500; max-height: 200px; overflow-y: auto; }
+        .autocomplete-item { padding: 10px 12px; font-size: 1rem; color: var(--blu); cursor: pointer; border-bottom: 1px solid #eee; }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item:active { background: #fff5f0; }
+        .search-bar { display: flex; gap: 8px; margin-bottom: 12px; }
+        .search-input { flex: 1; padding: 10px 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1rem; outline: none; color: var(--blu); background: white; font-family: 'Barlow', sans-serif; font-weight: 900; text-transform: uppercase; }
+        .search-input:focus { border-color: var(--ora); }
+        .orario-block { background: white; border-radius: 12px; margin-bottom: 10px; overflow: hidden; border-left: 8px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+        .orario-block.carico-0 { border-left-color: var(--ver); }
+        .orario-block.carico-1 { border-left-color: var(--ver); }
+        .orario-block.carico-2 { border-left-color: var(--ver); }
+        .orario-block.carico-3 { border-left-color: #F5A623; }
+        .orario-block.carico-4 { border-left-color: #F5A623; }
+        .orario-block.carico-alto { border-left-color: var(--rosso); }
+        .orario-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; cursor: pointer; }
+        .orario-ora { font-size: 1.6rem; color: var(--blu); }
+        .orario-badge { font-size: 1.3rem; font-weight: 900; padding: 4px 14px; border-radius: 20px; color: white; }
+        .badge-verde { background: var(--ver); }
+        .badge-giallo { background: #F5A623; }
+        .badge-rosso { background: var(--rosso); }
+        .orario-detail { display: none; border-top: 2px solid #eee; padding: 10px 15px; }
+        .orario-detail.open { display: block; }
+        .orario-ordine { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .orario-ordine:last-child { border-bottom: none; }
+        .orario-ordine-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .orario-cliente { font-size: 1.1rem; color: var(--blu); }
+        .orario-num { font-size: 0.85rem; color: var(--ora); }
+        .orario-ind { font-size: 0.9rem; color: #888; margin-bottom: 4px; }
+        .orario-prodotti { display: flex; flex-wrap: wrap; gap: 4px; }
+        .orario-prod-tag { font-size: 0.78rem; padding: 2px 8px; border-radius: 10px; border: 1px solid #ddd; color: #555; background: #f9f9f9; text-transform: uppercase; }
+        .orario-prod-tag.is-pollo { color: var(--rosso); border-color: var(--rosso); background: #fff0f0; }
+        .orario-prod-tag.is-bibita { color: var(--bibite); border-color: var(--bibite); background: #f0f5ff; }
+        .orario-prod-tag.is-gf { color: var(--ver); border-color: var(--ver); background: #f0fff5; }
+        .orario-prod-tag.is-banco { color: #8B6914; border-color: #8B6914; background: #fffbf0; }
+        .stat-sezione { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; color: var(--blu); }
+        .stat-sezione h3 { font-size: 1rem; color: var(--blu); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #eee; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-riga { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #f5f5f5; font-size: 1rem; }
+        .stat-riga:last-child { border-bottom: none; }
+        .stat-label { color: #555; }
+        .stat-val { font-size: 1.2rem; font-weight: 900; }
+        .stat-val.arancio { color: var(--ora); }
+        .stat-val.verde { color: var(--ver); }
+        .stat-val.rosso { color: var(--rosso); }
+        .stat-val.blu { color: var(--blu); }
+        .stat-val.giallo { color: #8B6914; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .stat-card-mini { background: #f4f7f9; border-radius: 8px; padding: 10px 12px; }
+        .stat-card-mini .label { font-size: 0.75rem; color: #888; margin-bottom: 4px; text-transform: uppercase; }
+        .stat-card-mini .valore { font-size: 1.3rem; font-weight: 900; }
+        .stat-rider-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
+        .stat-rider-row:last-child { border-bottom: none; }
+        .stat-rider-nome { font-size: 1rem; color: var(--blu); }
+        .stat-rider-dati { text-align: right; font-size: 0.85rem; color: #888; }
+        .card-compatta { background: white; border-radius: 10px; padding: 8px 10px 8px 12px; margin-bottom: 8px; border-left: 6px solid var(--ver); box-shadow: 0 2px 4px rgba(0,0,0,0.07); color: var(--blu); cursor: pointer; opacity: 0.82; }
+        .card-compatta-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+        .card-compatta-left { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+        .card-compatta-nome { font-size: 0.95rem; font-weight: 900; color: var(--blu); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-compatta-ind { font-size: 0.75rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-compatta-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+        .card-compatta-ora { font-size: 1rem; font-weight: 900; color: var(--ora); }
+        .card-compatta-tot { font-size: 1.1rem; font-weight: 900; color: var(--ver); }
+        .card-compatta-detail { display: none; margin-top: 8px; border-top: 1px solid #eee; padding-top: 8px; }
+        .card-compatta.espansa .card-compatta-detail { display: block; }
+        #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; pointer-events: none; }
+    </style>
 </head>
 <body>
 
-```
 <div id="app-admin" style="display:block;">
     <div class="header-main">
         <span style="font-size:0.8rem;">SAVERIO DELIVERY</span>
@@ -174,6 +163,7 @@
         <button class="nav-btn" id="btn-t2" onclick="showTab(2)">ORDINE</button>
         <button class="nav-btn" id="btn-t4" onclick="showTab(4)">RIEPILOGO</button>
         <button class="nav-btn" id="btn-t5" onclick="showTab(5)">CONSEGNE</button>
+        <button class="nav-btn" id="btn-t8" onclick="showTab(8)">CONSEGNATI</button>
         <button class="nav-btn" id="btn-t6" onclick="showTab(6)">ORARI</button>
     </div>
     <div class="content-area">
@@ -227,6 +217,14 @@
             <div id="consegne-lista"></div>
         </div>
 
+        <div id="tab8" class="tab-content">
+            <h2 style="color:var(--blu); margin-bottom:10px;">CONSEGNATI</h2>
+            <div class="search-bar">
+                <input type="text" id="search-consegnati" class="search-input" placeholder="🔍 CERCA COGNOME O INDIRIZZO" oninput="renderConsegnati()">
+            </div>
+            <div id="consegnati-lista"></div>
+        </div>
+
         <div id="tab6" class="tab-content">
             <h2 style="color:var(--blu); margin-bottom:15px;">ORARI</h2>
             <div id="orari-lista"></div>
@@ -238,10 +236,8 @@
     </div>
 </div>
 
-<!-- Indicatore stato Firebase (invisibile, solo debug) -->
 <div id="fb-status">⚪ connecting...</div>
 
-<!-- OVERLAY STATISTICHE -->
 <div id="stat-overlay" style="visibility:hidden; position:fixed; inset:0; background:#f4f7f9; z-index:2000; overflow-y:auto;">
     <div style="padding:15px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:var(--blu); margin:-15px -15px 15px -15px; padding:15px 20px; border-bottom:4px solid var(--ora);">
@@ -252,12 +248,10 @@
     </div>
 </div>
 
-<!-- Firebase Compat SDK — funziona su Safari iOS/iPadOS e Android -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-    // ── FIREBASE INIT ──────────────────────────────────────────────
     const firebaseConfig = {
         apiKey: "AIzaSyBvQVRAkkyO00yttmQuoZiAohM2P44gY1Y",
         authDomain: "saverio-delivery-29387.firebaseapp.com",
@@ -272,38 +266,29 @@
     const ordiniRef = db.ref('ordini');
     const contatoreRef = db.ref('contatore');
 
-    // ── VARIABILI APP ──────────────────────────────────────────────
     let sCost = 0; let sPay = ""; let currentOrderNum = 1;
     let ordiniSalvati = []; let editKey = null;
     let riders = {};
     let clienti = {};
     const clientiRef = db.ref('clienti');
-    
-    // ── AVVIO AUTOMATICO SENZA PIN ─────────────────────────────────
+
     window.addEventListener('load', () => initApp());
 
-    // ── TAB ────────────────────────────────────────────────────────
-    function showTab(n){ 
-        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show')); 
-        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); 
-        document.getElementById('tab'+n).classList.add('show'); 
-        let btnId = n === 4 ? 'btn-t4' : n === 5 ? 'btn-t5' : n === 6 ? 'btn-t6' : 'btn-t'+n;
-        document.getElementById(btnId).classList.add('active'); 
+    function showTab(n){
+        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('show'));
+        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('tab'+n).classList.add('show');
+        let btnId = n===4?'btn-t4':n===5?'btn-t5':n===6?'btn-t6':n===8?'btn-t8':'btn-t'+n;
+        document.getElementById(btnId).classList.add('active');
         updateRiepilogo();
         if(n===5) renderConsegne();
         if(n===6) renderOrari();
+        if(n===8) renderConsegnati();
     }
 
-    function apriStat() {
-        renderStat();
-        document.getElementById('stat-overlay').style.visibility = 'visible';
-    }
+    function apriStat() { renderStat(); document.getElementById('stat-overlay').style.visibility = 'visible'; }
+    function chiudiStat() { document.getElementById('stat-overlay').style.visibility = 'hidden'; }
 
-    function chiudiStat() {
-        document.getElementById('stat-overlay').style.visibility = 'hidden';
-    }
-
-    // ── INIT APP ───────────────────────────────────────────────────
     function initApp(){
         const root = document.getElementById('comanda-root');
         if(root.children.length > 0) return;
@@ -320,49 +305,31 @@
             root.appendChild(row);
         }
         updateTimeSelect();
-
-        // ── LISTENER LISTINO ──────────────────────────────────────
         db.ref('listino').on('value', snap => { listino = snap.val() || {}; });
-
-        // ── LISTENER FIREBASE: sincronizza ordini in tempo reale ──
         ordiniRef.on('value', (snapshot) => {
             ordiniSalvati = [];
-            snapshot.forEach((child) => {
-                let o = child.val();
-                o._key = child.key; // salvo la chiave Firebase nell'oggetto
-                ordiniSalvati.push(o);
-            });
-            // Ordina per orario
+            snapshot.forEach((child) => { let o = child.val(); o._key = child.key; ordiniSalvati.push(o); });
             ordiniSalvati.sort((a,b) => a.ora.localeCompare(b.ora));
-            // Se siamo sulla tab consegne, aggiorna in tempo reale
             if(document.getElementById('tab5').classList.contains('show')) renderConsegne();
+            if(document.getElementById('tab8').classList.contains('show')) renderConsegnati();
             document.getElementById('fb-status').textContent = '🟢 sync';
         });
-
-        // ── LISTENER CONTATORE ────────────────────────────────────
-        contatoreRef.on('value', (snapshot) => {
-            if(snapshot.val() !== null) currentOrderNum = snapshot.val() + 1;
-        });
-
+        contatoreRef.on('value', (snapshot) => { if(snapshot.val() !== null) currentOrderNum = snapshot.val() + 1; });
         db.ref('riders').on('value', snap => { riders = snap.val() || {}; });
-
         clientiRef.on('value', snap => { clienti = snap.val() || {}; });
-
         db.ref('.info/connected').on('value', (snap) => {
             document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
         });
     }
 
-    // ── LOGICA ORDINE (identica a prima) ──────────────────────────
     let listino = {};
     const coloriTipo = {'0':'#E8600A','1':'#FF4444','2':'#007AFF','3':'#8B6914','4':'#CC5500'};
     const classiTipo = {'0':'','1':'tipo-polleria','2':'tipo-bibite','3':'tipo-banco','4':'tipo-coscia'};
 
     function cicloTipo(i) {
-        let dot = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
+        let dot = document.getElementById(`bt-${i}`);
         let attuale = parseInt(dot.getAttribute('data-tipo')); let prossimo = (attuale + 1) % 5;
-        setTipo(i, prossimo.toString());
-        updateRiepilogo();
+        setTipo(i, prossimo.toString()); updateRiepilogo();
     }
 
     function setTipo(i, tipo) {
@@ -373,10 +340,8 @@
         dot.style.background = coloriTipo[tipo] || '#ccc';
     }
 
-    // ── SUGGERIMENTI PRODOTTO ──────────────────────────────────────
     function onGustoInput(i) {
-        autoExpand(document.getElementById(`g-${i}`));
-        updateRiepilogo();
+        autoExpand(document.getElementById(`g-${i}`)); updateRiepilogo();
         let val = document.getElementById(`g-${i}`).value.trim().toUpperCase();
         let sug = document.getElementById(`sug-${i}`);
         if(val.length < 2 || !listino) { sug.style.display='none'; return; }
@@ -384,8 +349,7 @@
         if(matches.length === 0) { sug.style.display='none'; return; }
         sug.innerHTML = matches.slice(0,5).map(([k,p]) => {
             let priceLabel = p.modalita==='qta' ? '(prezzo da qtà)' : p.modalita==='kg' ? `${p.prezzo.toFixed(2).replace('.',',')}€/kg` : `${p.prezzo.toFixed(2).replace('.',',')}€`;
-            return `<div style="padding:8px 10px; font-size:0.9rem; color:var(--blu); cursor:pointer; border-bottom:1px solid #eee;" 
-                onclick="selezionaProdotto(${i},'${p.nome}','${p.tipo}',${p.prezzo},'${p.modalita}')">
+            return `<div style="padding:8px 10px; font-size:0.9rem; color:var(--blu); cursor:pointer; border-bottom:1px solid #eee;" onclick="selezionaProdotto(${i},'${p.nome}','${p.tipo}',${p.prezzo},'${p.modalita}')">
                 <span style="color:${coloriTipo[p.tipo]||'inherit'};">●</span> ${p.nome} <span style="color:#aaa; font-size:0.8rem;">${priceLabel}</span>
             </div>`;
         }).join('');
@@ -393,21 +357,12 @@
     }
 
     function selezionaProdotto(i, nome, tipo, prezzo, modalita) {
-        document.getElementById(`g-${i}`).value = nome;
-        setTipo(i, tipo);
+        document.getElementById(`g-${i}`).value = nome; setTipo(i, tipo);
         let qta = document.getElementById(`q-${i}`).value.trim();
-        if(modalita === 'fisso') {
-            let q = parseQtaKg(qta) || 1;
-            document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2);
-        } else if(modalita === 'kg') {
-            let q = parseQtaKg(qta);
-            if(q > 0) document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2);
-        } else if(modalita === 'qta') {
-            let q = parseFloat(qta.replace(',','.'));
-            if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2);
-        }
-        document.getElementById(`sug-${i}`).style.display = 'none';
-        updateRiepilogo();
+        if(modalita === 'fisso') { let q = parseQtaKg(qta) || 1; document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2); }
+        else if(modalita === 'kg') { let q = parseQtaKg(qta); if(q > 0) document.getElementById(`p-${i}`).value = (q * prezzo).toFixed(2); }
+        else if(modalita === 'qta') { let q = parseFloat(qta.replace(',','.')); if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2); }
+        document.getElementById(`sug-${i}`).style.display = 'none'; updateRiepilogo();
     }
 
     function parseQtaKg(q) {
@@ -421,16 +376,9 @@
         let match = Object.values(listino||{}).find(p => p.nome === nome);
         if(!match) return;
         let qta = document.getElementById(`q-${i}`).value.trim();
-        if(match.modalita === 'fisso') {
-            let q = parseQtaKg(qta) || 1;
-            if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2);
-        } else if(match.modalita === 'kg') {
-            let q = parseQtaKg(qta);
-            if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2);
-        } else if(match.modalita === 'qta') {
-            let q = parseFloat(qta.replace(',','.'));
-            if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2);
-        }
+        if(match.modalita === 'fisso') { let q = parseQtaKg(qta) || 1; if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2); }
+        else if(match.modalita === 'kg') { let q = parseQtaKg(qta); if(q > 0) document.getElementById(`p-${i}`).value = (q * match.prezzo).toFixed(2); }
+        else if(match.modalita === 'qta') { let q = parseFloat(qta.replace(',','.')); if(q > 0) document.getElementById(`p-${i}`).value = q.toFixed(2); }
         updateRiepilogo();
     }
 
@@ -443,186 +391,149 @@
     }
 
     function autoExpand(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; updateRiepilogo(); }
-    function goGusto(e, i) { 
+    function goGusto(e, i) {
         if(e.key === ' ') { e.preventDefault(); document.getElementById(`g-${i}`).focus(); }
         if(e.key === 'Backspace' && document.getElementById(`q-${i}`).value === '' && i > 0) { e.preventDefault(); document.getElementById(`g-${i-1}`).focus(); }
     }
-    function goNext(e, i) { 
+    function goNext(e, i) {
         if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`q-${i+1}`).focus(); }
         if(e.key === 'Backspace' && document.getElementById(`g-${i}`).value === '') { e.preventDefault(); document.getElementById(`q-${i}`).focus(); }
     }
-    function goPrezzoNext(e, i) { 
+    function goPrezzoNext(e, i) {
         if(e.key === 'Enter') { e.preventDefault(); if(i<24) document.getElementById(`p-${i+1}`).focus(); }
         if(e.key === 'Backspace' && document.getElementById(`p-${i}`).value === '' && i > 0) { e.preventDefault(); document.getElementById(`p-${i-1}`).focus(); }
     }
 
     function toggleGF(i){ let isChecked = document.getElementById(`f-${i}`).checked; document.getElementById(`row-${i}`).classList.toggle('row-is-gf', isChecked); updateRiepilogo(); }
     function setCost(v){ sCost=v; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); if(v>0) document.getElementById('cost'+v).style.background='var(--ora)'; updateRiepilogo(); }
-    function setPay(t){ sPay=t; document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); if(t){ let k = t === 'PAGATO' ? 'pag' : t === 'CONTANTI' ? 'cont' : 'pos'; document.getElementById('p-'+k).style.background='var(--ora)'; } document.getElementById('resto-box').style.display = (t==='CONTANTI') ? 'block' : 'none'; updateRiepilogo(); }
+    function setPay(t){ sPay=t; document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8'); if(t){ let k = t==='PAGATO'?'pag':t==='CONTANTI'?'cont':'pos'; document.getElementById('p-'+k).style.background='var(--ora)'; } document.getElementById('resto-box').style.display=(t==='CONTANTI')?'block':'none'; updateRiepilogo(); }
     function skipTel(){ document.getElementById('o-tel').value="INTERNO"; updateRiepilogo(); }
 
     function updateRiepilogo(){
         let rawItems = [];
         for(let i=0; i<25; i++){
-            let v = parseFloat(document.getElementById(`p-${i}`).value)||0; let g = document.getElementById(`g-${i}`).value; 
-            let q = document.getElementById(`q-${i}`).value || "0"; let isGf = document.getElementById(`f-${i}`).checked;
-            let tipo = document.getElementById(`bt-${i}`).getAttribute('data-tipo');
-            if(v>0 || g.trim() !== "") rawItems.push({q, g: g.toUpperCase(), v, isGf, tipo});
+            let v=parseFloat(document.getElementById(`p-${i}`).value)||0; let g=document.getElementById(`g-${i}`).value;
+            let q=document.getElementById(`q-${i}`).value||"0"; let isGf=document.getElementById(`f-${i}`).checked;
+            let tipo=document.getElementById(`bt-${i}`).getAttribute('data-tipo');
+            if(v>0||g.trim()!=="") rawItems.push({q,g:g.toUpperCase(),v,isGf,tipo});
         }
-        let items = rawItems.sort((a, b) => a.tipo - b.tipo);
-        let pt = rawItems.reduce((acc, curr) => acc + curr.v, 0);
-
-        let tot = pt + sCost; document.getElementById('main-total').innerText = tot.toFixed(2).replace('.',',') + " €";
-        let nOrd = (editKey !== null) ? ordiniSalvati.find(o=>o._key===editKey)?.num || ("#"+currentOrderNum.toString().padStart(2,'0')) : "#" + currentOrderNum.toString().padStart(2, '0');
-        document.getElementById('header-tag').innerText = nOrd;
-        document.getElementById('btn-invia').innerText = (editKey !== null) ? `AGGIORNA ORDINE ${nOrd}` : "INVIA ORDINE";
-        
-        let cog = document.getElementById('o-cognome').value.toUpperCase(); 
-        let ind = document.getElementById('o-indirizzo').value.toUpperCase(); 
-        let ora = document.getElementById('o-orario').value; 
-
-        let lHtml = items.map(item => {
-            let colorClass = item.isGf ? 'gf-text' : (item.tipo === '1' ? 'tipo-polleria' : (item.tipo === '2' ? 'tipo-bibite' : (item.tipo === '3' ? 'tipo-banco' : (item.tipo === '4' ? 'tipo-coscia' : ''))));
-            return `<div class="pizza-item ${colorClass}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf ? '[GF] ' : ''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`
+        let items=rawItems.sort((a,b)=>a.tipo-b.tipo);
+        let pt=rawItems.reduce((acc,curr)=>acc+curr.v,0);
+        let tot=pt+sCost; document.getElementById('main-total').innerText=tot.toFixed(2).replace('.',',')+' €';
+        let nOrd=(editKey!==null)?ordiniSalvati.find(o=>o._key===editKey)?.num||('#'+currentOrderNum.toString().padStart(2,'0')):'#'+currentOrderNum.toString().padStart(2,'0');
+        document.getElementById('header-tag').innerText=nOrd;
+        document.getElementById('btn-invia').innerText=(editKey!==null)?`AGGIORNA ORDINE ${nOrd}`:'INVIA ORDINE';
+        let cog=document.getElementById('o-cognome').value.toUpperCase();
+        let ind=document.getElementById('o-indirizzo').value.toUpperCase();
+        let ora=document.getElementById('o-orario').value;
+        let lHtml=items.map(item=>{
+            let colorClass=item.isGf?'gf-text':(item.tipo==='1'?'tipo-polleria':(item.tipo==='2'?'tipo-bibite':(item.tipo==='3'?'tipo-banco':(item.tipo==='4'?'tipo-coscia':''))));
+            return `<div class="pizza-item ${colorClass}"><div class="pizza-qty">${item.q}</div><div class="pizza-desc">${item.isGf?'[GF] ':''}${item.g}</div><div class="pizza-price">${item.v.toFixed(2)}€</div></div>`;
         }).join('');
-
-        document.getElementById('riepilogo-box').innerHTML = `
-            <div class="rip-row-top"><span>🏷️ ${nOrd}</span> <span>🕒 ${ora||"--:--"}</span></div>
-            <div class="rip-row-client">👤 <b>${cog||"---"}</b><br>📍 <b>${ind||"---"}</b></div>
+        document.getElementById('riepilogo-box').innerHTML=`
+            <div class="rip-row-top"><span>🏷️ ${nOrd}</span> <span>🕒 ${ora||'--:--'}</span></div>
+            <div class="rip-row-client">👤 <b>${cog||'---'}</b><br>📍 <b>${ind||'---'}</b></div>
             <div style="margin-top:10px; border-top:2px solid #333; padding-top:10px;">${lHtml}</div>
             <div class="rip-delivery-row"><span style="width:80px; text-align:right; font-size:1.2rem;">🛵 <b>${sCost.toFixed(2)}€</b></span></div>
             <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;"><div style="text-align:right; color:var(--ora); font-size:1.6rem;"><b>TOTALE: ${tot.toFixed(2)}€</b></div></div>`;
-        
-        let ok = cog && ind && ora && sCost>0 && pt>0 && sPay;
-        document.getElementById('btn-invia').style.background = ok ? 'var(--ver)' : '#ccc'; document.getElementById('btn-invia').disabled = !ok;
+        let ok=cog&&ind&&ora&&sCost>0&&pt>0&&sPay;
+        document.getElementById('btn-invia').style.background=ok?'var(--ver)':'#ccc'; document.getElementById('btn-invia').disabled=!ok;
     }
 
-    // ── INVIA ORDINE → FIREBASE ────────────────────────────────────
     function inviaOrdine() {
-        let rawItems = [];
-        for(let i=0; i<25; i++){
-            let v = parseFloat(document.getElementById(`p-${i}`).value)||0; let g = document.getElementById(`g-${i}`).value; 
-            let q = document.getElementById(`q-${i}`).value || "0"; let isGf = document.getElementById(`f-${i}`).checked;
-            let tipo = document.getElementById(`bt-${i}`).getAttribute('data-tipo');
-            if(v>0 || g.trim() !== "") rawItems.push({q, g: g.toUpperCase(), v, isGf, tipo});
+        let rawItems=[];
+        for(let i=0;i<25;i++){
+            let v=parseFloat(document.getElementById(`p-${i}`).value)||0; let g=document.getElementById(`g-${i}`).value;
+            let q=document.getElementById(`q-${i}`).value||"0"; let isGf=document.getElementById(`f-${i}`).checked;
+            let tipo=document.getElementById(`bt-${i}`).getAttribute('data-tipo');
+            if(v>0||g.trim()!=="") rawItems.push({q,g:g.toUpperCase(),v,isGf,tipo});
         }
-        let items = rawItems.sort((a, b) => a.tipo - b.tipo);
-
-        let ordine = {
-            num: (editKey !== null) ? ordiniSalvati.find(o=>o._key===editKey)?.num || ("#"+currentOrderNum.toString().padStart(2,'0')) : "#" + currentOrderNum.toString().padStart(2, '0'),
-            ora: document.getElementById('o-orario').value,
-            cog: document.getElementById('o-cognome').value.toUpperCase(),
-            ind: document.getElementById('o-indirizzo').value.toUpperCase(),
-            tel: document.getElementById('o-tel').value.toUpperCase(),
-            nota: document.getElementById('o-nota-cons').value.toUpperCase(),
-            notaRip: document.getElementById('o-nota-rip').value.toUpperCase(),
-            tot: document.getElementById('main-total').innerText,
-            costoCons: sCost, pay: sPay, resto: document.getElementById('o-resto').value.toUpperCase(),
-            prodotti: items
+        let items=rawItems.sort((a,b)=>a.tipo-b.tipo);
+        let ordine={
+            num:(editKey!==null)?ordiniSalvati.find(o=>o._key===editKey)?.num||('#'+currentOrderNum.toString().padStart(2,'0')):'#'+currentOrderNum.toString().padStart(2,'0'),
+            ora:document.getElementById('o-orario').value,
+            cog:document.getElementById('o-cognome').value.toUpperCase(),
+            ind:document.getElementById('o-indirizzo').value.toUpperCase(),
+            tel:document.getElementById('o-tel').value.toUpperCase(),
+            nota:document.getElementById('o-nota-cons').value.toUpperCase(),
+            notaRip:document.getElementById('o-nota-rip').value.toUpperCase(),
+            tot:document.getElementById('main-total').innerText,
+            costoCons:sCost,pay:sPay,resto:document.getElementById('o-resto').value.toUpperCase(),
+            prodotti:items
         };
-
-        if(editKey !== null) {
-            // AGGIORNA ordine esistente su Firebase
-            let keyToUpdate = editKey;
-            editKey = null;
-            ordiniRef.child(keyToUpdate).set(ordine);
-        } else {
-            // NUOVO ordine: salva su Firebase e aggiorna contatore
-            ordiniRef.push(ordine);
-            contatoreRef.set(currentOrderNum);
-            // Salva cliente automaticamente
-            salvaCliente(ordine.cog, ordine.tel, ordine.ind, ordine.nota);
-        }
-
+        if(editKey!==null){let k=editKey;editKey=null;ordiniRef.child(k).set(ordine);}
+        else{ordiniRef.push(ordine);contatoreRef.set(currentOrderNum);salvaCliente(ordine.cog,ordine.tel,ordine.ind,ordine.nota);}
         resetForm(); showTab(5);
     }
 
-    // ── RESET FORM (identico a prima) ─────────────────────────────
     function resetForm() {
-        document.getElementById('o-cognome').value = ""; document.getElementById('o-tel').value = ""; document.getElementById('o-indirizzo').value = "";
-        document.getElementById('o-nota-cons').value = ""; document.getElementById('o-nota-rip').value = ""; document.getElementById('o-orario').value = ""; document.getElementById('o-resto').value = "";
-        sPay = ""; sCost = 0; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8');
-        for(let i=0; i<25; i++) {
-            document.getElementById(`q-${i}`).value = ""; document.getElementById(`g-${i}`).value = ""; document.getElementById(`g-${i}`).style.height = "auto";
-            document.getElementById(`p-${i}`).value = ""; document.getElementById(`f-${i}`).checked = false; 
-            document.getElementById(`bt-${i}`).setAttribute('data-tipo', '0'); document.getElementById(`bt-${i}`).style.background = '#ccc';
-            document.getElementById(`row-${i}`).classList.remove('row-is-gf', 'tipo-polleria', 'tipo-bibite', 'tipo-banco', 'tipo-coscia');
-            if(document.getElementById(`sug-${i}`)) document.getElementById(`sug-${i}`).style.display = 'none';
+        document.getElementById('o-cognome').value=""; document.getElementById('o-tel').value=""; document.getElementById('o-indirizzo').value="";
+        document.getElementById('o-nota-cons').value=""; document.getElementById('o-nota-rip').value=""; document.getElementById('o-orario').value=""; document.getElementById('o-resto').value="";
+        sPay=""; sCost=0; document.querySelectorAll('[id^="cost"]').forEach(b=>b.style.background='white'); document.querySelectorAll('[id^="p-"]').forEach(b=>b.style.background='#D0DCE8');
+        for(let i=0;i<25;i++){
+            document.getElementById(`q-${i}`).value=""; document.getElementById(`g-${i}`).value=""; document.getElementById(`g-${i}`).style.height="auto";
+            document.getElementById(`p-${i}`).value=""; document.getElementById(`f-${i}`).checked=false;
+            document.getElementById(`bt-${i}`).setAttribute('data-tipo','0'); document.getElementById(`bt-${i}`).style.background='#ccc';
+            document.getElementById(`row-${i}`).classList.remove('row-is-gf','tipo-polleria','tipo-bibite','tipo-banco','tipo-coscia');
+            if(document.getElementById(`sug-${i}`)) document.getElementById(`sug-${i}`).style.display='none';
         }
         updateTimeSelect(); updateRiepilogo();
-        // Reset pulsante verifica posizione
-        document.getElementById('btn-maps').style.background = '#4285F4';
-        document.getElementById('btn-maps').innerText = '📍 VERIFICA POSIZIONE';
+        document.getElementById('btn-maps').style.background='#4285F4';
+        document.getElementById('btn-maps').innerText='📍 VERIFICA POSIZIONE';
     }
 
-    // ── MODIFICA ORDINE ────────────────────────────────────────────
     function modificaOrdine(key) {
-        let o = ordiniSalvati.find(ord => ord._key === key);
+        let o=ordiniSalvati.find(ord=>ord._key===key);
         if(!o) return;
-        editKey = key; resetForm();
-        document.getElementById('o-cognome').value = o.cog; document.getElementById('o-tel').value = o.tel; document.getElementById('o-indirizzo').value = o.ind;
-        document.getElementById('o-nota-cons').value = o.nota; document.getElementById('o-nota-rip').value = o.notaRip; 
+        editKey=key; resetForm();
+        document.getElementById('o-cognome').value=o.cog; document.getElementById('o-tel').value=o.tel; document.getElementById('o-indirizzo').value=o.ind;
+        document.getElementById('o-nota-cons').value=o.nota; document.getElementById('o-nota-rip').value=o.notaRip;
         updateTimeSelect();
-        let selOra = document.getElementById('o-orario');
-        let hasTime = Array.from(selOra.options).some(opt => opt.value === o.ora);
-        if(!hasTime){ let opt = document.createElement('option'); opt.value = o.ora; opt.innerText = o.ora; selOra.appendChild(opt); }
-        selOra.value = o.ora; document.getElementById('o-resto').value = o.resto;
+        let selOra=document.getElementById('o-orario');
+        let hasTime=Array.from(selOra.options).some(opt=>opt.value===o.ora);
+        if(!hasTime){let opt=document.createElement('option');opt.value=o.ora;opt.innerText=o.ora;selOra.appendChild(opt);}
+        selOra.value=o.ora; document.getElementById('o-resto').value=o.resto;
         setCost(o.costoCons); setPay(o.pay);
-        o.prodotti.forEach((prod, i) => {
-            if(i < 25) {
-                let qInput = document.getElementById(`q-${i}`); let gInput = document.getElementById(`g-${i}`);
-                let pInput = document.getElementById(`p-${i}`); let fCheck = document.getElementById(`f-${i}`);
-                let bTipo = document.getElementById(`bt-${i}`); let row = document.getElementById(`row-${i}`);
-                qInput.value = prod.q; gInput.value = prod.g; pInput.value = prod.v; fCheck.checked = prod.isGf;
-                let tipoVal = prod.tipo || '0'; 
-                setTipo(i, tipoVal);
-                gInput.style.height = 'auto'; gInput.style.height = (gInput.scrollHeight > 0 ? gInput.scrollHeight : 50) + 'px';
+        o.prodotti.forEach((prod,i)=>{
+            if(i<25){
+                document.getElementById(`q-${i}`).value=prod.q; document.getElementById(`g-${i}`).value=prod.g;
+                document.getElementById(`p-${i}`).value=prod.v; document.getElementById(`f-${i}`).checked=prod.isGf;
+                setTipo(i,prod.tipo||'0');
+                let gInput=document.getElementById(`g-${i}`);
+                gInput.style.height='auto'; gInput.style.height=(gInput.scrollHeight>0?gInput.scrollHeight:50)+'px';
             }
         });
         showTab(1);
     }
 
-    // ── ELIMINA ORDINE → FIREBASE ──────────────────────────────────
     function eliminaOrdine(key) {
-        let o = ordiniSalvati.find(ord => ord._key === key);
-        if(o && confirm(`Sei sicura di voler eliminare l'ordine ${o.num}?`)) {
-            ordiniRef.child(key).remove();
-        }
+        let o=ordiniSalvati.find(ord=>ord._key===key);
+        if(o&&confirm(`Sei sicura di voler eliminare l'ordine ${o.num}?`)) ordiniRef.child(key).remove();
     }
 
     function toggleCardList(element) { element.classList.toggle('expanded'); }
 
-    // ── RENDER CONSEGNE ────────────────────────────────────────────
     function renderConsegne() {
-        const container = document.getElementById('consegne-lista');
-        let searchEl = document.getElementById('search-consegne');
-        let search = searchEl ? searchEl.value.trim().toUpperCase() : '';
-        let lista = search
-            ? ordiniSalvati.filter(o => (o.cog||'').includes(search) || (o.ind||'').includes(search) || (o.num||'').includes(search))
-            : ordiniSalvati;
-
-        if(lista.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine trovato</div>';
-            return;
-        }
-
-        container.innerHTML = lista.map((o) => {
-            let stato = o.stato || 'attesa';
-            let statoClass = stato==='pronto' ? 'stato-pronto' : stato==='assegnato' ? 'stato-assegnato' : stato==='consegnato' ? 'stato-consegnato' : '';
-            let badgeClass = stato==='pronto' ? 'badge-pronto' : stato==='assegnato' ? 'badge-assegnato' : stato==='consegnato' ? 'badge-consegnato' : 'badge-attesa';
-            let badgeLabel = stato==='pronto' ? '✅ PRONTO' : stato==='assegnato' ? '🛵 ASSEGNATO' : stato==='consegnato' ? '✔ CONSEGNATO' : '⏳ IN ATTESA';
-            let riderNome = o.riderId && riders[o.riderId] ? `<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>` : '';
-            let btnMod = stato === 'consegnato' 
-                ? `<button class="act-btn-small btn-mod" style="opacity:0.3; cursor:default;">✏️</button>`
-                : `<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
-
+        const container=document.getElementById('consegne-lista');
+        let searchEl=document.getElementById('search-consegne');
+        let search=searchEl?searchEl.value.trim().toUpperCase():'';
+        let lista=search
+            ?ordiniSalvati.filter(o=>(o.cog||'').includes(search)||(o.ind||'').includes(search)||(o.num||'').includes(search))
+            :ordiniSalvati;
+        if(lista.length===0){container.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine trovato</div>';return;}
+        container.innerHTML=lista.map((o)=>{
+            let stato=o.stato||'attesa';
+            let statoClass=stato==='pronto'?'stato-pronto':stato==='assegnato'?'stato-assegnato':stato==='consegnato'?'stato-consegnato':'';
+            let badgeClass=stato==='pronto'?'badge-pronto':stato==='assegnato'?'badge-assegnato':stato==='consegnato'?'badge-consegnato':'badge-attesa';
+            let badgeLabel=stato==='pronto'?'✅ PRONTO':stato==='assegnato'?'🛵 ASSEGNATO':stato==='consegnato'?'✔ CONSEGNATO':'⏳ IN ATTESA';
+            let riderNome=o.riderId&&riders[o.riderId]?`<div class="rider-assegnato-tag">🛵 ${riders[o.riderId].nome}</div>`:'';
+            let btnMod=stato==='consegnato'
+                ?`<button class="act-btn-small btn-mod" style="opacity:0.3; cursor:default;">✏️</button>`
+                :`<button class="act-btn-small btn-mod" onclick="modificaOrdine('${o._key}')">✏️</button>`;
             return `<div class="card-consegna ${statoClass}">
                 <div class="card-header-main">
                     <span class="card-num-big">🏷️ ${o.num}</span>
-                    <div class="card-actions-top">
-                        ${btnMod}
-                        <button class="act-btn-small btn-del" onclick="eliminaOrdine('${o._key}')">🗑️</button>
-                    </div>
+                    <div class="card-actions-top">${btnMod}<button class="act-btn-small btn-del" onclick="eliminaOrdine('${o._key}')">🗑️</button></div>
                     <span class="card-ora-big">🕒 ${o.ora}</span>
                 </div>
                 <span class="stato-badge ${badgeClass}">${badgeLabel}</span>
@@ -634,16 +545,12 @@
                 </div>
                 <div class="card-list-wrapper" onclick="toggleCardList(this)">
                     <div class="card-list-text">
-                        ${o.prodotti.map(p => {
-                            let cClass = p.isGf ? 'var(--ver)' : (p.tipo==='1' ? 'var(--rosso)' : (p.tipo==='2' ? 'var(--bibite)' : (p.tipo==='3' ? '#8B6914' : (p.tipo==='4' ? '#CC5500' : 'inherit'))));
-                            return `<div class="card-prod-row" style="color:${cClass}">
-                                <span class="card-prod-desc">${p.isGf?'[GF] ':''}${p.q} ${p.g}</span>
-                                <span class="card-prod-val">${p.v.toFixed(2)}€</span>
-                            </div>`;
+                        ${o.prodotti.map(p=>{
+                            let cClass=p.isGf?'var(--ver)':(p.tipo==='1'?'var(--rosso)':(p.tipo==='2'?'var(--bibite)':(p.tipo==='3'?'#8B6914':(p.tipo==='4'?'#CC5500':'inherit'))));
+                            return `<div class="card-prod-row" style="color:${cClass}"><span class="card-prod-desc">${p.isGf?'[GF] ':''}${p.q} ${p.g}</span><span class="card-prod-val">${p.v.toFixed(2)}€</span></div>`;
                         }).join('')}
-                        <div class="card-prod-row" style="margin-top:2px; border-top:1px dashed #ddd; padding-top:2px;">
-                            <span class="card-prod-desc">🛵 CONSEGNA</span>
-                            <span class="card-prod-val">${o.costoCons.toFixed(2)}€</span>
+                        <div class="card-prod-row" style="margin-top:2px;border-top:1px dashed #ddd;padding-top:2px;">
+                            <span class="card-prod-desc">🛵 CONSEGNA</span><span class="card-prod-val">${o.costoCons.toFixed(2)}€</span>
                         </div>
                     </div>
                 </div>
@@ -657,274 +564,172 @@
         }).join('');
     }
 
+    function renderConsegnati() {
+        const container=document.getElementById('consegnati-lista');
+        let searchEl=document.getElementById('search-consegnati');
+        let search=searchEl?searchEl.value.trim().toUpperCase():'';
+        let lista=ordiniSalvati.filter(o=>o.stato==='consegnato');
+        if(search) lista=lista.filter(o=>(o.cog||'').includes(search)||(o.ind||'').includes(search)||(o.num||'').includes(search));
+        if(lista.length===0){container.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine consegnato</div>';return;}
+        container.innerHTML=lista.map(o=>{
+            let riderNome=o.riderId&&riders[o.riderId]?'🛵 '+riders[o.riderId].nome:'';
+            let payColor=o.pay==='POS'?'var(--rosso)':o.pay==='PAGATO'?'var(--ver)':'var(--blu)';
+            let prodHtml=o.prodotti.map(p=>{
+                let col=p.isGf?'var(--ver)':p.tipo==='1'?'var(--rosso)':p.tipo==='2'?'var(--bibite)':p.tipo==='3'?'#8B6914':p.tipo==='4'?'#CC5500':'inherit';
+                return `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:0.82rem;color:${col};"><span>${p.isGf?'[GF] ':''}${p.q} ${p.g}</span><span style="color:#666;margin-left:8px;">${p.v.toFixed(2)}€</span></div>`;
+            }).join('');
+            return `<div class="card-compatta" onclick="this.classList.toggle('espansa')">
+                <div class="card-compatta-row">
+                    <div class="card-compatta-left">
+                        <span style="font-size:0.72rem;color:#aaa;">${o.num}</span>
+                        <span class="card-compatta-nome">👤 ${o.cog}</span>
+                        <span class="card-compatta-ind">📍 ${o.ind}</span>
+                    </div>
+                    <div class="card-compatta-right">
+                        <span class="card-compatta-ora">🕒 ${o.ora}</span>
+                        ${riderNome?`<span style="font-size:0.8rem;color:var(--blu);">${riderNome}</span>`:''}
+                        <span class="card-compatta-tot">${o.tot}</span>
+                        <span style="font-size:0.8rem;color:${payColor};">${o.pay}</span>
+                    </div>
+                </div>
+                <div class="card-compatta-detail">
+                    <div style="font-size:0.85rem;margin-bottom:6px;">
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" style="color:var(--ora);text-decoration:none;" target="_blank" onclick="event.stopPropagation()">📍 ${o.ind}</a><br>
+                        <a href="tel:${o.tel}" style="color:var(--link);text-decoration:none;" onclick="event.stopPropagation()">📞 ${o.tel}</a>
+                        ${o.nota?`<div style="font-size:0.8rem;color:var(--ora);margin-top:4px;">📝 ${o.nota}</div>`:''}
+                    </div>
+                    <div style="background:#f9f9f9;border-radius:6px;padding:6px;">${prodHtml}
+                        <div style="display:flex;justify-content:space-between;padding:2px 0;margin-top:2px;border-top:1px dashed #ddd;font-size:0.82rem;color:#888;">
+                            <span>🛵 CONSEGNA</span><span>${o.costoCons.toFixed(2)}€</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <button onclick="event.stopPropagation();eliminaOrdine('${o._key}')" style="width:100%;padding:8px;background:var(--rosso);color:white;border:none;border-radius:8px;font-family:'Barlow',sans-serif;font-weight:900;font-size:0.82rem;cursor:pointer;">🗑 ELIMINA</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
     function renderOrari() {
-        const container = document.getElementById('orari-lista');
-        if(ordiniSalvati.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:40px; color:#aaa; font-size:1.1rem;">Nessun ordine ancora</div>';
-            return;
-        }
-        // Raggruppa per orario
-        let fasce = {};
-        ordiniSalvati.forEach(o => {
-            if(!o.ora) return;
-            if(!fasce[o.ora]) fasce[o.ora] = [];
-            fasce[o.ora].push(o);
-        });
-        // Ordina orari
-        let orariOrdinati = Object.keys(fasce).sort();
-        container.innerHTML = orariOrdinati.map(ora => {
-            let ordini = fasce[ora];
-            let n = ordini.length;
-            let caricoClass = n >= 5 ? 'carico-alto' : `carico-${n}`;
-            let badgeClass = n >= 5 ? 'badge-rosso' : n >= 3 ? 'badge-giallo' : 'badge-verde';
-            let dettagli = ordini.map(o => {
-                let prodTags = o.prodotti.map(p => {
-                    let cls = p.isGf ? 'is-gf' : p.tipo === '1' ? 'is-pollo' : p.tipo === '2' ? 'is-bibita' : p.tipo === '3' ? 'is-banco' : '';
+        const container=document.getElementById('orari-lista');
+        if(ordiniSalvati.length===0){container.innerHTML='<div style="text-align:center;padding:40px;color:#aaa;font-size:1.1rem;">Nessun ordine ancora</div>';return;}
+        let fasce={};
+        ordiniSalvati.forEach(o=>{if(!o.ora)return;if(!fasce[o.ora])fasce[o.ora]=[];fasce[o.ora].push(o);});
+        let orariOrdinati=Object.keys(fasce).sort();
+        container.innerHTML=orariOrdinati.map(ora=>{
+            let ordini=fasce[ora],n=ordini.length;
+            let caricoClass=n>=5?'carico-alto':`carico-${n}`;
+            let badgeClass=n>=5?'badge-rosso':n>=3?'badge-giallo':'badge-verde';
+            let dettagli=ordini.map(o=>{
+                let prodTags=o.prodotti.map(p=>{
+                    let cls=p.isGf?'is-gf':p.tipo==='1'?'is-pollo':p.tipo==='2'?'is-bibita':p.tipo==='3'?'is-banco':'';
                     return `<span class="orario-prod-tag ${cls}">${p.q} ${p.g}</span>`;
                 }).join('');
-                return `<div class="orario-ordine">
-                    <div class="orario-ordine-top">
-                        <span class="orario-cliente">👤 ${o.cog}</span>
-                        <span class="orario-num">${o.num}</span>
-                    </div>
-                    <div class="orario-ind">📍 ${o.ind}</div>
-                    <div class="orario-prodotti">${prodTags}</div>
-                </div>`;
+                return `<div class="orario-ordine"><div class="orario-ordine-top"><span class="orario-cliente">👤 ${o.cog}</span><span class="orario-num">${o.num}</span></div><div class="orario-ind">📍 ${o.ind}</div><div class="orario-prodotti">${prodTags}</div></div>`;
             }).join('');
-            return `<div class="orario-block ${caricoClass}">
-                <div class="orario-header" onclick="toggleOrario(this)">
-                    <span class="orario-ora">🕒 ${ora}</span>
-                    <span class="orario-badge ${badgeClass}">${n} ${n === 1 ? 'ordine' : 'ordini'}</span>
-                </div>
-                <div class="orario-detail">${dettagli}</div>
-            </div>`;
+            return `<div class="orario-block ${caricoClass}"><div class="orario-header" onclick="toggleOrario(this)"><span class="orario-ora">🕒 ${ora}</span><span class="orario-badge ${badgeClass}">${n} ${n===1?'ordine':'ordini'}</span></div><div class="orario-detail">${dettagli}</div></div>`;
         }).join('');
     }
 
     function toggleOrario(header) { header.nextElementSibling.classList.toggle('open'); }
 
     function renderStat() {
-        const container = document.getElementById('stat-box');
+        const container=document.getElementById('stat-box');
         if(!container) return;
-        
-        // Debug — mostra sempre qualcosa
-        container.innerHTML = `<div style="padding:15px; background:white; border-radius:10px; color:var(--blu); margin-bottom:10px;">
-            <b>DEBUG:</b> ordini caricati: ${ordiniSalvati.length} | riders: ${Object.keys(riders).length}
-        </div>`;
-
-        if(ordiniSalvati.length === 0) {
-            container.innerHTML += '<div style="text-align:center; padding:40px; color:#888; font-size:1.1rem;">Nessun ordine presente</div>';
-            return;
-        }
-
+        container.innerHTML=`<div style="padding:15px; background:white; border-radius:10px; color:var(--blu); margin-bottom:10px;"><b>DEBUG:</b> ordini caricati: ${ordiniSalvati.length} | riders: ${Object.keys(riders).length}</div>`;
+        if(ordiniSalvati.length===0){container.innerHTML+='<div style="text-align:center;padding:40px;color:#888;font-size:1.1rem;">Nessun ordine presente</div>';return;}
         try {
-
-        // ── CALCOLI ────────────────────────────────────────────────
-        let totaleConConsegna = 0, totaleProdotti = 0, totaleConsegne = 0;
-        let totContanti = 0, totPOS = 0, totPagati = 0;
-        let qPizza = 0, ePizza = 0, qPizzaGF = 0, ePizzaGF = 0;
-        let qPollo = 0, ePollo = 0, qPolloGF = 0, ePolloGF = 0;
-        let qBibite = 0, eBibite = 0, qBanco = 0, eBanco = 0;
-        let riderStats = {};
-
-        ordiniSalvati.forEach(o => {
-            // Parsing robusto del totale
-            let totOrdine = 0;
-            if(o.tot) {
-                totOrdine = parseFloat(o.tot.toString().replace(/[€\s]/g,'').replace(',','.')) || 0;
-            }
-            let costoC = parseFloat(o.costoCons) || 0;
-            let prodotti = totOrdine - costoC;
-
-            totaleConConsegna += totOrdine;
-            totaleProdotti += prodotti;
-            totaleConsegne += costoC;
-
-            if(o.pay === 'CONTANTI') totContanti += prodotti;
-            else if(o.pay === 'POS') totPOS += prodotti;
-            else if(o.pay === 'PAGATO') totPagati += prodotti;
-
-            // Prodotti
-            (o.prodotti || []).forEach(p => {
-                let v = parseFloat(p.v) || 0;
-                let q = parseInt(p.q) || 1;
-                if(p.tipo === '0' || !p.tipo) {
-                    if(p.isGf) { qPizzaGF += q; ePizzaGF += v; }
-                    else { qPizza += q; ePizza += v; }
-                } else if(p.tipo === '1') {
-                    if(p.isGf) { qPolloGF += q; ePolloGF += v; }
-                    else { qPollo += q; ePollo += v; }
-                } else if(p.tipo === '2') { qBibite += q; eBibite += v; }
-                else if(p.tipo === '3') { qBanco += q; eBanco += v; }
+        let totaleConConsegna=0,totaleProdotti=0,totaleConsegne=0,totContanti=0,totPOS=0,totPagati=0;
+        let qPizza=0,ePizza=0,qPizzaGF=0,ePizzaGF=0,qPollo=0,ePollo=0,qPolloGF=0,ePolloGF=0,qBibite=0,eBibite=0,qBanco=0,eBanco=0;
+        let riderStats={};
+        ordiniSalvati.forEach(o=>{
+            let totOrdine=o.tot?parseFloat(o.tot.toString().replace(/[€\s]/g,'').replace(',','.'))||0:0;
+            let costoC=parseFloat(o.costoCons)||0,prodotti=totOrdine-costoC;
+            totaleConConsegna+=totOrdine;totaleProdotti+=prodotti;totaleConsegne+=costoC;
+            if(o.pay==='CONTANTI')totContanti+=prodotti;else if(o.pay==='POS')totPOS+=prodotti;else if(o.pay==='PAGATO')totPagati+=prodotti;
+            (o.prodotti||[]).forEach(p=>{
+                let v=parseFloat(p.v)||0,q=parseInt(p.q)||1;
+                if(p.tipo==='0'||!p.tipo){if(p.isGf){qPizzaGF+=q;ePizzaGF+=v;}else{qPizza+=q;ePizza+=v;}}
+                else if(p.tipo==='1'){if(p.isGf){qPolloGF+=q;ePolloGF+=v;}else{qPollo+=q;ePollo+=v;}}
+                else if(p.tipo==='2'){qBibite+=q;eBibite+=v;}else if(p.tipo==='3'){qBanco+=q;eBanco+=v;}
             });
-
-            // Rider stats
-            if(o.riderId && o.stato === 'consegnato') {
-                if(!riderStats[o.riderId]) riderStats[o.riderId] = { cons: 0, tempi: [] };
+            if(o.riderId&&o.stato==='consegnato'){
+                if(!riderStats[o.riderId])riderStats[o.riderId]={cons:0,tempi:[]};
                 riderStats[o.riderId].cons++;
-                if(o.tsAssegnato && o.tsConsegnato) {
-                    let minuti = Math.round((o.tsConsegnato - o.tsAssegnato) / 60000);
-                    if(minuti > 0 && minuti < 120) riderStats[o.riderId].tempi.push(minuti);
-                }
+                if(o.tsAssegnato&&o.tsConsegnato){let m=Math.round((o.tsConsegnato-o.tsAssegnato)/60000);if(m>0&&m<120)riderStats[o.riderId].tempi.push(m);}
             }
         });
-
-        let nOrdini = ordiniSalvati.length;
-        let fmt = v => v.toFixed(2).replace('.',',') + ' €';
-
-        // ── RIDER HTML ─────────────────────────────────────────────
-        let riderHtml = Object.entries(riderStats).map(([id, s]) => {
-            let nome = riders[id]?.nome || id;
-            let tempoMedio = s.tempi.length > 0 ? Math.round(s.tempi.reduce((a,b)=>a+b,0)/s.tempi.length) : null;
-            return `<div class="stat-rider-row">
-                <span class="stat-rider-nome">🛵 ${nome}</span>
-                <div class="stat-rider-dati">
-                    <div><b>${s.cons}</b> consegne</div>
-                    ${tempoMedio ? `<div>⏱ ~${tempoMedio} min/cons.</div>` : ''}
-                </div>
-            </div>`;
-        }).join('') || '<div style="color:#aaa; font-size:0.9rem;">Nessuna consegna completata</div>';
-
-        container.innerHTML = `
-            <!-- INCASSI -->
-            <div class="stat-sezione">
-                <h3>💰 INCASSI</h3>
-                <div class="stat-riga">
-                    <span class="stat-label">Totale giornaliero</span>
-                    <span class="stat-val arancio">${fmt(totaleConConsegna)}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">Totale prodotti</span>
-                    <span class="stat-val blu">${fmt(totaleProdotti)}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">🛵 Costo consegne (rider)</span>
-                    <span class="stat-val" style="color:#888;">${fmt(totaleConsegne)}</span>
-                </div>
-            </div>
-
-            <!-- PAGAMENTI -->
-            <div class="stat-sezione">
-                <h3>💳 PAGAMENTI</h3>
+        let fmt=v=>v.toFixed(2).replace('.',',')+' €';
+        let riderHtml=Object.entries(riderStats).map(([id,s])=>{
+            let nome=riders[id]?.nome||id;
+            let tm=s.tempi.length>0?Math.round(s.tempi.reduce((a,b)=>a+b,0)/s.tempi.length):null;
+            return `<div class="stat-rider-row"><span class="stat-rider-nome">🛵 ${nome}</span><div class="stat-rider-dati"><div><b>${s.cons}</b> consegne</div>${tm?`<div>⏱ ~${tm} min/cons.</div>`:''}</div></div>`;
+        }).join('')||'<div style="color:#aaa;font-size:0.9rem;">Nessuna consegna completata</div>';
+        container.innerHTML=`
+            <div class="stat-sezione"><h3>💰 INCASSI</h3>
+                <div class="stat-riga"><span class="stat-label">Totale giornaliero</span><span class="stat-val arancio">${fmt(totaleConConsegna)}</span></div>
+                <div class="stat-riga"><span class="stat-label">Totale prodotti</span><span class="stat-val blu">${fmt(totaleProdotti)}</span></div>
+                <div class="stat-riga"><span class="stat-label">🛵 Costo consegne</span><span class="stat-val" style="color:#888;">${fmt(totaleConsegne)}</span></div></div>
+            <div class="stat-sezione"><h3>💳 PAGAMENTI</h3>
                 <div class="stat-grid">
-                    <div class="stat-card-mini">
-                        <div class="label">Contanti</div>
-                        <div class="valore" style="color:var(--blu);">${fmt(totContanti)}</div>
-                    </div>
-                    <div class="stat-card-mini">
-                        <div class="label">POS</div>
-                        <div class="valore" style="color:var(--rosso);">${fmt(totPOS)}</div>
-                    </div>
-                    <div class="stat-card-mini" style="grid-column:1/-1;">
-                        <div class="label">Pagati anticipati</div>
-                        <div class="valore" style="color:var(--ver);">${fmt(totPagati)}</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PRODOTTI -->
-            <div class="stat-sezione">
-                <h3>🍕 PRODOTTI</h3>
-                <div class="stat-riga">
-                    <span class="stat-label">🍕 Pizze</span>
-                    <span class="stat-val arancio">${qPizza} pz — ${fmt(ePizza)}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">🍕 Pizze GF</span>
-                    <span class="stat-val verde">${qPizzaGF} pz — ${fmt(ePizzaGF)}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">🍗 Pollo</span>
-                    <span class="stat-val rosso">${qPollo} pz — ${fmt(ePollo)}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">🍗 Pollo GF</span>
-                    <span class="stat-val verde">${qPolloGF} pz — ${fmt(ePolloGF)}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">🥤 Bibite</span>
-                    <span class="stat-val blu">${qBibite} pz — ${fmt(eBibite)}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">🏪 Banco</span>
-                    <span class="stat-val giallo">${qBanco} pz — ${fmt(eBanco)}</span>
-                </div>
-            </div>
-
-            <!-- ORDINI -->
-            <div class="stat-sezione">
-                <h3>📦 ORDINI</h3>
-                <div class="stat-riga">
-                    <span class="stat-label">Totale ordini</span>
-                    <span class="stat-val arancio">${nOrdini}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">Consegnati</span>
-                    <span class="stat-val verde">${ordiniSalvati.filter(o=>o.stato==='consegnato').length}</span>
-                </div>
-                <div class="stat-riga">
-                    <span class="stat-label">In attesa / In giro</span>
-                    <span class="stat-val" style="color:#888;">${ordiniSalvati.filter(o=>o.stato!=='consegnato').length}</span>
-                </div>
-            </div>
-
-            <!-- RIDER -->
-            <div class="stat-sezione">
-                <h3>🛵 RIDER</h3>
-                ${riderHtml}
-            </div>`;
-        } catch(err) {
-            container.innerHTML = `<div style="padding:20px; color:var(--rosso);">Errore: ${err.message}</div>`;
-            console.error('renderStat error:', err);
-        }
+                    <div class="stat-card-mini"><div class="label">Contanti</div><div class="valore" style="color:var(--blu);">${fmt(totContanti)}</div></div>
+                    <div class="stat-card-mini"><div class="label">POS</div><div class="valore" style="color:var(--rosso);">${fmt(totPOS)}</div></div>
+                    <div class="stat-card-mini" style="grid-column:1/-1;"><div class="label">Pagati anticipati</div><div class="valore" style="color:var(--ver);">${fmt(totPagati)}</div></div>
+                </div></div>
+            <div class="stat-sezione"><h3>🍕 PRODOTTI</h3>
+                <div class="stat-riga"><span class="stat-label">🍕 Pizze</span><span class="stat-val arancio">${qPizza} pz — ${fmt(ePizza)}</span></div>
+                <div class="stat-riga"><span class="stat-label">🍕 Pizze GF</span><span class="stat-val verde">${qPizzaGF} pz — ${fmt(ePizzaGF)}</span></div>
+                <div class="stat-riga"><span class="stat-label">🍗 Pollo</span><span class="stat-val rosso">${qPollo} pz — ${fmt(ePollo)}</span></div>
+                <div class="stat-riga"><span class="stat-label">🍗 Pollo GF</span><span class="stat-val verde">${qPolloGF} pz — ${fmt(ePolloGF)}</span></div>
+                <div class="stat-riga"><span class="stat-label">🥤 Bibite</span><span class="stat-val blu">${qBibite} pz — ${fmt(eBibite)}</span></div>
+                <div class="stat-riga"><span class="stat-label">🏪 Banco</span><span class="stat-val giallo">${qBanco} pz — ${fmt(eBanco)}</span></div></div>
+            <div class="stat-sezione"><h3>📦 ORDINI</h3>
+                <div class="stat-riga"><span class="stat-label">Totale ordini</span><span class="stat-val arancio">${ordiniSalvati.length}</span></div>
+                <div class="stat-riga"><span class="stat-label">Consegnati</span><span class="stat-val verde">${ordiniSalvati.filter(o=>o.stato==='consegnato').length}</span></div>
+                <div class="stat-riga"><span class="stat-label">In attesa / In giro</span><span class="stat-val" style="color:#888;">${ordiniSalvati.filter(o=>o.stato!=='consegnato').length}</span></div></div>
+            <div class="stat-sezione"><h3>🛵 RIDER</h3>${riderHtml}</div>`;
+        } catch(err){container.innerHTML=`<div style="padding:20px;color:var(--rosso);">Errore: ${err.message}</div>`;}
     }
 
-    // ── AUTOCOMPLETE CLIENTI ───────────────────────────────────────
     function onCognomeInput() {
         updateRiepilogo();
-        let val = document.getElementById('o-cognome').value.trim().toUpperCase();
-        let list = document.getElementById('autocomplete-list');
-        if(val.length < 2) { list.style.display = 'none'; return; }
-        let matches = Object.values(clienti).filter(c => c.cog.startsWith(val));
-        if(matches.length === 0) { list.style.display = 'none'; return; }
-        list.innerHTML = matches.slice(0,5).map(c =>
+        let val=document.getElementById('o-cognome').value.trim().toUpperCase();
+        let list=document.getElementById('autocomplete-list');
+        if(val.length<2){list.style.display='none';return;}
+        let matches=Object.values(clienti).filter(c=>c.cog.startsWith(val));
+        if(matches.length===0){list.style.display='none';return;}
+        list.innerHTML=matches.slice(0,5).map(c=>
             `<div class="autocomplete-item" onclick="selezionaCliente(${JSON.stringify(c).replace(/"/g,'&quot;')})">
-                <b>${c.cog}</b> — ${c.ind}<br>
-                <small style="color:#888;">${c.tel || ''}</small>
+                <b>${c.cog}</b> — ${c.ind}<br><small style="color:#888;">${c.tel||''}</small>
             </div>`
         ).join('');
-        list.style.display = 'block';
+        list.style.display='block';
     }
 
     function selezionaCliente(c) {
-        document.getElementById('o-cognome').value = c.cog;
-        document.getElementById('o-tel').value = c.tel || '';
-        document.getElementById('o-indirizzo').value = c.ind || '';
-        document.getElementById('o-nota-cons').value = c.nota || '';
-        document.getElementById('autocomplete-list').style.display = 'none';
+        document.getElementById('o-cognome').value=c.cog;
+        document.getElementById('o-tel').value=c.tel||'';
+        document.getElementById('o-indirizzo').value=c.ind||'';
+        document.getElementById('o-nota-cons').value=c.nota||'';
+        document.getElementById('autocomplete-list').style.display='none';
         updateRiepilogo();
     }
 
-    function salvaCliente(cog, tel, ind, nota) {
-        if(!cog || !ind) return;
-        // Cerca se esiste già per cognome+indirizzo
-        let esistente = Object.entries(clienti).find(([k,c]) => c.cog === cog && c.ind === ind);
-        if(esistente) {
-            clientiRef.child(esistente[0]).update({ cog, tel, ind, nota });
-        } else {
-            clientiRef.push({ cog, tel, ind, nota });
-        }
+    function salvaCliente(cog,tel,ind,nota) {
+        if(!cog||!ind) return;
+        let esistente=Object.entries(clienti).find(([k,c])=>c.cog===cog&&c.ind===ind);
+        if(esistente) clientiRef.child(esistente[0]).update({cog,tel,ind,nota});
+        else clientiRef.push({cog,tel,ind,nota});
     }
 
     function verifyMaps() {
-        let a = document.getElementById('o-indirizzo').value;
+        let a=document.getElementById('o-indirizzo').value;
         if(!a) return alert("METTI INDIRIZZO");
         window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a)}`);
-        document.getElementById('btn-maps').style.background = 'var(--ver)';
-        document.getElementById('btn-maps').innerText = '✅ POSIZIONE VERIFICATA';
+        document.getElementById('btn-maps').style.background='var(--ver)';
+        document.getElementById('btn-maps').innerText='✅ POSIZIONE VERIFICATA';
     }
 </script>
-```
-
 </body>
 </html>
