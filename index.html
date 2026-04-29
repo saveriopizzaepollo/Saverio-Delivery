@@ -679,7 +679,16 @@
             var p=prods[i];
             var nome=p.q+'  '+(p.isGf?'[GF] ':'')+p.g.toUpperCase();
             var prezzo=p.v.toFixed(2)+' EUR';
-            r+=BOLD_ON+rigaProdotto(nome, prezzo)+BOLD_OFF;
+            // Nome grande (doppia altezza+larghezza) — va a capo se lungo
+            var maxCar=W; // a SIZE_BIG entrano circa 24 caratteri per riga
+            r+=SIZE_BIG+BOLD_ON;
+            while(nome.length>0){
+                r+=nome.substring(0,24)+LF;
+                nome=nome.length>24?nome.substring(24):'';
+            }
+            r+=BOLD_OFF+SIZE_NORM;
+            // Prezzo normale a destra
+            r+=ALIGN_R+prezzo+LF+ALIGN_L;
         }
 
         r+=dashedLine();
@@ -693,7 +702,7 @@
 
         // Pagamento
         var payStr=o.pay+(o.pay==='CONTANTI'&&o.resto?' ('+o.resto+')':'');
-        r+=ALIGN_R+payStr+LF;
+        r+=LF+ALIGN_R+SIZE_MED+BOLD_ON+payStr+BOLD_OFF+SIZE_NORM+LF;
 
         // Feed e taglio
         r+=ALIGN_L+FEED+CUT;
