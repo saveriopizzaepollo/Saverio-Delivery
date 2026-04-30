@@ -677,14 +677,36 @@
         var prods=o.prodotti||[];
         for(var i=0;i<prods.length;i++){
             var p=prods[i];
-            var nome=p.q+'  '+(p.isGf?'[GF] ':'')+p.g.toUpperCase();
+            var qta=p.q+'  ';
+            var nome=(p.isGf?'[GF] ':'')+p.g.toUpperCase();
             var prezzo=p.v.toFixed(2)+' EUR';
-            // Nome grande (doppia altezza+larghezza) — va a capo se lungo
-            var maxCar=W; // a SIZE_BIG entrano circa 24 caratteri per riga
+            // A SIZE_BIG entrano 24 caratteri per riga
+            // La quantità occupa i primi caratteri, il nome il resto
+            var qtaLen=qta.length; // spazio riservato alla quantità
+            var maxNome=24-qtaLen; // caratteri disponibili per il nome sulla prima riga
+            var rientro=''; for(var s=0;s<qtaLen;s++) rientro+=' '; // rientro = spazio quantità
+            // Spezza il nome in parole e costruisce righe senza tagliare parole
+            var parole=nome.split(' ');
+            var righe=[];
+            var rigaCorrente='';
+            for(var w=0;w<parole.length;w++){
+                var parola=parole[w];
+                var maxRiga=righe.length===0?maxNome:24-qtaLen;
+                if(rigaCorrente.length===0){
+                    rigaCorrente=parola;
+                } else if(rigaCorrente.length+1+parola.length<=maxRiga){
+                    rigaCorrente+=' '+parola;
+                } else {
+                    righe.push(rigaCorrente);
+                    rigaCorrente=parola;
+                }
+            }
+            if(rigaCorrente.length>0) righe.push(rigaCorrente);
+            // Stampa righe
             r+=SIZE_BIG+BOLD_ON;
-            while(nome.length>0){
-                r+=nome.substring(0,24)+LF;
-                nome=nome.length>24?nome.substring(24):'';
+            for(var ri=0;ri<righe.length;ri++){
+                if(ri===0) r+=qta+righe[ri]+LF;
+                else r+=rientro+righe[ri]+LF;
             }
             r+=BOLD_OFF+SIZE_NORM;
             // Prezzo normale a destra
