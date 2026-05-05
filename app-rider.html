@@ -9,13 +9,9 @@
         :root { --blu: #1A3A5C; --ora: #E8600A; --giallo: #FFEF00; --bor: #D0DCE8; --rosso: #FF4444; --ver: #1B8A4A; --link: #007AFF; --bibite: #007AFF; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Barlow', sans-serif; font-weight: 900; }
         body { background: var(--blu); color: white; height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
-
-        /* PAGINE */
         .page { position: fixed; inset: 0; display: none; background: var(--blu); text-align: center; z-index: 100; overflow-y: auto; }
         .page.show { display: block; }
         .page-inner { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
-
-        /* PIN OVERLAY */
         .pin-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; }
         .pin-overlay.show { display: flex; }
         .pin-box { background: var(--blu); border: 3px solid var(--ora); border-radius: 20px; padding: 30px 25px; width: 90%; max-width: 320px; text-align: center; }
@@ -24,316 +20,416 @@
         .num-key:active { background: rgba(255,255,255,0.25); }
         .dot-row { display: flex; gap: 15px; margin-bottom: 25px; justify-content: center; }
         .dot { width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; transition: background 0.15s; }
-
-        /* HEADER APP */
         .header-main { position: fixed; top: 0; left: 0; right: 0; height: 75px; background: var(--blu); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 4px solid var(--ora); z-index: 1000; }
         .header-nome { font-size: 1.1rem; color: var(--giallo); }
         .header-title { font-size: 0.8rem; color: white; }
         .btn-logout { background: none; border: 2px solid rgba(255,255,255,0.3); color: white; border-radius: 8px; padding: 6px 12px; font-size: 0.75rem; cursor: pointer; }
-
-        /* NAV */
         .nav-bar { position: fixed; top: 75px; left: 0; right: 0; height: 60px; background: #f4f7f9; display: flex; padding: 5px; gap: 5px; z-index: 999; }
-        .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: var(--blu); font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 900; }
+        .nav-btn { flex: 1; border: none; border-radius: 8px; background: #D0DCE8; color: var(--blu); font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-family: 'Barlow', sans-serif; font-weight: 900; }
         .nav-btn.active { background: var(--ora); color: white; }
-
-        /* CONTENT */
         .content-area { position: fixed; top: 135px; bottom: 0; left: 0; right: 0; overflow-y: auto; background: #f4f7f9; color: var(--blu); padding: 15px; }
         .tab-content { display: none; }
         .tab-content.show { display: block; }
-
-        /* CARD CONSEGNA */
-        .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); position: relative; }
-        .card-consegna.consegnata { border-left-color: var(--ver); opacity: 0.7; }
+        .card-consegna { background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 10px solid var(--blu); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--blu); }
+        .card-consegna.consegnata { border-left-color: var(--ver); opacity: 0.6; }
         .card-header-main { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
         .card-num-big { font-size: 1.8rem; color: var(--blu); }
         .card-ora-big { font-size: 1.8rem; color: var(--ora); }
         .card-body-main { font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
-        .card-link-tel { color: var(--link); text-decoration: none; }
-        .card-link-ind { color: var(--ora); text-decoration: none; }
-        
-        .card-list-wrapper { background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }
-        .card-list-text { font-size: 1.1rem; color: var(--blu); display: flex; flex-direction: column; gap: 4px; }
-        .card-prod-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 2px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .card-prod-desc { flex-grow: 1; text-transform: uppercase; }
-        .card-prod-val { width: 70px; text-align: right; font-weight: 700; flex-shrink: 0; }
-
+        .card-link-tel { color: var(--link); text-decoration: none; display: inline-block; }
+        .card-link-ind { color: var(--ora); text-decoration: none; display: inline-block; }
+        .card-list-wrapper { background: #f9f9f9; padding: 6px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; border: 1px solid #eee; }
+        .card-list-wrapper.expanded { background: white; padding: 15px; border: 2px solid var(--ora); }
+        .card-list-text { font-size: 0.9rem; color: #555; display: flex; flex-direction: column; gap: 2px; }
+        .card-prod-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 1px 0; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        .card-prod-desc { flex-grow: 1; text-transform: uppercase; white-space: normal; word-wrap: break-word; }
+        .card-prod-val { width: 65px; text-align: right; color: #666; flex-shrink: 0; font-weight: 700; margin-left: 5px; }
+        .expanded .card-prod-val { display: none; }
+        .expanded .card-list-text { font-size: 1.6rem; color: var(--blu); line-height: 1.2; gap: 5px; }
+        .expanded .card-prod-row { border-bottom: 1px solid #eee; padding: 4px 0; }
         .card-footer-big { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #eee; padding-top: 10px; }
         .pay-label-big { font-size: 1.3rem; font-weight: 900; }
         .tot-label-big { font-size: 1.8rem; color: var(--ora); }
-
-        .btn-consegnato { width: 100%; padding: 16px; background: var(--ver); color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 900; cursor: pointer; margin-top: 12px; }
-
-        /* PIN SETTINGS */
-        .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; color: var(--blu); text-align: center; letter-spacing: 6px; }
-        .btn-main { width: 100%; padding: 15px; background: var(--ora); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 900; }
-
+        .btn-consegnato { width: 100%; padding: 14px; background: var(--ver); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; margin-top: 10px; letter-spacing: 0.5px; }
+        .input-big { width: 100%; padding: 12px; border: 2px solid var(--bor); border-radius: 10px; font-size: 1.1rem; margin-bottom: 12px; outline: none; color: var(--blu); background: white; font-weight: 900; font-family: 'Barlow', sans-serif; text-align: center; letter-spacing: 6px; }
+        .input-big:focus { border-color: var(--ora); }
+        .btn-main { width: 100%; padding: 15px; background: var(--ora); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; margin-bottom: 10px; }
         .empty-state { text-align: center; padding: 60px 20px; color: #aaa; }
-        #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; }
+        .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+        .rider-btn { display: block; width: 100%; padding: 14px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 12px; color: white; font-size: 1.1rem; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; margin-bottom: 8px; text-align: center; }
+        .rider-btn:active { background: rgba(255,255,255,0.25); border-color: var(--ora); }
+
+        /* OVERLAY QR ORDINE */
+        .qr-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 400; display: none; align-items: center; justify-content: center; }
+        .qr-overlay.show { display: flex; }
+        .qr-box { background: white; border-radius: 20px; padding: 25px 20px; width: 92%; max-width: 380px; color: var(--blu); text-align: center; }
+        .qr-num { font-size: 2rem; color: var(--ora); margin-bottom: 4px; }
+        .qr-cog { font-size: 1.5rem; color: var(--blu); margin-bottom: 4px; }
+        .qr-ind { font-size: 0.9rem; color: #888; margin-bottom: 15px; }
+        .qr-prods { background: #f9f9f9; border-radius: 10px; padding: 10px; margin-bottom: 15px; text-align: left; }
+        .qr-prod-row { font-size: 0.95rem; color: var(--blu); padding: 3px 0; border-bottom: 1px solid #eee; }
+        .qr-prod-row:last-child { border-bottom: none; }
+        .qr-tot { font-size: 1.4rem; color: var(--ora); margin-bottom: 15px; }
+        .btn-prendi { width: 100%; padding: 16px; background: var(--ver); color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; margin-bottom: 10px; }
+        .btn-lascia { width: 100%; padding: 14px; background: none; border: 2px solid #ddd; border-radius: 12px; font-size: 1rem; color: #aaa; font-family: 'Barlow', sans-serif; font-weight: 900; cursor: pointer; }
+
+        #fb-status { position: fixed; bottom: 8px; right: 10px; font-size: 0.65rem; color: rgba(255,255,255,0.4); z-index: 9999; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN RIDER -->
-    <div id="page-select" class="page show">
-        <div class="page-inner">
-            <h1 style="font-size:2.8rem; margin-bottom:8px;">SAVERIO DELIVERY</h1>
-            <p style="color:rgba(255,255,255,0.4); margin-bottom:40px; letter-spacing:3px;">AREA RIDER</p>
-            <div id="rider-list" style="width:100%; max-width:320px;"></div>
-        </div>
+<div id="page-select" class="page show">
+    <div class="page-inner">
+        <h1 style="font-size:2.8rem; margin-bottom:8px; letter-spacing:1px;">SAVERIO DELIVERY</h1>
+        <p style="color:rgba(255,255,255,0.4); margin-bottom:40px; font-size:0.8rem; letter-spacing:3px;">AREA RIDER</p>
+        <div id="rider-list" style="width:100%; max-width:320px;"></div>
     </div>
+</div>
 
-    <!-- PIN OVERLAY -->
-    <div id="pin-overlay" class="pin-overlay">
-        <div class="pin-box">
-            <h2 id="pin-title" style="font-size:1.6rem; margin-bottom:4px;"></h2>
-            <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-bottom:20px;">INSERISCI PIN</p>
-            <div class="dot-row">
-                <div class="dot" id="dot-0"></div>
-                <div class="dot" id="dot-1"></div>
-                <div class="dot" id="dot-2"></div>
-                <div class="dot" id="dot-3"></div>
-            </div>
-            <div class="grid-pin" id="numpad"></div>
-            <p id="pin-error" style="color:var(--rosso); margin-top:15px; display:none;">PIN ERRATO</p>
-            <button onclick="chiudiPin()" style="margin-top:18px; background:none; border:none; color:white; opacity:0.4;">← ANNULLA</button>
+<div id="pin-overlay" class="pin-overlay">
+    <div class="pin-box">
+        <h2 id="pin-title" style="font-size:1.6rem; margin-bottom:4px;"></h2>
+        <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-bottom:20px; letter-spacing:1px;">INSERISCI PIN</p>
+        <div class="dot-row">
+            <div class="dot" id="dot-0"></div><div class="dot" id="dot-1"></div>
+            <div class="dot" id="dot-2"></div><div class="dot" id="dot-3"></div>
         </div>
+        <div class="grid-pin" id="numpad"></div>
+        <p id="pin-error" style="color:var(--rosso); margin-top:15px; font-size:0.9rem; display:none;">PIN ERRATO</p>
+        <button onclick="chiudiPin()" style="margin-top:18px; background:none; border:none; color:rgba(255,255,255,0.35); font-size:0.8rem; cursor:pointer; font-family:'Barlow',sans-serif;">← ANNULLA</button>
     </div>
+</div>
 
-    <!-- MAIN APP -->
-    <div id="app-rider" style="display:none;">
-        <div class="header-main">
-            <span class="header-title">SAVERIO DELIVERY</span>
-            <span class="header-nome" id="rider-nome-header"></span>
-            <button class="btn-logout" onclick="logout()">ESCI</button>
-        </div>
-        <div class="nav-bar">
-            <button class="nav-btn active" id="btn-ta" onclick="showTab('a')">CONSEGNE</button>
-            <button class="nav-btn" id="btn-tb" onclick="showTab('b')">STORICO</button>
-            <button class="nav-btn" id="btn-tc" onclick="showTab('c')">PIN</button>
-        </div>
-
-        <div id="banner-disponibile" style="display:none; position:fixed; top:135px; left:0; right:0; background:var(--ver); padding:12px 20px; z-index:998; align-items:center; justify-content:space-between;">
-            <span style="font-size:0.9rem;">⏱ Stai rientrando?</span>
-            <button onclick="sonoDisponibile()" style="padding:8px 18px; background:white; color:var(--ver); border:none; border-radius:8px; font-weight:900;">✅ SONO DISPONIBILE</button>
-        </div>
-
-        <div class="content-area">
-            <div id="taba" class="tab-content show"><div id="lista-assegnate"></div></div>
-            <div id="tabb" class="tab-content"><div id="lista-completate"></div></div>
-            <div id="tabc" class="tab-content">
-                <div style="background:white; border-radius:15px; padding:20px; color:var(--blu);">
-                    <h3 style="margin-bottom:20px;">CAMBIA IL TUO PIN</h3>
-                    <input type="password" inputmode="numeric" maxlength="4" id="pin-nuovo" class="input-big" placeholder="NUOVO PIN">
-                    <input type="password" inputmode="numeric" maxlength="4" id="pin-conferma" class="input-big" placeholder="CONFERMA">
-                    <button class="btn-main" onclick="cambiaPIN()">SALVA NUOVO PIN</button>
-                    <p id="pin-msg" style="text-align:center; margin-top:10px; display:none;"></p>
-                </div>
+<div id="app-rider" style="display:none;">
+    <div class="header-main">
+        <span class="header-title">SAVERIO DELIVERY</span>
+        <span class="header-nome" id="rider-nome-header"></span>
+        <button class="btn-logout" onclick="logout()">ESCI</button>
+    </div>
+    <div class="nav-bar">
+        <button class="nav-btn active" id="btn-ta" onclick="showTab('a')">CONSEGNE</button>
+        <button class="nav-btn" id="btn-tb" onclick="showTab('b')">COMPLETATE</button>
+        <button class="nav-btn" id="btn-tc" onclick="showTab('c')">PIN</button>
+    </div>
+    <div id="banner-disponibile" style="display:none; position:fixed; top:135px; left:0; right:0; background:var(--ver); padding:12px 20px; z-index:998; align-items:center; justify-content:space-between; gap:10px;">
+        <span style="font-size:0.9rem; color:white;">⏱ Stai rientrando...</span>
+        <button onclick="sonoDisponibile()" style="padding:8px 18px; background:white; color:var(--ver); border:none; border-radius:8px; font-family:'Barlow',sans-serif; font-weight:900; font-size:0.9rem; cursor:pointer;">✅ SONO DISPONIBILE</button>
+    </div>
+    <div class="content-area" id="content-area-rider">
+        <div id="taba" class="tab-content show"><div id="lista-assegnate"></div></div>
+        <div id="tabb" class="tab-content"><div id="lista-completate"></div></div>
+        <div id="tabc" class="tab-content">
+            <div style="background:white; border-radius:15px; padding:20px; color:var(--blu);">
+                <h3 style="margin-bottom:20px; font-size:1.3rem;">CAMBIA IL TUO PIN</h3>
+                <input type="password" inputmode="numeric" maxlength="4" id="pin-nuovo" class="input-big" placeholder="NUOVO PIN">
+                <input type="password" inputmode="numeric" maxlength="4" id="pin-conferma" class="input-big" placeholder="CONFERMA PIN">
+                <button class="btn-main" onclick="cambiaPIN()">SALVA NUOVO PIN</button>
+                <p id="pin-msg" style="text-align:center; font-size:0.9rem; display:none;"></p>
             </div>
         </div>
     </div>
+</div>
 
-    <div id="fb-status">⚪ collegando...</div>
+<!-- OVERLAY QR ORDINE -->
+<div id="qr-overlay" class="qr-overlay">
+    <div class="qr-box">
+        <div id="qr-content"></div>
+        <button class="btn-prendi" id="btn-prendi" onclick="prendiOrdine()">🛵 PRENDI</button>
+        <button class="btn-lascia" onclick="chiudiQR()">LASCIA</button>
+    </div>
+</div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<div id="fb-status">⚪ connecting...</div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBvQVRAkkyO00yttmQuoZiAohM2P44gY1Y",
-            authDomain: "saverio-delivery-29387.firebaseapp.com",
-            databaseURL: "https://saverio-delivery-29387-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "saverio-delivery-29387",
-            storageBucket: "saverio-delivery-29387.firebasestorage.app",
-            messagingSenderId: "1023327240106",
-            appId: "1:1023327240106:web:203ace4347a69a038ab5d3"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const ridersRef = db.ref('riders');
-        const ordiniRef = db.ref('ordini');
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-        let riders = {};
-        let riderSelezionato = null;
-        let cPin = "";
-        let ordiniTutti = [];
-        let sessionRiderId = sessionStorage.getItem('riderId');
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvQVRAkkyO00yttmQuoZiAohM2P44gY1Y",
+        authDomain: "saverio-delivery-29387.firebaseapp.com",
+        databaseURL: "https://saverio-delivery-29387-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "saverio-delivery-29387",
+        storageBucket: "saverio-delivery-29387.firebasestorage.app",
+        messagingSenderId: "1023327240106",
+        appId: "1:1023327240106:web:203ace4347a69a038ab5d3"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const ridersRef = db.ref('riders');
+    const ordiniRef = db.ref('ordini');
 
-        // --- INIZIALIZZAZIONE ---
-        ridersRef.on('value', (snap) => {
-            riders = snap.val() || {};
-            renderRiderList();
-            if(sessionRiderId && riders[sessionRiderId]) {
-                riderSelezionato = { id: sessionRiderId, ...riders[sessionRiderId] };
-                document.getElementById('rider-nome-header').textContent = riderSelezionato.nome;
-                if(ordiniTutti.length > 0) renderConsegne();
-            }
-        });
+    let riders = {};
+    let riderSelezionato = null;
+    let cPin = "";
+    let ordiniTutti = [];
+    let sessionRiderId = sessionStorage.getItem('riderId') || null;
+    let qrOrdineKey = null; // chiave ordine da QR
+    let qrOrdine = null;   // dati ordine da QR
 
-        ordiniRef.on('value', (snap) => {
-            ordiniTutti = [];
-            snap.forEach(child => {
-                let o = child.val(); o._key = child.key;
-                ordiniTutti.push(o);
-            });
-            ordiniTutti.sort((a,b) => a.ora.localeCompare(b.ora));
-            if(riderSelezionato) renderConsegne();
-        });
+    // Leggi parametro ?ordine= dall'URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var ordineKeyQR = urlParams.get('ordine');
 
-        if(sessionRiderId) {
+    ridersRef.on('value', (snap) => {
+        riders = snap.val() || {};
+        renderRiderList();
+        if(sessionRiderId && riders[sessionRiderId]) {
+            riderSelezionato = { id: sessionRiderId, ...riders[sessionRiderId] };
+            document.getElementById('rider-nome-header').textContent = riderSelezionato.nome;
+            renderConsegne();
+            // Se c'è un ordine da QR e il rider è già loggato, mostra subito
+            if(ordineKeyQR) apriQROrdine(ordineKeyQR);
+        }
+    });
+
+    if(sessionRiderId) {
+        document.getElementById('page-select').classList.remove('show');
+        document.getElementById('app-rider').style.display = 'block';
+    }
+
+    ordiniRef.on('value', (snap) => {
+        ordiniTutti = [];
+        snap.forEach(child => { let o = child.val(); o._key = child.key; ordiniTutti.push(o); });
+        ordiniTutti.sort((a,b) => a.ora.localeCompare(b.ora));
+        if(riderSelezionato) renderConsegne();
+        document.getElementById('fb-status').textContent = '🟢 sync';
+    });
+
+    db.ref('.info/connected').on('value', snap => {
+        document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
+    });
+
+    ridersRef.once('value', snap => {
+        if(!snap.val()) {
+            var predefiniti = ['FELICE','GASPARE','LEONARDO','VINCENZO','GAETANO'];
+            for(var i=0;i<predefiniti.length;i++) ridersRef.push({nome:predefiniti[i],pin:'0000'});
+        }
+    });
+
+    function renderRiderList() {
+        var container = document.getElementById('rider-list');
+        if(!riders || Object.keys(riders).length === 0) { container.innerHTML = '<p style="color:rgba(255,255,255,0.5);">Caricamento...</p>'; return; }
+        container.innerHTML = Object.entries(riders).map(([id, r]) =>
+            `<button class="rider-btn" onclick="selezionaRider('${id}')">${r.nome}</button>`
+        ).join('');
+    }
+
+    function selezionaRider(id) {
+        riderSelezionato = { id, ...riders[id] };
+        document.getElementById('pin-title').textContent = riderSelezionato.nome;
+        document.getElementById('pin-error').style.display = 'none';
+        cPin = "";
+        for(var i=0; i<4; i++) document.getElementById('dot-'+i).style.background = 'none';
+        document.getElementById('pin-overlay').classList.add('show');
+    }
+
+    function chiudiPin() { document.getElementById('pin-overlay').classList.remove('show'); cPin = ""; }
+
+    var pad = document.getElementById('numpad');
+    for(var i=1; i<=9; i++) {
+        var b = document.createElement('div'); b.className='num-key'; b.innerText=i;
+        (function(n){ b.onclick = function(){ pressPin(n); }; })(i);
+        pad.appendChild(b);
+    }
+    var z = document.createElement('div'); z.className='num-key'; z.innerText='0';
+    z.style.gridColumnStart='2'; z.onclick = function(){ pressPin(0); }; pad.appendChild(z);
+
+    function pressPin(n) {
+        if(cPin.length < 4) {
+            cPin += n;
+            document.getElementById('dot-'+(cPin.length-1)).style.background = 'var(--ora)';
+            if(cPin.length === 4) setTimeout(function(){ verificaPin(); }, 200);
+        }
+    }
+
+    function verificaPin() {
+        var pinCorretto = riders[riderSelezionato.id] ? riders[riderSelezionato.id].pin || '0000' : '0000';
+        if(cPin === pinCorretto) {
+            sessionStorage.setItem('riderId', riderSelezionato.id);
+            sessionRiderId = riderSelezionato.id;
+            document.getElementById('pin-overlay').classList.remove('show');
             document.getElementById('page-select').classList.remove('show');
             document.getElementById('app-rider').style.display = 'block';
+            document.getElementById('rider-nome-header').textContent = riderSelezionato.nome;
+            renderConsegne();
+            // Se c'era un ordine da QR, mostralo dopo il login
+            if(ordineKeyQR) apriQROrdine(ordineKeyQR);
+        } else {
+            document.getElementById('pin-error').style.display = 'block';
+            cPin = "";
+            for(var i=0; i<4; i++) document.getElementById('dot-'+i).style.background = 'none';
         }
+    }
 
-        db.ref('.info/connected').on('value', snap => {
-            document.getElementById('fb-status').textContent = snap.val() ? '🟢 sync' : '🔴 offline';
+    function logout() {
+        sessionStorage.removeItem('riderId');
+        sessionRiderId = null; riderSelezionato = null;
+        document.getElementById('app-rider').style.display = 'none';
+        document.getElementById('page-select').classList.add('show');
+    }
+
+    function showTab(t) {
+        document.querySelectorAll('.tab-content').forEach(function(el){ el.classList.remove('show'); });
+        document.querySelectorAll('.nav-btn').forEach(function(el){ el.classList.remove('active'); });
+        document.getElementById('tab'+t).classList.add('show');
+        document.getElementById('btn-t'+t).classList.add('active');
+        if(t === 'a' || t === 'b') renderConsegne();
+    }
+
+    // ── OVERLAY QR ORDINE ──────────────────────────────────────────
+    function apriQROrdine(key) {
+        var ordine = null;
+        for(var i=0;i<ordiniTutti.length;i++){
+            if(ordiniTutti[i]._key === key){ ordine = ordiniTutti[i]; break; }
+        }
+        if(!ordine) {
+            // Carica direttamente da Firebase se non ancora in memoria
+            ordiniRef.child(key).once('value', function(snap){
+                var o = snap.val();
+                if(!o) return;
+                o._key = key;
+                qrOrdine = o;
+                qrOrdineKey = key;
+                mostraQRCard(o);
+            });
+            return;
+        }
+        qrOrdine = ordine;
+        qrOrdineKey = key;
+        mostraQRCard(ordine);
+    }
+
+    function mostraQRCard(o) {
+        var prodHtml = (o.prodotti||[]).map(function(p){
+            return `<div class="qr-prod-row">${p.q} ${p.isGf?'[GF] ':''}${p.g.toUpperCase()}</div>`;
+        }).join('');
+        var riderAttuale = o.riderId && riders[o.riderId] ? '🛵 Assegnato a: '+riders[o.riderId].nome : '';
+        document.getElementById('qr-content').innerHTML = `
+            <div class="qr-num">${o.num} &nbsp; 🕒 ${o.ora}</div>
+            <div class="qr-cog">👤 ${o.cog}</div>
+            <div class="qr-ind">📍 ${o.ind}</div>
+            ${riderAttuale?`<div style="font-size:0.85rem;color:var(--ora);margin-bottom:10px;">${riderAttuale}</div>`:''}
+            <div class="qr-prods">${prodHtml}</div>
+            <div class="qr-tot">${o.tot}</div>`;
+        document.getElementById('qr-overlay').classList.add('show');
+    }
+
+    function prendiOrdine() {
+        if(!qrOrdineKey || !riderSelezionato) return;
+        ordiniRef.child(qrOrdineKey).update({
+            stato: 'assegnato',
+            riderId: riderSelezionato.id,
+            tsAssegnato: firebase.database.ServerValue.TIMESTAMP
         });
-
-        // --- LOGICA LOGIN ---
-        function renderRiderList() {
-            const container = document.getElementById('rider-list');
-            container.innerHTML = Object.entries(riders).map(([id, r]) =>
-                `<button style="width:100%; padding:16px; background:rgba(255,255,255,0.1); border:2px solid rgba(255,255,255,0.2); border-radius:12px; color:white; font-size:1.2rem; margin-bottom:10px; cursor:pointer;" onclick="selezionaRider('${id}')">${r.nome}</button>`
-            ).join('');
+        chiudiQR();
+        // Pulisci URL senza ricaricare la pagina
+        if(window.history && window.history.replaceState) {
+            window.history.replaceState({}, '', window.location.pathname);
         }
+        ordineKeyQR = null;
+    }
 
-        function selezionaRider(id) {
-            riderSelezionato = { id, ...riders[id] };
-            document.getElementById('pin-title').textContent = riderSelezionato.nome;
-            document.getElementById('pin-error').style.display = 'none';
-            cPin = ""; resetDots();
-            document.getElementById('pin-overlay').classList.add('show');
+    function chiudiQR() {
+        document.getElementById('qr-overlay').classList.remove('show');
+        qrOrdineKey = null; qrOrdine = null;
+        if(window.history && window.history.replaceState) {
+            window.history.replaceState({}, '', window.location.pathname);
         }
+        ordineKeyQR = null;
+    }
 
-        const pad = document.getElementById('numpad');
-        for(let i=1; i<=9; i++) {
-            let b = document.createElement('div'); b.className='num-key'; b.innerText=i;
-            b.onclick = () => pressPin(i); pad.appendChild(b);
+    // ── RENDER CONSEGNE ────────────────────────────────────────────
+    function renderConsegne() {
+        if(!riderSelezionato) return;
+        var mie = ordiniTutti.filter(function(o){ return o.riderId === riderSelezionato.id; });
+        var assegnate = mie.filter(function(o){ return o.stato !== 'consegnato'; });
+        var completate = mie.filter(function(o){ return o.stato === 'consegnato'; });
+        renderLista('lista-assegnate', assegnate, false);
+        renderLista('lista-completate', completate, true);
+        document.getElementById('btn-ta').textContent = assegnate.length > 0 ? 'CONSEGNE ('+assegnate.length+')' : 'CONSEGNE';
+        var banner = document.getElementById('banner-disponibile');
+        var riderData = riders[riderSelezionato.id];
+        if(assegnate.length === 0 && completate.length > 0 && riderData && riderData.inRientro) {
+            banner.style.display = 'flex';
+        } else {
+            banner.style.display = 'none';
         }
-        let z = document.createElement('div'); z.className='num-key'; z.innerText='0';
-        z.style.gridColumnStart='2'; z.onclick = () => pressPin(0); pad.appendChild(z);
+    }
 
-        function pressPin(n) {
-            if(cPin.length < 4) {
-                cPin += n;
-                document.getElementById('dot-'+(cPin.length-1)).style.background = 'var(--ora)';
-                if(cPin.length === 4) setTimeout(verificaPin, 200);
-            }
+    function renderLista(containerId, lista, isCompletate) {
+        var container = document.getElementById(containerId);
+        if(lista.length === 0) {
+            container.innerHTML = '<div class="empty-state"><div class="empty-icon">'+(isCompletate?'✅':'🛵')+'</div><p>'+(isCompletate?'Nessuna consegna completata':'Nessuna consegna assegnata')+'</p></div>';
+            return;
         }
-
-        function verificaPin() {
-            if(cPin === (riders[riderSelezionato.id]?.pin || '0000')) {
-                sessionStorage.setItem('riderId', riderSelezionato.id);
-                sessionRiderId = riderSelezionato.id;
-                document.getElementById('pin-overlay').classList.remove('show');
-                document.getElementById('page-select').classList.remove('show');
-                document.getElementById('app-rider').style.display = 'block';
-                document.getElementById('rider-nome-header').textContent = riderSelezionato.nome;
-                renderConsegne();
-            } else {
-                document.getElementById('pin-error').style.display = 'block';
-                cPin = ""; resetDots();
-            }
-        }
-
-        function resetDots() { for(let i=0; i<4; i++) document.getElementById('dot-'+i).style.background = 'none'; }
-
-        function logout() {
-            sessionStorage.removeItem('riderId');
-            location.reload();
-        }
-
-        // --- NAVIGAZIONE ---
-        function showTab(t) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('show'));
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab'+t).classList.add('show');
-            document.getElementById('btn-t'+t).classList.add('active');
-        }
-
-        // --- RENDER ORDINI ---
-        function renderConsegne() {
-            if(!riderSelezionato) return;
-            let mie = ordiniTutti.filter(o => o.riderId === riderSelezionato.id);
-            let assegnate = mie.filter(o => o.stato !== 'consegnato');
-            let completate = mie.filter(o => o.stato === 'consegnato').reverse();
-
-            renderLista('lista-assegnate', assegnate, false);
-            renderLista('lista-completate', completate, true);
-
-            document.getElementById('btn-ta').textContent = assegnate.length > 0 ? `CONSEGNE (${assegnate.length})` : 'CONSEGNE';
-            
-            let riderData = riders[riderSelezionato.id];
-            document.getElementById('banner-disponibile').style.display = (assegnate.length === 0 && riderData?.inRientro) ? 'flex' : 'none';
-        }
-
-        function renderLista(containerId, lista, isCompletate) {
-            const container = document.getElementById(containerId);
-            if(lista.length === 0) {
-                container.innerHTML = `<div class="empty-state"><p>${isCompletate ? 'Nessuno storico' : 'Nessuna consegna'}</p></div>`;
-                return;
-            }
-            container.innerHTML = lista.map(o => {
-                let p_html = o.prodotti.map(p => `
-                    <div class="card-prod-row" style="color:${p.isGf?'var(--ver)':p.tipo==='1'?'var(--rosso)':p.tipo==='2'?'var(--bibite)':'inherit'}">
-                        <span class="card-prod-desc">${p.isGf?'[GF] ':''}${p.q} ${p.g}</span>
-                        <span class="card-prod-val">${p.v.toFixed(2)}€</span>
-                    </div>`).join('');
-
-                return `
-                <div class="card-consegna ${isCompletate ? 'consegnata' : ''}">
-                    <div class="card-header-main">
-                        <span class="card-num-big">#${o.num}</span>
-                        <span class="card-ora-big">${o.ora}</span>
-                    </div>
-                    <div class="card-body-main">
-                        <b>${o.cog}</b><br>
-                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
-                        <small>📞 <a href="tel:${o.tel}" class="card-link-tel">${o.tel}</a></small>
-                        ${o.nota ? `<div style="margin-top:5px; color:var(--ora); font-size:1.1rem;">📝 ${o.nota}</div>` : ''}
-                    </div>
-                    <div class="card-list-wrapper"><div class="card-list-text">${p_html}</div></div>
-                    <div class="card-footer-big">
-                        <span class="pay-label-big" style="color:${o.pay==='POS'?'var(--rosso)':o.pay==='PAGATO'?'var(--ver)':'var(--blu)'}">
-                            ${o.pay}${o.pay==='CONTANTI'&&o.resto?' (R:'+o.resto+')':''}
-                        </span>
-                        <b class="tot-label-big">${o.tot}</b>
-                    </div>
-                    ${!isCompletate ? `<button class="btn-consegnato" onclick="segnaConsegnato('${o._key}')">✅ CONSEGNATO</button>` : ''}
-                </div>`;
+        container.innerHTML = lista.map(function(o){
+            var prodHtml = o.prodotti.map(function(p){
+                var col = p.isGf ? 'var(--ver)' : p.tipo==='1' ? 'var(--rosso)' : p.tipo==='2' ? 'var(--bibite)' : p.tipo==='3' ? '#8B6914' : 'inherit';
+                return `<div class="card-prod-row" style="color:${col}"><span class="card-prod-desc">${p.isGf?'[GF] ':''}${p.q} ${p.g}</span><span class="card-prod-val">${p.v.toFixed(2)}€</span></div>`;
             }).join('');
-        }
+            var notaHtml = o.nota ? `<div style="margin-top:5px;font-size:1rem;color:var(--ora);">📝 ${o.nota}</div>` : '';
+            var btnConsegnato = !isCompletate ? `<button class="btn-consegnato" onclick="segnaConsegnato('${o._key}')">✅ CONSEGNATO</button>` : '';
+            return `<div class="card-consegna ${isCompletate?'consegnata':''}">
+                <div class="card-header-main">
+                    <span class="card-num-big">🏷️ ${o.num}</span>
+                    <span class="card-ora-big">🕒 ${o.ora}</span>
+                </div>
+                <div class="card-body-main">
+                    <b>👤 ${o.cog}</b><br>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.ind)}" class="card-link-ind" target="_blank">📍 ${o.ind}</a><br>
+                    <small>📞 <a href="tel:${o.tel}" class="card-link-tel">${o.tel}</a></small>
+                    ${notaHtml}
+                </div>
+                <div class="card-list-wrapper" onclick="this.classList.toggle('expanded')">
+                    <div class="card-list-text">${prodHtml}
+                        <div class="card-prod-row" style="margin-top:2px;border-top:1px dashed #ddd;padding-top:2px;">
+                            <span class="card-prod-desc">🛵 CONSEGNA</span>
+                            <span class="card-prod-val">${o.costoCons.toFixed(2)}€</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer-big">
+                    <span class="pay-label-big" style="color:${o.pay==='POS'?'var(--rosso)':o.pay==='PAGATO'?'var(--ver)':'var(--blu)'}">
+                        ${o.pay}${o.pay==='CONTANTI'&&o.resto?' ('+o.resto+')':''}
+                    </span>
+                    <b class="tot-label-big">${o.tot}</b>
+                </div>
+                ${btnConsegnato}
+            </div>`;
+        }).join('');
+    }
 
-        // --- AZIONI ---
-        function segnaConsegnato(key) {
-            if(!confirm("Consegna completata?")) return;
-            ordiniRef.child(key).update({ stato: 'consegnato', tsConsegnato: firebase.database.ServerValue.TIMESTAMP })
-            .then(() => {
-                let ancoraDaFare = ordiniTutti.filter(o => o.riderId === riderSelezionato.id && o.stato !== 'consegnato' && o._key !== key);
-                if(ancoraDaFare.length === 0) {
-                    ridersRef.child(riderSelezionato.id).update({ inRientro: true, tsRientro: firebase.database.ServerValue.TIMESTAMP });
-                }
-            });
-        }
+    function sonoDisponibile() {
+        if(!riderSelezionato) return;
+        ridersRef.child(riderSelezionato.id).update({ inRientro: false, tsRientro: null });
+    }
 
-        function sonoDisponibile() {
-            ridersRef.child(riderSelezionato.id).update({ inRientro: false, tsRientro: null });
-        }
-
-        function cambiaPIN() {
-            let n = document.getElementById('pin-nuovo').value;
-            let c = document.getElementById('pin-conferma').value;
-            let m = document.getElementById('pin-msg');
-            if(!/^\d{4}$/.test(n) || n !== c) {
-                m.textContent = "ERRORE PIN"; m.style.color = "var(--rosso)"; m.style.display = "block"; return;
+    function segnaConsegnato(key) {
+        ordiniRef.child(key).update({ stato: 'consegnato', tsConsegnato: firebase.database.ServerValue.TIMESTAMP });
+        setTimeout(function(){
+            if(!riderSelezionato) return;
+            var mie = ordiniTutti.filter(function(o){ return o.riderId === riderSelezionato.id; });
+            var rimanenti = mie.filter(function(o){ return o.stato !== 'consegnato' && o._key !== key; });
+            if(rimanenti.length === 0) {
+                ridersRef.child(riderSelezionato.id).update({ inRientro: true, tsRientro: firebase.database.ServerValue.TIMESTAMP });
             }
-            ridersRef.child(riderSelezionato.id).update({ pin: n }).then(() => {
-                m.textContent = "✅ AGGIORNATO"; m.style.color = "var(--ver)"; m.style.display = "block";
-                document.getElementById('pin-nuovo').value = ""; document.getElementById('pin-conferma').value = "";
-                setTimeout(() => m.style.display = "none", 2000);
-            });
-        }
+        }, 500);
+    }
 
-        function chiudiPin() { document.getElementById('pin-overlay').classList.remove('show'); }
-    </script>
+    function cambiaPIN() {
+        var nuovo = document.getElementById('pin-nuovo').value.trim();
+        var conferma = document.getElementById('pin-conferma').value.trim();
+        var msg = document.getElementById('pin-msg');
+        if(nuovo.length !== 4 || !/^\d{4}$/.test(nuovo)) { msg.style.display='block'; msg.style.color='var(--rosso)'; msg.textContent='IL PIN DEVE ESSERE DI 4 CIFRE'; return; }
+        if(nuovo !== conferma) { msg.style.display='block'; msg.style.color='var(--rosso)'; msg.textContent='I PIN NON COINCIDONO'; return; }
+        ridersRef.child(riderSelezionato.id).update({ pin: nuovo });
+        riderSelezionato.pin = nuovo;
+        document.getElementById('pin-nuovo').value = '';
+        document.getElementById('pin-conferma').value = '';
+        msg.style.display='block'; msg.style.color='var(--ver)'; msg.textContent='✅ PIN AGGIORNATO!';
+        setTimeout(function(){ msg.style.display='none'; }, 3000);
+    }
+</script>
 </body>
 </html>
