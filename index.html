@@ -185,16 +185,18 @@
             <div id="resto-box" style="display:none; margin-top:10px;">
                 <input type="text" id="o-resto" class="input-big" placeholder="ES: RESTO DA 50€" oninput="updateRiepilogo()">
             </div>
-            <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; margin-top:15px; margin-bottom:30px;" disabled onclick="inviaOrdine()">INVIA ORDINE</button>
+            <button id="btn-invia" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; margin-top:15px; margin-bottom:10px;" disabled onclick="inviaOrdine()">INVIA ORDINE</button>
+            <button id="btn-invia-stampa" style="width:100%; height:70px; background:#ccc; border:none; border-radius:15px; color:white; margin-bottom:30px;" disabled onclick="inviaEStampa()">INVIA E STAMPA 🖨️</button>
         </div>
 
         <div id="tab5" class="tab-content">
             <h2 style="color:var(--blu); margin-bottom:10px;">STATO CONSEGNE</h2>
             <div class="search-bar">
                 <input type="text" id="search-consegne" class="search-input" placeholder="🔍 CERCA COGNOME O INDIRIZZO" oninput="renderConsegne()">
+                <button id="btn-filtro-stampa" onclick="toggleFiltroNonStampati()" style="padding:8px 12px;background:#D0DCE8;color:var(--blu);border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-weight:900;font-size:0.75rem;cursor:pointer;white-space:nowrap;">🖨️ NON STAMPATI</button>
             </div>
             <div id="consegne-lista"></div>
-            <div style="height:20px;"></div>
+            <div style="height:80px;"></div>
         </div>
 
         <div id="tab8" class="tab-content">
@@ -219,7 +221,21 @@
 <div id="barra-stampa">
     <button onclick="annullaStampa()" style="padding:8px 14px;background:none;border:2px solid rgba(255,255,255,0.3);color:white;border-radius:8px;font-family:'Barlow',sans-serif;font-weight:900;font-size:0.85rem;cursor:pointer;">✕ ANNULLA</button>
     <span id="stampa-count" style="color:var(--giallo);font-size:0.95rem;"></span>
-    <button onclick="stampaSelezionati()" style="padding:10px 20px;background:var(--ora);color:white;border:none;border-radius:8px;font-family:'Barlow',sans-serif;font-weight:900;font-size:1rem;cursor:pointer;">🖨️ STAMPA</button>
+    <button onclick="apriSceltaCopie()" style="padding:10px 20px;background:var(--ora);color:white;border:none;border-radius:8px;font-family:'Barlow',sans-serif;font-weight:900;font-size:1rem;cursor:pointer;">🖨️ STAMPA</button>
+</div>
+
+<!-- OVERLAY SCELTA COPIE -->
+<div id="copie-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:600;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:20px;padding:25px 20px;width:85%;max-width:320px;text-align:center;color:var(--blu);">
+        <h3 style="font-size:1.2rem;margin-bottom:15px;">QUANTE COPIE?</h3>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;">
+            <button onclick="stampaCopie(1)" style="padding:18px 0;background:#f4f7f9;border:2px solid var(--bor);border-radius:10px;font-size:1.4rem;font-family:'Barlow',sans-serif;font-weight:900;color:var(--blu);cursor:pointer;">1</button>
+            <button onclick="stampaCopie(2)" style="padding:18px 0;background:#f4f7f9;border:2px solid var(--bor);border-radius:10px;font-size:1.4rem;font-family:'Barlow',sans-serif;font-weight:900;color:var(--blu);cursor:pointer;">2</button>
+            <button onclick="stampaCopie(3)" style="padding:18px 0;background:#f4f7f9;border:2px solid var(--bor);border-radius:10px;font-size:1.4rem;font-family:'Barlow',sans-serif;font-weight:900;color:var(--blu);cursor:pointer;">3</button>
+            <button onclick="stampaCopie(4)" style="padding:18px 0;background:#f4f7f9;border:2px solid var(--bor);border-radius:10px;font-size:1.4rem;font-family:'Barlow',sans-serif;font-weight:900;color:var(--blu);cursor:pointer;">4</button>
+        </div>
+        <button onclick="chiudiCopieOverlay()" style="width:100%;padding:12px;background:none;border:2px solid #ddd;border-radius:10px;color:#aaa;font-family:'Barlow',sans-serif;font-weight:900;cursor:pointer;">ANNULLA</button>
+    </div>
 </div>
 
 <div id="fb-status">⚪ connecting...</div>
@@ -246,6 +262,7 @@
     let ordiniSalvati = [], editKey = null, editStatoPrecedente = null;
     let riders = {}, clienti = {}, listino = {};
     let selezionatiStampa = new Set();
+    let filtroNonStampati = false;
     const clientiRef = db.ref('clienti');
     const coloriTipo = {'0':'#E8600A','1':'#FF4444','2':'#007AFF','3':'#8B6914','4':'#CC5500'};
     const classiTipo = {'0':'','1':'tipo-polleria','2':'tipo-bibite','3':'tipo-banco','4':'tipo-coscia'};
@@ -461,6 +478,8 @@
         let ok=cog&&ind&&ora&&sCost>0&&pt>0&&sPay;
         document.getElementById('btn-invia').style.background=ok?'var(--ver)':'#ccc';
         document.getElementById('btn-invia').disabled=!ok;
+        document.getElementById('btn-invia-stampa').style.background=ok?'var(--ora)':'#ccc';
+        document.getElementById('btn-invia-stampa').disabled=!ok;
     }
 
     function inviaOrdine() {
@@ -577,6 +596,67 @@
             barra.style.display='none';
         }
     }
+
+    function inviaEStampa() {
+        inviaOrdine();
+        // Dopo un attimo cerca l'ultimo ordine inserito e stampalo
+        setTimeout(function(){
+            // Trova l'ordine appena inserito (l'ultimo per orario/num)
+            if(ordiniSalvati.length === 0) return;
+            var ultimo = ordiniSalvati[ordiniSalvati.length-1];
+            // Cerca per numero ordine corrente
+            selezionatiStampa.clear();
+            selezionatiStampa.add(ultimo._key);
+            apriSceltaCopie();
+        }, 800);
+    }
+
+    function toggleFiltroNonStampati() {
+        filtroNonStampati = !filtroNonStampati;
+        var btn = document.getElementById('btn-filtro-stampa');
+        btn.style.background = filtroNonStampati ? 'var(--ora)' : '#D0DCE8';
+        btn.style.color = filtroNonStampati ? 'white' : 'var(--blu)';
+        renderConsegne();
+    }
+
+    function apriSceltaCopie() {
+        if(selezionatiStampa.size === 0) return;
+        document.getElementById('copie-overlay').style.display = 'flex';
+    }
+
+    function chiudiCopieOverlay() {
+        document.getElementById('copie-overlay').style.display = 'none';
+    }
+
+    function stampaCopie(n) {
+        chiudiCopieOverlay();
+        if(selezionatiStampa.size === 0) return;
+        let ordiniDaStampare = ordiniSalvati.filter(o => selezionatiStampa.has(o._key));
+        // Costruisce array con n copie per ogni ordine
+        let coda = [];
+        for(let i=0; i<ordiniDaStampare.length; i++){
+            for(let c=0; c<n; c++) coda.push(ordiniDaStampare[i]);
+        }
+        let idx = 0;
+        function stampaProssimo() {
+            if(idx >= coda.length){
+                // Segna tutti come stampati
+                ordiniDaStampare.forEach(o => ordiniRef.child(o._key).update({stampato: true}));
+                selezionatiStampa.clear(); aggiornaBarra(); renderConsegne();
+                return;
+            }
+            let o = coda[idx++];
+            try {
+                let esc = generaScontrinoESC(o);
+                let b64 = btoa(esc);
+                window.location.href = 'rawbt:base64,' + b64;
+                setTimeout(stampaProssimo, 1500);
+            } catch(e){ console.error(e); stampaProssimo(); }
+        }
+        stampaProssimo();
+    }
+
+    function stampaSelezionati() { apriSceltaCopie(); }
 
     function annullaStampa() { selezionatiStampa.clear(); aggiornaBarra(); renderConsegne(); }
 
@@ -756,6 +836,7 @@
         let searchEl=document.getElementById('search-consegne');
         let search=searchEl?searchEl.value.trim().toUpperCase():'';
         let lista=ordiniSalvati.filter(o=>(o.stato||'attesa')!=='consegnato');
+        if(filtroNonStampati) lista=lista.filter(o=>!o.stampato);
         if(search) lista=lista.filter(o=>(o.cog||'').includes(search)||(o.ind||'').includes(search)||(o.num||'').includes(search));
         if(lista.length===0){container.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">Nessun ordine in corso</div>';return;}
         container.innerHTML=lista.map((o)=>{

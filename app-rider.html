@@ -163,7 +163,7 @@
     let riderSelezionato = null;
     let cPin = "";
     let ordiniTutti = [];
-    let sessionRiderId = sessionStorage.getItem('riderId') || null;
+    let sessionRiderId = localStorage.getItem('riderId') || null;
     let qrOrdineKey = null; // chiave ordine da QR
     let qrOrdine = null;   // dati ordine da QR
 
@@ -246,7 +246,7 @@
     function verificaPin() {
         var pinCorretto = riders[riderSelezionato.id] ? riders[riderSelezionato.id].pin || '0000' : '0000';
         if(cPin === pinCorretto) {
-            sessionStorage.setItem('riderId', riderSelezionato.id);
+            localStorage.setItem('riderId', riderSelezionato.id);
             sessionRiderId = riderSelezionato.id;
             document.getElementById('pin-overlay').classList.remove('show');
             document.getElementById('page-select').classList.remove('show');
@@ -263,7 +263,7 @@
     }
 
     function logout() {
-        sessionStorage.removeItem('riderId');
+        localStorage.removeItem('riderId');
         sessionRiderId = null; riderSelezionato = null;
         document.getElementById('app-rider').style.display = 'none';
         document.getElementById('page-select').classList.add('show');
