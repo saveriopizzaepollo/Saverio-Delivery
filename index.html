@@ -310,13 +310,9 @@
         dot.style.background = coloriTipo[tipo] || '#ccc';
     }
 
-    // ── CALCOLO PREZZO AUTOMATICO ──────────────────────────────────
     function parseQtaFrazione(q) {
-        // Gestisce: 1/2, 1, 1 1/2, 2, 2 1/2, 1.5, 1,5 ecc.
         let s = (q||'').toString().trim().replace(',','.');
-        // Rimuove "kg" se presente
         s = s.replace(/kg/i,'').trim();
-        // Formato "1 1/2"
         if(s.indexOf(' ') !== -1) {
             let parts = s.split(' ');
             let intera = parseFloat(parts[0]) || 0;
@@ -326,7 +322,6 @@
                 return intera + parseFloat(fp[0])/parseFloat(fp[1]);
             }
         }
-        // Formato "1/2"
         if(s.indexOf('/') !== -1) {
             let p = s.split('/');
             return parseFloat(p[0])/parseFloat(p[1]);
@@ -338,40 +333,30 @@
         let tipo = document.getElementById(`bt-${i}`).getAttribute('data-tipo');
         let qRaw = (document.getElementById(`q-${i}`).value || '').trim();
         let gusto = (document.getElementById(`g-${i}`).value || '').trim().toUpperCase();
-        if(!gusto) return; // se nome vuoto non calcolare
-
-        // POLLO (tipo 1)
+        if(!gusto) return;
         if(tipo === '1') {
             let q = parseQtaFrazione(qRaw);
             if(q > 0) document.getElementById(`p-${i}`).value = (q * 15).toFixed(2);
             return;
         }
-
-        // COSCIA (tipo 4)
         if(tipo === '4') {
             let q = parseFloat(qRaw.replace(',','.')) || 0;
             if(q > 0) document.getElementById(`p-${i}`).value = (q * 4.5).toFixed(2);
             return;
         }
-
-        // ROSTICCERIA/BANCO (tipo 3) — se contiene "kg" calcola a peso
         if(tipo === '3') {
             let qLow = qRaw.toLowerCase();
             if(qLow.indexOf('kg') !== -1) {
-                // estrai numero prima di "kg"
                 let num = parseFloat(qRaw.replace(/kg/i,'').trim().replace(',','.')) || 0;
                 if(num > 0) document.getElementById(`p-${i}`).value = (num * 10).toFixed(2);
             } else if(qLow.indexOf('pz') !== -1 || /[a-z]/i.test(qRaw)) {
-                // contiene lettere diversi da kg -> lascia vuoto
                 document.getElementById(`p-${i}`).value = '';
             } else {
-                // numero puro -> prezzo diretto
                 let num = parseFloat(qRaw.replace(',','.')) || 0;
                 if(num > 0) document.getElementById(`p-${i}`).value = num.toFixed(2);
             }
             return;
         }
-        // PIZZA (tipo 0) e BIBITE (tipo 2) -> prezzo manuale, non toccare
     }
 
     function onGustoInput(i) {
@@ -463,7 +448,11 @@
         document.getElementById('btn-invia').disabled=!ok;
     }
 
-    function inviaOrdine() {
+    // --- AGGIORNATO: INVIO ORDINE CON TRANSAZIONE ---
+    async function inviaOrdine() {
+        const btn = document.getElementById('btn-invia');
+        btn.disabled = true;
+        
         let rawItems=[];
         for(let i=0;i<25;i++){
             let v=parseFloat(document.getElementById(`p-${i}`).value)||0;
@@ -474,33 +463,63 @@
             if(v>0||g.trim()!=="") rawItems.push({q,g:g.toUpperCase(),v,isGf,tipo});
         }
         let items=rawItems.sort((a,b)=>a.tipo-b.tipo);
-        let ordine={
-            num:(editKey!==null)?ordiniSalvati.find(o=>o._key===editKey)?.num||('#'+currentOrderNum.toString().padStart(2,'0')):'#'+currentOrderNum.toString().padStart(2,'0'),
-            ora:document.getElementById('o-orario').value,
-            cog:document.getElementById('o-cognome').value.toUpperCase(),
-            ind:document.getElementById('o-indirizzo').value.toUpperCase(),
-            tel:document.getElementById('o-tel').value.toUpperCase(),
-            nota:document.getElementById('o-nota-cons').value.toUpperCase(),
-            notaRip:document.getElementById('o-nota-rip').value.toUpperCase(),
-            tot:document.getElementById('main-total').innerText,
-            costoCons:sCost,pay:sPay,resto:document.getElementById('o-resto').value.toUpperCase(),
-            prodotti:items,
-            stato:editStatoPrecedente||'attesa'
-        };
-        if(editKey!==null){
-            let k=editKey; editKey=null; editStatoPrecedente=null;
-            ordiniRef.child(k).set(ordine);
-        } else {
-            ordiniRef.push(ordine);
-            contatoreRef.set(currentOrderNum);
-            salvaCliente(ordine.cog,ordine.tel,ordine.ind,ordine.nota);
+
+        try {
+            let finaleNum;
+            // Se stiamo modificando, manteniamo il vecchio numero
+            if(editKey !== null) {
+                finaleNum = ordiniSalvati.find(o=>o._key===editKey)?.num;
+            } else {
+                // Altrimenti, incrementiamo il contatore in modo sicuro (Transazione)
+                const { snapshot } = await contatoreRef.transaction(c => (c || 0) + 1);
+                finaleNum = '#' + snapshot.val().toString().padStart(2, '0');
+            }
+
+            let ordine={
+                num: finaleNum,
+                ora:document.getElementById('o-orario').value,
+                cog:document.getElementById('o-cognome').value.toUpperCase(),
+                ind:document.getElementById('o-indirizzo').value.toUpperCase(),
+                tel:document.getElementById('o-tel').value.toUpperCase(),
+                nota:document.getElementById('o-nota-cons').value.toUpperCase(),
+                notaRip:document.getElementById('o-nota-rip').value.toUpperCase(),
+                tot:document.getElementById('main-total').innerText,
+                costoCons:sCost,pay:sPay,resto:document.getElementById('o-resto').value.toUpperCase(),
+                prodotti:items,
+                stato:editStatoPrecedente||'attesa',
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            if(editKey!==null){
+                const k = editKey; editKey=null; editStatoPrecedente=null;
+                await ordiniRef.child(k).set(ordine);
+            } else {
+                // Usa il numero ordine come chiave del database per evitare duplicati
+                await ordiniRef.child(finaleNum.replace('#','')).set(ordine);
+                salvaCliente(ordine.cog,ordine.tel,ordine.ind,ordine.nota);
+            }
+            
+            // Stampa automatica solo se nuovo ordine
+            if(!editKey) stampaRawBT(ordine);
+            
+            resetForm(); 
+            showTab(5);
+        } catch(e) { 
+            console.error(e);
+            alert("Errore invio"); 
+            btn.disabled = false; 
         }
-        resetForm(); showTab(5);
+    }
+
+    function stampaRawBT(ordine) {
+        try {
+            let esc = generaScontrinoESC(ordine);
+            window.location.href = 'rawbt:base64,' + btoa(esc);
+        } catch(e) { console.error("Errore stampa:", e); }
     }
 
     function annullaModifica() {
         if(editKey!==null) {
-            // Ripristina stato precedente
             ordiniRef.child(editKey).update({stato: editStatoPrecedente||'attesa'});
             editKey=null; editStatoPrecedente=null;
         }
@@ -529,7 +548,6 @@
         if(!o) return;
         editKey=key;
         editStatoPrecedente=o.stato||'attesa';
-        // Segna l'ordine come "in modifica" su Firebase
         ordiniRef.child(key).update({stato:'modifica'});
         resetForm();
         document.getElementById('o-cognome').value=o.cog; document.getElementById('o-tel').value=o.tel; document.getElementById('o-indirizzo').value=o.ind;
@@ -590,7 +608,6 @@
             try {
                 let esc=generaScontrinoESC(o);
                 let b64=btoa(esc);
-                // Segna come stampato su Firebase
                 ordiniRef.child(o._key).update({stampato: true});
                 window.location.href='rawbt:base64,'+b64;
                 setTimeout(stampaProssimo,1500);
@@ -599,138 +616,38 @@
         stampaProssimo();
     }
 
+    // --- AGGIORNATO: SCONTRINO CON ALLINEAMENTO DINAMICO ---
     function generaScontrinoESC(o) {
-        // Comandi ESC/POS
         var ESC='\x1B', GS='\x1D';
-        var INIT=ESC+'@';                    // inizializza
-        var BOLD_ON=ESC+'E\x01';             // grassetto on
-        var BOLD_OFF=ESC+'E\x00';            // grassetto off
-        var SIZE_BIG=GS+'!\x11';             // doppia altezza+larghezza
-        var SIZE_MED=GS+'!\x01';             // doppia altezza
-        var SIZE_NORM=GS+'!\x00';            // normale
-        var ALIGN_C=ESC+'a\x01';             // centro
-        var ALIGN_L=ESC+'a\x00';             // sinistra
-        var ALIGN_R=ESC+'a\x02';             // destra
-        var LF='\n';
-        var FEED=ESC+'d\x04';               // avanza 4 righe
-        var CUT=GS+'V\x41\x00';             // taglia
+        var INIT=ESC+'@';
+        var BOLD_ON=ESC+'E\x01', BOLD_OFF=ESC+'E\x00';
+        var SIZE_BIG=GS+'!\x11', SIZE_MED=GS+'!\x01', SIZE_NORM=GS+'!\x00';
+        var ALIGN_C=ESC+'a\x01', ALIGN_L=ESC+'a\x00', ALIGN_R=ESC+'a\x02';
+        var LF='\n', CUT=GS+'V\x41\x00';
 
-        var W=32; // caratteri per riga a dimensione normale
-        var W_NORM=48; // caratteri per riga a SIZE_NORM
+        var r = INIT + ALIGN_C + SIZE_NORM + BOLD_ON + 'SAVERIO DELIVERY' + BOLD_OFF + LF;
+        r += '--------------------------------' + LF;
+        r += ALIGN_L + SIZE_BIG + BOLD_ON + (o.num || '#01') + '   ' + (o.ora || '') + BOLD_OFF + SIZE_NORM + LF;
+        r += SIZE_MED + BOLD_ON + (o.cog || '') + BOLD_OFF + SIZE_NORM + LF;
+        r += (o.ind || '') + LF;
+        r += 'TEL: ' + (o.tel || '') + LF;
+        if(o.nota) r += 'NOTA: ' + o.nota + LF;
+        r += '--------------------------------' + LF;
 
-        function dashedLine() { return '- '.repeat(W/2)+LF; }
+        (o.prodotti || []).forEach(p => {
+            let nome = (p.isGf ? '[GF] ' : '') + p.g.toUpperCase();
+            let rigaDescr = p.q + ' ' + nome;
+            let prezzo = p.v.toFixed(2);
+            // Allineamento destra del prezzo calcolando gli spazi (per 32 caratteri)
+            let spazi = 32 - (rigaDescr.length + prezzo.length + 2);
+            r += BOLD_ON + rigaDescr + " ".repeat(Math.max(1, spazi)) + '€' + prezzo + BOLD_OFF + LF;
+        });
 
-        function rigaProdotto(nome, prezzo) {
-            // Larghezza disponibile per nome lasciando spazio al prezzo
-            var prezzoStr=prezzo;
-            var maxNome=W_NORM-prezzoStr.length-2;
-            var out='';
-            if(nome.length<=maxNome) {
-                // tutto su una riga
-                var spaces=W_NORM-nome.length-prezzoStr.length;
-                var sp='';
-                for(var s=0;s<spaces;s++) sp+=' ';
-                out+=nome+sp+prezzoStr+LF;
-            } else {
-                // va a capo
-                var prima=nome.substring(0,maxNome);
-                var resto='  '+nome.substring(maxNome);
-                var spaces=W_NORM-prima.length-prezzoStr.length;
-                var sp='';
-                for(var s=0;s<spaces;s++) sp+=' ';
-                out+=prima+sp+prezzoStr+LF;
-                // righe extra con rientro
-                while(resto.length>0) {
-                    out+='  '+resto.substring(0,W_NORM-2).trim()+LF;
-                    resto=resto.length>W_NORM-2?'  '+resto.substring(W_NORM-2):'';
-                }
-            }
-            return out;
-        }
-
-        function rigaDestra(label, val) {
-            var spaces=W_NORM-label.length-val.length;
-            var sp='';
-            for(var s=0;s<spaces;s++) sp+=' ';
-            return label+sp+val+LF;
-        }
-
-        var r='';
-        r+=INIT;
-
-        // SAVERIO DELIVERY - centrato piccolo
-        r+=ALIGN_C+SIZE_NORM+BOLD_ON+'SAVERIO DELIVERY'+BOLD_OFF+LF;
-        r+=dashedLine();
-
-        // Numero ordine + orario - grande
-        r+=ALIGN_L+SIZE_BIG+BOLD_ON+(o.num||'#01')+'    '+(o.ora||'')+BOLD_OFF+SIZE_NORM+LF;
-
-        // Cognome - grassetto grande
-        r+=SIZE_MED+BOLD_ON+(o.cog||'')+BOLD_OFF+SIZE_NORM+LF;
-
-        // Indirizzo, tel, nota - normale
-        r+=(o.ind||'')+LF;
-        r+'TEL: '+(o.tel||'')+LF;
-        if(o.nota) r+='NOTA: '+o.nota+LF;
-
-        r+=dashedLine();
-
-        // Prodotti
-        var prods=o.prodotti||[];
-        for(var i=0;i<prods.length;i++){
-            var p=prods[i];
-            var qta=p.q+'  ';
-            var nome=(p.isGf?'[GF] ':'')+p.g.toUpperCase();
-            var prezzo=p.v.toFixed(2)+' EUR';
-            // A SIZE_BIG entrano 24 caratteri per riga
-            // La quantità occupa i primi caratteri, il nome il resto
-            var qtaLen=qta.length; // spazio riservato alla quantità
-            var maxNome=24-qtaLen; // caratteri disponibili per il nome sulla prima riga
-            var rientro=''; for(var s=0;s<qtaLen;s++) rientro+=' '; // rientro = spazio quantità
-            // Spezza il nome in parole e costruisce righe senza tagliare parole
-            var parole=nome.split(' ');
-            var righe=[];
-            var rigaCorrente='';
-            for(var w=0;w<parole.length;w++){
-                var parola=parole[w];
-                var maxRiga=righe.length===0?maxNome:24-qtaLen;
-                if(rigaCorrente.length===0){
-                    rigaCorrente=parola;
-                } else if(rigaCorrente.length+1+parola.length<=maxRiga){
-                    rigaCorrente+=' '+parola;
-                } else {
-                    righe.push(rigaCorrente);
-                    rigaCorrente=parola;
-                }
-            }
-            if(rigaCorrente.length>0) righe.push(rigaCorrente);
-            // Stampa righe
-            r+=SIZE_BIG+BOLD_ON;
-            for(var ri=0;ri<righe.length;ri++){
-                if(ri===0) r+=qta+righe[ri]+LF;
-                else r+=rientro+righe[ri]+LF;
-            }
-            r+=BOLD_OFF+SIZE_NORM;
-            // Prezzo normale a destra
-            r+=ALIGN_R+prezzo+LF+ALIGN_L;
-        }
-
-        r+=dashedLine();
-
-        // Consegna
-        r+=rigaDestra('CONSEGNA', o.costoCons.toFixed(2)+' EUR');
-
-        // Totale
-        var totStr=(o.tot||'').replace(' €','').replace('€','').trim()+' EUR';
-        r+=SIZE_MED+BOLD_ON+rigaDestra('TOT.', totStr)+BOLD_OFF+SIZE_NORM;
-
-        // Pagamento
-        var payStr=o.pay+(o.pay==='CONTANTI'&&o.resto?' ('+o.resto+')':'');
-        r+=LF+ALIGN_R+SIZE_MED+BOLD_ON+payStr+BOLD_OFF+SIZE_NORM+LF;
-
-        // Feed e taglio
-        r+=ALIGN_L+FEED+CUT;
-
+        r += '--------------------------------' + LF;
+        r += ALIGN_R + 'CONSEGNA: ' + o.costoCons.toFixed(2) + ' EUR' + LF;
+        r += SIZE_MED + BOLD_ON + 'TOTALE: ' + o.tot + BOLD_OFF + SIZE_NORM + LF;
+        r += BOLD_ON + 'PAG: ' + o.pay + (o.pay==='CONTANTI'&&o.resto ? ' ('+o.resto+')' : '') + BOLD_OFF + LF;
+        r += LF + LF + LF + CUT;
         return r;
     }
 
